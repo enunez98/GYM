@@ -1128,6 +1128,15 @@ class TeacherDashboardScreen extends StatelessWidget {
     );
   }
 
+  void _openImportRoutines(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const ImportRoutinesScreen(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1216,10 +1225,11 @@ class TeacherDashboardScreen extends StatelessWidget {
                             subtitle: 'Plan 2, 3 o 4 sesiones',
                             onTap: () => _openWeeklyRoutine(context),
                           ),
-                          const _TeacherActionRow(
+                          _TeacherActionRow(
                             icon: Icons.upload_file,
                             title: 'Cargar rutinas desde Excel',
                             subtitle: 'Importar planificación del gimnasio',
+                            onTap: () => _openImportRoutines(context),
                           ),
                         ],
                       ),
@@ -4054,6 +4064,453 @@ class DemoRoutineExercise {
     required this.series,
     required this.reps,
   });
+}
+
+class ImportRoutinesScreen extends StatefulWidget {
+  const ImportRoutinesScreen({super.key});
+
+  @override
+  State<ImportRoutinesScreen> createState() => _ImportRoutinesScreenState();
+}
+
+class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
+  String selectedPlan = 'Plan 3 sesiones';
+  String selectedFileName = 'Ningún archivo seleccionado';
+  bool fileSelected = false;
+  bool fileValidated = false;
+
+  void selectFile() {
+    setState(() {
+      selectedFileName = 'PLANIFICACION_3_SESIONES.xlsx';
+      fileSelected = true;
+      fileValidated = false;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Archivo Excel seleccionado en modo demo'),
+      ),
+    );
+  }
+
+  void validateFile() {
+    if (!fileSelected) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Primero selecciona un archivo Excel'),
+        ),
+      );
+      return;
+    }
+    setState(() {
+      fileValidated = true;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Archivo validado correctamente'),
+      ),
+    );
+  }
+
+  void importRoutine() {
+    if (!fileValidated) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Primero valida el archivo antes de cargarlo'),
+        ),
+      );
+      return;
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Rutina cargada para $selectedPlan'),
+      ),
+    );
+    Navigator.pop(context);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF06111F),
+      body: SafeArea(
+        child: Column(
+          children: [
+            _FormHeader(
+              title: 'Cargar rutinas',
+              subtitle: 'Importar planificación desde Excel',
+              icon: Icons.upload_file,
+              onBack: () => Navigator.pop(context),
+            ),
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: const BoxDecoration(
+                  color: Color(0xFFF6F8FA),
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(28),
+                  ),
+                ),
+                child: ListView(
+                  children: [
+                    _Card(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Plan destino',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 14),
+                          DropdownButtonFormField<String>(
+                            value: selectedPlan,
+                            decoration: InputDecoration(
+                              labelText: 'Plan',
+                              prefixIcon: const Icon(Icons.assignment),
+                              filled: true,
+                              fillColor: const Color(0xFFF6F8FA),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                            ),
+                            items: const [
+                              DropdownMenuItem(
+                                value: 'Plan 2 sesiones',
+                                child: Text('Plan 2 sesiones'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'Plan 3 sesiones',
+                                child: Text('Plan 3 sesiones'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'Plan 4 sesiones',
+                                child: Text('Plan 4 sesiones'),
+                              ),
+                            ],
+                            onChanged: (value) {
+                              setState(() {
+                                selectedPlan = value ?? 'Plan 3 sesiones';
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    _Card(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Archivo Excel',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 14),
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(18),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF6F8FA),
+                              borderRadius: BorderRadius.circular(18),
+                              border: Border.all(
+                                color: fileSelected
+                                    ? const Color(0xFF20B2AA)
+                                    : const Color(0xFFE5E7EB),
+                              ),
+                            ),
+                            child: Column(
+                              children: [
+                                Icon(
+                                  fileSelected
+                                      ? Icons.check_circle
+                                      : Icons.upload_file,
+                                  color: fileSelected
+                                      ? const Color(0xFF20B2AA)
+                                      : Colors.black45,
+                                  size: 42,
+                                ),
+                                const SizedBox(height: 10),
+                                Text(
+                                  selectedFileName,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: fileSelected
+                                        ? Colors.black87
+                                        : Colors.black45,
+                                  ),
+                                ),
+                                const SizedBox(height: 6),
+                                const Text(
+                                  'Formato esperado: .xlsx',
+                                  style: TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 14),
+                          SizedBox(
+                            height: 52,
+                            width: double.infinity,
+                            child: OutlinedButton.icon(
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: const Color(0xFF20B2AA),
+                                side: const BorderSide(
+                                  color: Color(0xFF20B2AA),
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                              ),
+                              onPressed: selectFile,
+                              icon: const Icon(Icons.attach_file),
+                              label: const Text(
+                                'Seleccionar Excel',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    _Card(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text(
+                            'Columnas esperadas',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 14),
+                          _ImportColumnRow(
+                            name: 'Semana',
+                            description: 'Ej: Semana 1, Semana 2',
+                          ),
+                          _ImportColumnRow(
+                            name: 'Tipo semana',
+                            description: 'Ordinario, carga o recuperación',
+                          ),
+                          _ImportColumnRow(
+                            name: 'Sesión',
+                            description: 'Sesión 1, 2, 3 o 4',
+                          ),
+                          _ImportColumnRow(
+                            name: 'Ejercicio',
+                            description: 'Nombre del ejercicio',
+                          ),
+                          _ImportColumnRow(
+                            name: 'Series',
+                            description: 'Cantidad de series planificadas',
+                          ),
+                          _ImportColumnRow(
+                            name: 'Repeticiones',
+                            description: 'Rango objetivo de reps',
+                          ),
+                          _ImportColumnRow(
+                            name: 'Orden',
+                            description: 'Orden del ejercicio en la sesión',
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    _Card(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Estado de validación',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 14),
+                          _ValidationRow(
+                            label: 'Archivo seleccionado',
+                            isOk: fileSelected,
+                          ),
+                          _ValidationRow(
+                            label: 'Formato .xlsx',
+                            isOk: fileSelected,
+                          ),
+                          _ValidationRow(
+                            label: 'Columnas obligatorias',
+                            isOk: fileValidated,
+                          ),
+                          _ValidationRow(
+                            label: 'Rutina lista para cargar',
+                            isOk: fileValidated,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 18),
+                    SizedBox(
+                      height: 54,
+                      child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF20B2AA),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
+                        onPressed: validateFile,
+                        icon: const Icon(Icons.fact_check),
+                        label: const Text(
+                          'Validar archivo',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      height: 54,
+                      child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: fileValidated
+                              ? const Color(0xFF06111F)
+                              : Colors.black26,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
+                        onPressed: importRoutine,
+                        icon: const Icon(Icons.cloud_upload),
+                        label: const Text(
+                          'Cargar rutina',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      height: 54,
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.black87,
+                          side: const BorderSide(color: Colors.black26),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text(
+                          'Cancelar',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ImportColumnRow extends StatelessWidget {
+  final String name;
+  final String description;
+
+  const _ImportColumnRow({
+    required this.name,
+    required this.description,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        children: [
+          const Icon(
+            Icons.table_chart_outlined,
+            color: Color(0xFF20B2AA),
+            size: 20,
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              name,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          Text(
+            description,
+            style: const TextStyle(
+              color: Colors.black54,
+              fontSize: 12,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ValidationRow extends StatelessWidget {
+  final String label;
+  final bool isOk;
+
+  const _ValidationRow({
+    required this.label,
+    required this.isOk,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        children: [
+          Icon(
+            isOk ? Icons.check_circle : Icons.radio_button_unchecked,
+            color: isOk ? const Color(0xFF20B2AA) : Colors.black38,
+            size: 22,
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontWeight: isOk ? FontWeight.bold : FontWeight.normal,
+                color: isOk ? Colors.black87 : Colors.black54,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class DemoExercise {
