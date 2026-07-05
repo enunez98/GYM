@@ -1112,9 +1112,9 @@ class TeacherDashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: const Color(0xFF06111F),
-      child: SafeArea(
+    return Scaffold(
+      backgroundColor: const Color(0xFF06111F),
+      body: SafeArea(
         child: Column(
           children: [
             const _ScreenHeader(
@@ -1914,9 +1914,9 @@ class AdminDashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: const Color(0xFF06111F),
-      child: SafeArea(
+    return Scaffold(
+      backgroundColor: const Color(0xFF06111F),
+      body: SafeArea(
         child: Column(
           children: [
             const _ScreenHeader(
