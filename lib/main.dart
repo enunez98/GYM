@@ -93,15 +93,14 @@ class LoginScreen extends StatelessWidget {
                       const SizedBox(height: 6),
                       const Text(
                         'Entrada de prueba antes de conectar Firebase.',
-                        style: TextStyle(
-                          color: Colors.black54,
-                        ),
+                        style: TextStyle(color: Colors.black54),
                       ),
                       const SizedBox(height: 18),
                       _RoleButton(
                         icon: Icons.person,
                         title: 'Entrar como Alumno',
-                        subtitle: 'Dashboard, entrenamiento, progreso y corporal',
+                        subtitle:
+                            'Dashboard, entrenamiento, progreso y corporal',
                         color: const Color(0xFF20B2AA),
                         onTap: () => _goTo(context, const HomeShell()),
                       ),
@@ -111,10 +110,8 @@ class LoginScreen extends StatelessWidget {
                         title: 'Entrar como Profesor',
                         subtitle: 'Alumnos, rutinas, pesajes y asistencia',
                         color: const Color(0xFF2563EB),
-                        onTap: () => _goTo(
-                          context,
-                          const TeacherDashboardScreen(),
-                        ),
+                        onTap: () =>
+                            _goTo(context, const TeacherDashboardScreen()),
                       ),
                       const SizedBox(height: 12),
                       _RoleButton(
@@ -122,10 +119,8 @@ class LoginScreen extends StatelessWidget {
                         title: 'Entrar como Admin / Dueño',
                         subtitle: 'Panel general del gimnasio',
                         color: const Color(0xFF7C3AED),
-                        onTap: () => _goTo(
-                          context,
-                          const AdminDashboardScreen(),
-                        ),
+                        onTap: () =>
+                            _goTo(context, const AdminDashboardScreen()),
                       ),
                     ],
                   ),
@@ -222,9 +217,7 @@ class _HomeShellState extends State<HomeShell> {
   @override
   Widget build(BuildContext context) {
     final pages = [
-      StudentHomeScreen(
-        onStartWorkout: () => changeTab(1),
-      ),
+      StudentHomeScreen(onStartWorkout: () => changeTab(1)),
       const WorkoutScreen(),
       const ProgressScreen(),
       const BodyEvaluationScreen(),
@@ -306,9 +299,7 @@ class StudentHomeScreen extends StatelessWidget {
                     const SizedBox(height: 14),
                     const _AttendanceCards(),
                     const SizedBox(height: 14),
-                    _NextWorkoutCard(
-                      onStartWorkout: onStartWorkout,
-                    ),
+                    _NextWorkoutCard(onStartWorkout: onStartWorkout),
                     const SizedBox(height: 14),
                     const _BodySummaryCard(),
                   ],
@@ -460,9 +451,8 @@ class WorkoutScreen extends StatelessWidget {
                         onPressed: () {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content: Text(
-                                'Entrenamiento guardado correctamente',
-                              ),
+                              content:
+                                  Text('Entrenamiento guardado correctamente'),
                             ),
                           );
                         },
@@ -488,9 +478,7 @@ class WorkoutScreen extends StatelessWidget {
                         ),
                         onPressed: () {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Sesión omitida'),
-                            ),
+                            const SnackBar(content: Text('Sesión omitida')),
                           );
                         },
                         child: const Text(
@@ -1084,9 +1072,7 @@ class ProfileScreen extends StatelessWidget {
                       title: 'Ayuda y soporte',
                     ),
                     const SizedBox(height: 16),
-                    _LogoutOption(
-                      onTap: () => _logout(context),
-                    ),
+                    _LogoutOption(onTap: () => _logout(context)),
                   ],
                 ),
               ),
@@ -1105,6 +1091,13 @@ class TeacherDashboardScreen extends StatelessWidget {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => const LoginScreen()),
+    );
+  }
+
+  void _openRegisterStudent(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const RegisterStudentScreen()),
     );
   }
 
@@ -1163,31 +1156,32 @@ class TeacherDashboardScreen extends StatelessWidget {
                     _Card(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
+                        children: [
+                          const Text(
                             'Acciones rápidas',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(height: 14),
+                          const SizedBox(height: 14),
                           _TeacherActionRow(
                             icon: Icons.person_add_alt,
                             title: 'Registrar alumno',
                             subtitle: 'Nombre, teléfono, plan y vencimiento',
+                            onTap: () => _openRegisterStudent(context),
                           ),
-                          _TeacherActionRow(
+                          const _TeacherActionRow(
                             icon: Icons.monitor_weight,
                             title: 'Registrar evaluación corporal',
                             subtitle: 'Datos de Body Go Pro / Fitdays',
                           ),
-                          _TeacherActionRow(
+                          const _TeacherActionRow(
                             icon: Icons.fitness_center,
                             title: 'Ver rutina semanal',
                             subtitle: 'Plan 2, 3 o 4 sesiones',
                           ),
-                          _TeacherActionRow(
+                          const _TeacherActionRow(
                             icon: Icons.upload_file,
                             title: 'Cargar rutinas desde Excel',
                             subtitle: 'Importar planificación del gimnasio',
@@ -1227,8 +1221,254 @@ class TeacherDashboardScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 14),
-                    _LogoutOption(
-                      onTap: () => _logout(context),
+                    _LogoutOption(onTap: () => _logout(context)),
+                    const SizedBox(height: 24),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+class RegisterStudentScreen extends StatefulWidget {
+  const RegisterStudentScreen({super.key});
+
+  @override
+  State<RegisterStudentScreen> createState() => _RegisterStudentScreenState();
+}
+
+class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
+  final nameController = TextEditingController();
+  final lastNameController = TextEditingController();
+  final phoneController = TextEditingController(text: '+569');
+  final startDateController = TextEditingController(text: '04-07-2026');
+  final endDateController = TextEditingController(text: '04-08-2026');
+
+  String selectedPlan = 'Plan 3 sesiones';
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    lastNameController.dispose();
+    phoneController.dispose();
+    startDateController.dispose();
+    endDateController.dispose();
+    super.dispose();
+  }
+
+  void saveStudent() {
+    final name = nameController.text.trim();
+    final lastName = lastNameController.text.trim();
+    final phone = phoneController.text.trim();
+
+    if (name.isEmpty || lastName.isEmpty || phone.length < 12) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Completa nombre, apellido y teléfono válido'),
+        ),
+      );
+      return;
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Alumno $name $lastName registrado con $selectedPlan'),
+      ),
+    );
+
+    Navigator.pop(context);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF06111F),
+      body: SafeArea(
+        child: Column(
+          children: [
+            _FormHeader(
+              title: 'Registrar alumno',
+              subtitle: 'Crear ficha inicial del alumno',
+              icon: Icons.person_add_alt,
+              onBack: () => Navigator.pop(context),
+            ),
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: const BoxDecoration(
+                  color: Color(0xFFF6F8FA),
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(28),
+                  ),
+                ),
+                child: ListView(
+                  children: [
+                    _Card(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Datos personales',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 14),
+                          _AppTextField(
+                            controller: nameController,
+                            label: 'Nombre',
+                            icon: Icons.person_outline,
+                            hint: 'Ej: Felipe',
+                          ),
+                          const SizedBox(height: 12),
+                          _AppTextField(
+                            controller: lastNameController,
+                            label: 'Apellido',
+                            icon: Icons.person_outline,
+                            hint: 'Ej: Durán',
+                          ),
+                          const SizedBox(height: 12),
+                          _AppTextField(
+                            controller: phoneController,
+                            label: 'Teléfono',
+                            icon: Icons.phone_outlined,
+                            hint: '+569XXXXXXXX',
+                            keyboardType: TextInputType.phone,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    _Card(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Plan contratado',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 14),
+                          DropdownButtonFormField<String>(
+                            value: selectedPlan,
+                            decoration: InputDecoration(
+                              labelText: 'Plan',
+                              prefixIcon: const Icon(Icons.fitness_center),
+                              filled: true,
+                              fillColor: const Color(0xFFF6F8FA),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                            ),
+                            items: const [
+                              DropdownMenuItem(
+                                value: 'Plan 2 sesiones',
+                                child: Text('Plan 2 sesiones'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'Plan 3 sesiones',
+                                child: Text('Plan 3 sesiones'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'Plan 4 sesiones',
+                                child: Text('Plan 4 sesiones'),
+                              ),
+                            ],
+                            onChanged: (value) {
+                              setState(() {
+                                selectedPlan = value ?? 'Plan 3 sesiones';
+                              });
+                            },
+                          ),
+                          const SizedBox(height: 12),
+                          _AppTextField(
+                            controller: startDateController,
+                            label: 'Fecha de inicio',
+                            icon: Icons.calendar_month,
+                            hint: 'dd-mm-aaaa',
+                          ),
+                          const SizedBox(height: 12),
+                          _AppTextField(
+                            controller: endDateController,
+                            label: 'Fecha de vencimiento',
+                            icon: Icons.event_available,
+                            hint: 'dd-mm-aaaa',
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    Container(
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFEFF6FF),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: const Row(
+                        children: [
+                          Icon(Icons.info_outline, color: Color(0xFF2563EB)),
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              'Cuando conectemos Firebase, esta ficha quedará guardada en la base de datos del gimnasio.',
+                              style: TextStyle(
+                                color: Color(0xFF1E3A8A),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 18),
+                    SizedBox(
+                      height: 54,
+                      child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF20B2AA),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
+                        onPressed: saveStudent,
+                        icon: const Icon(Icons.save),
+                        label: const Text(
+                          'Guardar alumno',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      height: 54,
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.black87,
+                          side: const BorderSide(color: Colors.black26),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text(
+                          'Cancelar',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 24),
                   ],
@@ -1241,7 +1481,6 @@ class TeacherDashboardScreen extends StatelessWidget {
     );
   }
 }
-
 class AdminDashboardScreen extends StatelessWidget {
   const AdminDashboardScreen({super.key});
 
@@ -1371,9 +1610,7 @@ class AdminDashboardScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 14),
-                    _LogoutOption(
-                      onTap: () => _logout(context),
-                    ),
+                    _LogoutOption(onTap: () => _logout(context)),
                     const SizedBox(height: 24),
                   ],
                 ),
@@ -1452,6 +1689,65 @@ class _ScreenHeader extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
       child: Row(
         children: [
+          CircleAvatar(
+            radius: 24,
+            backgroundColor: const Color(0xFF20B2AA),
+            child: Icon(icon, color: Colors.white),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 23,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  subtitle,
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 13,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FormHeader extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final VoidCallback onBack;
+
+  const _FormHeader({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.onBack,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 18, 20, 24),
+      child: Row(
+        children: [
+          IconButton(
+            onPressed: onBack,
+            icon: const Icon(Icons.arrow_back_ios_new),
+            color: Colors.white,
+          ),
           CircleAvatar(
             radius: 24,
             backgroundColor: const Color(0xFF20B2AA),
@@ -1784,9 +2080,7 @@ class _ExerciseCard extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 6),
               child: Row(
                 children: [
-                  Expanded(
-                    child: Text('Serie ${item.serie}'),
-                  ),
+                  Expanded(child: Text('Serie ${item.serie}')),
                   SizedBox(
                     width: 76,
                     child: TextField(
@@ -1908,11 +2202,7 @@ class _BodyMetricTile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            icon,
-            color: const Color(0xFF20B2AA),
-            size: 22,
-          ),
+          Icon(icon, color: const Color(0xFF20B2AA), size: 22),
           const SizedBox(height: 10),
           Text(
             title,
@@ -1975,12 +2265,7 @@ class _BodyControlRow extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         children: [
-          Expanded(
-            child: Text(
-              label,
-              style: const TextStyle(color: Colors.black87),
-            ),
-          ),
+          Expanded(child: Text(label)),
           Text(
             value,
             style: TextStyle(
@@ -2057,49 +2342,60 @@ class _TeacherActionRow extends StatelessWidget {
   final IconData icon;
   final String title;
   final String subtitle;
+  final VoidCallback? onTap;
 
   const _TeacherActionRow({
     required this.icon,
     required this.title,
     required this.subtitle,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
+    final rowContent = Row(
+      children: [
+        CircleAvatar(
+          radius: 22,
+          backgroundColor: const Color(0xFFE9F8F7),
+          child: Icon(
+            icon,
+            color: const Color(0xFF20B2AA),
+            size: 22,
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+              Text(
+                subtitle,
+                style: const TextStyle(
+                  color: Colors.black54,
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const Icon(Icons.chevron_right, color: Colors.black38),
+      ],
+    );
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 22,
-            backgroundColor: const Color(0xFFE9F8F7),
-            child: Icon(
-              icon,
-              color: const Color(0xFF20B2AA),
-              size: 22,
-            ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(14),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: rowContent,
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  subtitle,
-                  style: const TextStyle(
-                    color: Colors.black54,
-                    fontSize: 12,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const Icon(Icons.chevron_right, color: Colors.black38),
-        ],
+        ),
       ),
     );
   }
@@ -2134,10 +2430,7 @@ class _StudentMiniRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  name,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
+                Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
                 Text(
                   plan,
                   style: const TextStyle(
@@ -2181,21 +2474,14 @@ class _AdminAlertRow extends StatelessWidget {
           CircleAvatar(
             radius: 22,
             backgroundColor: const Color(0xFFFFF2D9),
-            child: Icon(
-              icon,
-              color: const Color(0xFFD98200),
-              size: 22,
-            ),
+            child: Icon(icon, color: const Color(0xFFD98200), size: 22),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
+                Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
                 Text(
                   subtitle,
                   style: const TextStyle(
@@ -2252,24 +2538,64 @@ class _LogoutOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _Card(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(18),
-        child: const Row(
-          children: [
-            Icon(Icons.logout, color: Colors.red),
-            SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                'Cerrar sesión',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontWeight: FontWeight.w700,
+      padding: EdgeInsets.zero,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(18),
+          child: const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            child: Row(
+              children: [
+                Icon(Icons.logout, color: Colors.red),
+                SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    'Cerrar sesión',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AppTextField extends StatelessWidget {
+  final TextEditingController controller;
+  final String label;
+  final String hint;
+  final IconData icon;
+  final TextInputType keyboardType;
+
+  const _AppTextField({
+    required this.controller,
+    required this.label,
+    required this.hint,
+    required this.icon,
+    this.keyboardType = TextInputType.text,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: controller,
+      keyboardType: keyboardType,
+      decoration: InputDecoration(
+        labelText: label,
+        hintText: hint,
+        prefixIcon: Icon(icon),
+        filled: true,
+        fillColor: const Color(0xFFF6F8FA),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
         ),
       ),
     );
@@ -2489,10 +2815,7 @@ class ProgressChartPainter extends CustomPainter {
         ),
       );
       gridTextPainter.layout();
-      gridTextPainter.paint(
-        canvas,
-        Offset(0, y - 7),
-      );
+      gridTextPainter.paint(canvas, Offset(0, y - 7));
     }
 
     final points = <Offset>[];
@@ -2528,10 +2851,7 @@ class ProgressChartPainter extends CustomPainter {
       );
 
       valueText.layout();
-      valueText.paint(
-        canvas,
-        Offset(points[i].dx - 12, points[i].dy - 24),
-      );
+      valueText.paint(canvas, Offset(points[i].dx - 12, points[i].dy - 24));
     }
   }
 
