@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:file_selector/file_selector.dart';
 
 void main() {
   runApp(const GymApp());
@@ -4079,37 +4080,88 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
   bool fileSelected = false;
   bool fileValidated = false;
 
-  void selectFile() {
-    setState(() {
-      selectedFileName = 'PLANIFICACION_3_SESIONES.xlsx';
-      fileSelected = true;
-      fileValidated = false;
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Archivo Excel seleccionado en modo demo'),
-      ),
+  Future<void> selectFile() async {
+    const XTypeGroup excelTypeGroup = XTypeGroup(
+      label: 'Excel',
+      extensions: <String>['xlsx'],
+      mimeTypes: <String>[
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      ],
+      uniformTypeIdentifiers: <String>[
+        'org.openxmlformats.spreadsheetml.sheet',
+      ],
     );
-  }
 
-  void validateFile() {
-    if (!fileSelected) {
+    final XFile? file = await openFile(
+      acceptedTypeGroups: <XTypeGroup>[excelTypeGroup],
+    );
+
+    if (!mounted) return;
+
+    if (file == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Primero selecciona un archivo Excel'),
+          content: Text('No se seleccionó ningún archivo'),
         ),
       );
       return;
     }
+
+    final fileName = file.name;
+
+    if (!fileName.toLowerCase().endsWith('.xlsx')) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('El archivo debe estar en formato .xlsx'),
+        ),
+      );
+      return;
+    }
+
     setState(() {
-      fileValidated = true;
+      selectedFileName = fileName;
+      fileSelected = true;
+      fileValidated = false;
     });
+
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Archivo validado correctamente'),
+      SnackBar(
+        content: Text('Archivo seleccionado: $fileName'),
       ),
     );
   }
+
+void validateFile() {
+  if (!fileSelected) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Primero selecciona un archivo Excel'),
+      ),
+    );
+    return;
+  }
+
+  final isExcel = selectedFileName.toLowerCase().endsWith('.xlsx');
+
+  if (!isExcel) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('El archivo debe estar en formato .xlsx'),
+      ),
+    );
+    return;
+  }
+
+  setState(() {
+    fileValidated = true;
+  });
+
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text('Archivo $selectedFileName validado correctamente'),
+    ),
+  );
+}
 
   void importRoutine() {
     if (!fileValidated) {
