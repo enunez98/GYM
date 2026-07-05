@@ -20,7 +20,185 @@ class GymApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color(0xFFF6F8FA),
         useMaterial3: true,
       ),
-      home: const HomeShell(),
+      home: const LoginScreen(),
+    );
+  }
+}
+
+class LoginScreen extends StatelessWidget {
+  const LoginScreen({super.key});
+
+  void _goTo(BuildContext context, Widget screen) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => screen),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF06111F),
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(22),
+            child: Column(
+              children: [
+                const CircleAvatar(
+                  radius: 46,
+                  backgroundColor: Color(0xFF20B2AA),
+                  child: Icon(
+                    Icons.fitness_center,
+                    color: Colors.white,
+                    size: 48,
+                  ),
+                ),
+                const SizedBox(height: 18),
+                const Text(
+                  'GYM Pro',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 34,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                const Text(
+                  'Gestión de alumnos, rutinas y progreso',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 15,
+                  ),
+                ),
+                const SizedBox(height: 34),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(18),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(26),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Selecciona un perfil',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      const Text(
+                        'Entrada de prueba antes de conectar Firebase.',
+                        style: TextStyle(
+                          color: Colors.black54,
+                        ),
+                      ),
+                      const SizedBox(height: 18),
+                      _RoleButton(
+                        icon: Icons.person,
+                        title: 'Entrar como Alumno',
+                        subtitle: 'Dashboard, entrenamiento, progreso y corporal',
+                        color: const Color(0xFF20B2AA),
+                        onTap: () => _goTo(context, const HomeShell()),
+                      ),
+                      const SizedBox(height: 12),
+                      _RoleButton(
+                        icon: Icons.sports,
+                        title: 'Entrar como Profesor',
+                        subtitle: 'Alumnos, rutinas, pesajes y asistencia',
+                        color: const Color(0xFF2563EB),
+                        onTap: () => _goTo(
+                          context,
+                          const TeacherDashboardScreen(),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      _RoleButton(
+                        icon: Icons.admin_panel_settings,
+                        title: 'Entrar como Admin / Dueño',
+                        subtitle: 'Panel general del gimnasio',
+                        color: const Color(0xFF7C3AED),
+                        onTap: () => _goTo(
+                          context,
+                          const AdminDashboardScreen(),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _RoleButton extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _RoleButton({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: const Color(0xFFF6F8FA),
+      borderRadius: BorderRadius.circular(18),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(18),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 24,
+                backgroundColor: color.withOpacity(0.12),
+                child: Icon(icon, color: color),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      subtitle,
+                      style: const TextStyle(
+                        color: Colors.black54,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right, color: Colors.black38),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -825,6 +1003,13 @@ class BodyEvaluationScreen extends StatelessWidget {
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
+  void _logout(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const LoginScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -868,38 +1053,328 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
                 child: ListView(
-                  children: const [
-                    _ProfileOption(
+                  children: [
+                    const _ProfileOption(
                       icon: Icons.person_outline,
                       title: 'Información personal',
                     ),
-                    SizedBox(height: 10),
-                    _ProfileOption(
+                    const SizedBox(height: 10),
+                    const _ProfileOption(
                       icon: Icons.credit_card,
                       title: 'Plan y pagos',
                     ),
-                    SizedBox(height: 10),
-                    _ProfileOption(
+                    const SizedBox(height: 10),
+                    const _ProfileOption(
                       icon: Icons.calendar_month,
                       title: 'Asistencia',
                     ),
-                    SizedBox(height: 10),
-                    _ProfileOption(
+                    const SizedBox(height: 10),
+                    const _ProfileOption(
                       icon: Icons.monitor_weight,
                       title: 'Evaluación corporal',
                     ),
-                    SizedBox(height: 10),
-                    _ProfileOption(
+                    const SizedBox(height: 10),
+                    const _ProfileOption(
                       icon: Icons.settings_outlined,
                       title: 'Configuración',
                     ),
-                    SizedBox(height: 10),
-                    _ProfileOption(
+                    const SizedBox(height: 10),
+                    const _ProfileOption(
                       icon: Icons.help_outline,
                       title: 'Ayuda y soporte',
                     ),
-                    SizedBox(height: 16),
-                    _LogoutOption(),
+                    const SizedBox(height: 16),
+                    _LogoutOption(
+                      onTap: () => _logout(context),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class TeacherDashboardScreen extends StatelessWidget {
+  const TeacherDashboardScreen({super.key});
+
+  void _logout(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const LoginScreen()),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: const Color(0xFF06111F),
+      child: SafeArea(
+        child: Column(
+          children: [
+            const _ScreenHeader(
+              title: 'Panel Profesor',
+              subtitle: 'Gestión diaria de alumnos',
+              icon: Icons.sports,
+            ),
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: const BoxDecoration(
+                  color: Color(0xFFF6F8FA),
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(28),
+                  ),
+                ),
+                child: ListView(
+                  children: [
+                    Row(
+                      children: const [
+                        Expanded(
+                          child: _MetricCard(
+                            title: 'Alumnos activos',
+                            value: '42',
+                            subtitle: 'activos',
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: _MetricCard(
+                            title: 'Clases hoy',
+                            value: '18',
+                            subtitle: 'agendadas',
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: _MetricCard(
+                            title: 'Pesajes',
+                            value: '6',
+                            subtitle: 'semana',
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 14),
+                    _Card(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text(
+                            'Acciones rápidas',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 14),
+                          _TeacherActionRow(
+                            icon: Icons.person_add_alt,
+                            title: 'Registrar alumno',
+                            subtitle: 'Nombre, teléfono, plan y vencimiento',
+                          ),
+                          _TeacherActionRow(
+                            icon: Icons.monitor_weight,
+                            title: 'Registrar evaluación corporal',
+                            subtitle: 'Datos de Body Go Pro / Fitdays',
+                          ),
+                          _TeacherActionRow(
+                            icon: Icons.fitness_center,
+                            title: 'Ver rutina semanal',
+                            subtitle: 'Plan 2, 3 o 4 sesiones',
+                          ),
+                          _TeacherActionRow(
+                            icon: Icons.upload_file,
+                            title: 'Cargar rutinas desde Excel',
+                            subtitle: 'Importar planificación del gimnasio',
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    _Card(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text(
+                            'Alumnos recientes',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 14),
+                          _StudentMiniRow(
+                            name: 'Felipe Durán',
+                            plan: 'Plan 3 sesiones',
+                            status: 'Activo',
+                          ),
+                          _StudentMiniRow(
+                            name: 'Camila Rojas',
+                            plan: 'Plan 2 sesiones',
+                            status: 'Activo',
+                          ),
+                          _StudentMiniRow(
+                            name: 'Matías Soto',
+                            plan: 'Plan 4 sesiones',
+                            status: 'Por vencer',
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    _LogoutOption(
+                      onTap: () => _logout(context),
+                    ),
+                    const SizedBox(height: 24),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class AdminDashboardScreen extends StatelessWidget {
+  const AdminDashboardScreen({super.key});
+
+  void _logout(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const LoginScreen()),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: const Color(0xFF06111F),
+      child: SafeArea(
+        child: Column(
+          children: [
+            const _ScreenHeader(
+              title: 'Panel Admin',
+              subtitle: 'Resumen general del gimnasio',
+              icon: Icons.admin_panel_settings,
+            ),
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: const BoxDecoration(
+                  color: Color(0xFFF6F8FA),
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(28),
+                  ),
+                ),
+                child: ListView(
+                  children: [
+                    Row(
+                      children: const [
+                        Expanded(
+                          child: _MetricCard(
+                            title: 'Alumnos',
+                            value: '128',
+                            subtitle: 'activos',
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: _MetricCard(
+                            title: 'Vencen pronto',
+                            value: '9',
+                            subtitle: 'planes',
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: _MetricCard(
+                            title: 'Asistencia',
+                            value: '76%',
+                            subtitle: 'mes',
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 14),
+                    _Card(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text(
+                            'Gestión del gimnasio',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 14),
+                          _TeacherActionRow(
+                            icon: Icons.groups,
+                            title: 'Usuarios registrados',
+                            subtitle: 'Alumnos, profesores y administradores',
+                          ),
+                          _TeacherActionRow(
+                            icon: Icons.calendar_month,
+                            title: 'Planes y vencimientos',
+                            subtitle: '2, 3 o 4 sesiones por semana',
+                          ),
+                          _TeacherActionRow(
+                            icon: Icons.insert_chart_outlined,
+                            title: 'Reporte de asistencia',
+                            subtitle: 'Cumplimiento por alumno y plan',
+                          ),
+                          _TeacherActionRow(
+                            icon: Icons.upload_file,
+                            title: 'Importar planificación',
+                            subtitle: 'Cargar Excel de rutinas',
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    _Card(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text(
+                            'Alertas',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 14),
+                          _AdminAlertRow(
+                            icon: Icons.warning_amber,
+                            title: '9 alumnos con plan por vencer',
+                            subtitle: 'Revisar renovaciones esta semana',
+                          ),
+                          _AdminAlertRow(
+                            icon: Icons.trending_down,
+                            title: '12 alumnos con baja asistencia',
+                            subtitle: 'Menos del 50% de cumplimiento mensual',
+                          ),
+                          _AdminAlertRow(
+                            icon: Icons.monitor_weight,
+                            title: '6 evaluaciones corporales pendientes',
+                            subtitle: 'Alumnos sin pesaje actualizado',
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    _LogoutOption(
+                      onTap: () => _logout(context),
+                    ),
+                    const SizedBox(height: 24),
                   ],
                 ),
               ),
@@ -1578,6 +2053,165 @@ class _BodyProgressRow extends StatelessWidget {
   }
 }
 
+class _TeacherActionRow extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+
+  const _TeacherActionRow({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: Row(
+        children: [
+          CircleAvatar(
+            radius: 22,
+            backgroundColor: const Color(0xFFE9F8F7),
+            child: Icon(
+              icon,
+              color: const Color(0xFF20B2AA),
+              size: 22,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  subtitle,
+                  style: const TextStyle(
+                    color: Colors.black54,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Icon(Icons.chevron_right, color: Colors.black38),
+        ],
+      ),
+    );
+  }
+}
+
+class _StudentMiniRow extends StatelessWidget {
+  final String name;
+  final String plan;
+  final String status;
+
+  const _StudentMiniRow({
+    required this.name,
+    required this.plan,
+    required this.status,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isWarning = status == 'Por vencer';
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: Row(
+        children: [
+          const CircleAvatar(
+            radius: 21,
+            backgroundColor: Color(0xFF20B2AA),
+            child: Icon(Icons.person, color: Colors.white),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  name,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  plan,
+                  style: const TextStyle(
+                    color: Colors.black54,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          _StatusChip(
+            text: status,
+            background:
+                isWarning ? const Color(0xFFFFF2D9) : const Color(0xFFDFF9EA),
+            textColor:
+                isWarning ? const Color(0xFFD98200) : const Color(0xFF12985C),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AdminAlertRow extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+
+  const _AdminAlertRow({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: Row(
+        children: [
+          CircleAvatar(
+            radius: 22,
+            backgroundColor: const Color(0xFFFFF2D9),
+            child: Icon(
+              icon,
+              color: const Color(0xFFD98200),
+              size: 22,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  subtitle,
+                  style: const TextStyle(
+                    color: Colors.black54,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _ProfileOption extends StatelessWidget {
   final IconData icon;
   final String title;
@@ -1609,26 +2243,34 @@ class _ProfileOption extends StatelessWidget {
 }
 
 class _LogoutOption extends StatelessWidget {
-  const _LogoutOption();
+  final VoidCallback onTap;
+
+  const _LogoutOption({
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     return _Card(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      child: Row(
-        children: const [
-          Icon(Icons.logout, color: Colors.red),
-          SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              'Cerrar sesión',
-              style: TextStyle(
-                color: Colors.red,
-                fontWeight: FontWeight.w700,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(18),
+        child: const Row(
+          children: [
+            Icon(Icons.logout, color: Colors.red),
+            SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                'Cerrar sesión',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
