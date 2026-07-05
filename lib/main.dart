@@ -262,7 +262,14 @@ class _NextWorkoutCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(14),
                 ),
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const WorkoutScreen(),
+                  ),
+                );
+              },
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -327,6 +334,346 @@ class _BodySummaryCard extends StatelessWidget {
       ),
     );
   }
+}
+
+class WorkoutScreen extends StatelessWidget {
+  const WorkoutScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final exercises = [
+      DemoExercise(
+        name: 'Press Banca Plano',
+        series: [
+          DemoSet(serie: 1, kg: 60, reps: 10),
+          DemoSet(serie: 2, kg: 65, reps: 10),
+          DemoSet(serie: 3, kg: 65, reps: 8),
+          DemoSet(serie: 4, kg: 60, reps: 10),
+        ],
+      ),
+      DemoExercise(
+        name: 'Press Inclinado Mancuernas',
+        series: [
+          DemoSet(serie: 1, kg: 28, reps: 12),
+          DemoSet(serie: 2, kg: 30, reps: 10),
+          DemoSet(serie: 3, kg: 30, reps: 10),
+          DemoSet(serie: 4, kg: 28, reps: 12),
+        ],
+      ),
+      DemoExercise(
+        name: 'Extensión de Tríceps',
+        series: [
+          DemoSet(serie: 1, kg: 25, reps: 12),
+          DemoSet(serie: 2, kg: 30, reps: 10),
+          DemoSet(serie: 3, kg: 30, reps: 10),
+        ],
+      ),
+    ];
+
+    return Scaffold(
+      backgroundColor: const Color(0xFFF6F8FA),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF06111F),
+        foregroundColor: Colors.white,
+        title: const Text('Entrenamiento'),
+        centerTitle: true,
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          _Card(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Semana 2 - Ordinario',
+                  style: TextStyle(color: Colors.black54),
+                ),
+                const SizedBox(height: 6),
+                Row(
+                  children: [
+                    const Expanded(
+                      child: Text(
+                        'Sesión 1',
+                        style: TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 7,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFF2D9),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: const Text(
+                        'Pendiente',
+                        style: TextStyle(
+                          color: Color(0xFFD98200),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                const Text(
+                  'Pecho - Tríceps',
+                  style: TextStyle(color: Colors.black54),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 14),
+          Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: const Color(0xFFEFF6FF),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: const Row(
+              children: [
+                Icon(Icons.info_outline, color: Color(0xFF2563EB)),
+                SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    'Debes completar esta sesión para avanzar a la siguiente clase.',
+                    style: TextStyle(
+                      color: Color(0xFF1E3A8A),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 14),
+          for (int i = 0; i < exercises.length; i++) ...[
+            _ExerciseCard(
+              number: i + 1,
+              exercise: exercises[i],
+            ),
+            const SizedBox(height: 14),
+          ],
+          SizedBox(
+            height: 54,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF20B2AA),
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+              ),
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Entrenamiento guardado correctamente'),
+                  ),
+                );
+              },
+              child: const Text(
+                'Guardar entrenamiento',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          SizedBox(
+            height: 54,
+            child: OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                foregroundColor: Colors.black87,
+                side: const BorderSide(color: Colors.black26),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+              ),
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Sesión omitida'),
+                  ),
+                );
+              },
+              child: const Text(
+                'Omitir sesión',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+        ],
+      ),
+    );
+  }
+}
+
+class _ExerciseCard extends StatelessWidget {
+  final int number;
+  final DemoExercise exercise;
+
+  const _ExerciseCard({
+    required this.number,
+    required this.exercise,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return _Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 16,
+                backgroundColor: const Color(0xFFE9F8F7),
+                child: Text(
+                  '$number',
+                  style: const TextStyle(
+                    color: Color(0xFF20B2AA),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  exercise.name,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const Text(
+                '4 series',
+                style: TextStyle(
+                  color: Colors.black54,
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          const Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'Serie',
+                  style: TextStyle(
+                    color: Colors.black54,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 76,
+                child: Text(
+                  'kg',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.black54,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              SizedBox(width: 8),
+              SizedBox(
+                width: 76,
+                child: Text(
+                  'reps',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.black54,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          for (final item in exercise.series)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text('Serie ${item.serie}'),
+                  ),
+                  SizedBox(
+                    width: 76,
+                    child: TextField(
+                      textAlign: TextAlign.center,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        hintText: '${item.kg}',
+                        isDense: true,
+                        filled: true,
+                        fillColor: const Color(0xFFF6F8FA),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  SizedBox(
+                    width: 76,
+                    child: TextField(
+                      textAlign: TextAlign.center,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        hintText: '${item.reps}',
+                        isDense: true,
+                        filled: true,
+                        fillColor: const Color(0xFFF6F8FA),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class DemoExercise {
+  final String name;
+  final List<DemoSet> series;
+
+  DemoExercise({
+    required this.name,
+    required this.series,
+  });
+}
+
+class DemoSet {
+  final int serie;
+  final int kg;
+  final int reps;
+
+  DemoSet({
+    required this.serie,
+    required this.kg,
+    required this.reps,
+  });
 }
 
 class _MetricCard extends StatelessWidget {
