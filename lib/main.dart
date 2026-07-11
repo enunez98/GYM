@@ -308,6 +308,12 @@ class WorkoutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final importedSession = ImportedRoutineStore.sessions.isNotEmpty
+        ? ImportedRoutineStore.sessions.first
+        : null;
+
+    final hasImportedWorkout = importedSession != null;
+
     final exercises = [
       DemoExercise(
         name: 'Press Banca Plano',
@@ -364,32 +370,44 @@ class WorkoutScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Semana 2 - Ordinario',
+                          Text(
+                            hasImportedWorkout
+                                ? importedSession.session
+                                : 'Semana 2 - Ordinario',
                             style: TextStyle(color: Colors.black54),
                           ),
                           const SizedBox(height: 6),
                           Row(
                             children: [
-                              const Expanded(
+                              Expanded(
                                 child: Text(
-                                  'Sesión 1',
-                                  style: TextStyle(
+                                  hasImportedWorkout
+                                      ? importedSession.title
+                                      : 'Sesión 1',
+                                  style: const TextStyle(
                                     fontSize: 26,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
                               _StatusChip(
-                                text: 'Pendiente',
-                                background: const Color(0xFFFFF2D9),
-                                textColor: const Color(0xFFD98200),
+                                text: hasImportedWorkout
+                                    ? 'Excel'
+                                    : 'Pendiente',
+                                background: hasImportedWorkout
+                                    ? const Color(0xFFDFF9EA)
+                                    : const Color(0xFFFFF2D9),
+                                textColor: hasImportedWorkout
+                                    ? const Color(0xFF12985C)
+                                    : const Color(0xFFD98200),
                               ),
                             ],
                           ),
                           const SizedBox(height: 6),
-                          const Text(
-                            'Pecho - Tríceps',
+                          Text(
+                            hasImportedWorkout
+                                ? '${importedSession.exercises.length} ejercicios importados'
+                                : 'Pecho - Tríceps',
                             style: TextStyle(color: Colors.black54),
                           ),
                         ],
@@ -402,14 +420,19 @@ class WorkoutScreen extends StatelessWidget {
                         color: const Color(0xFFEFF6FF),
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      child: const Row(
+                      child: Row(
                         children: [
-                          Icon(Icons.info_outline, color: Color(0xFF2563EB)),
-                          SizedBox(width: 10),
+                          const Icon(
+                            Icons.info_outline,
+                            color: Color(0xFF2563EB),
+                          ),
+                          const SizedBox(width: 10),
                           Expanded(
                             child: Text(
-                              'Debes completar esta sesión para avanzar a la siguiente clase.',
-                              style: TextStyle(
+                              hasImportedWorkout
+                                  ? 'Esta clase viene desde la planificación Excel cargada por el profesor.'
+                                  : 'Debes completar esta sesión para avanzar a la siguiente clase.',
+                              style: const TextStyle(
                                 color: Color(0xFF1E3A8A),
                                 fontWeight: FontWeight.w500,
                               ),
@@ -419,10 +442,23 @@ class WorkoutScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 14),
-                    for (int i = 0; i < exercises.length; i++) ...[
-                      _ExerciseCard(number: i + 1, exercise: exercises[i]),
-                      const SizedBox(height: 14),
-                    ],
+                    if (hasImportedWorkout)
+                      for (
+                        int i = 0;
+                        i < importedSession.exercises.length;
+                        i++
+                      ) ...[
+                        _ImportedWorkoutExerciseCard(
+                          number: i + 1,
+                          exercise: importedSession.exercises[i],
+                        ),
+                        const SizedBox(height: 14),
+                      ]
+                    else
+                      for (int i = 0; i < exercises.length; i++) ...[
+                        _ExerciseCard(number: i + 1, exercise: exercises[i]),
+                        const SizedBox(height: 14),
+                      ],
                     SizedBox(
                       height: 54,
                       child: ElevatedButton(
@@ -2679,24 +2715,49 @@ class _NextWorkoutCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final importedSession = ImportedRoutineStore.sessions.isNotEmpty
+        ? ImportedRoutineStore.sessions.first
+        : null;
+
+    final sessionTitle = importedSession != null
+        ? importedSession.title
+        : 'Sesión 1';
+
+    final sessionSubtitle = importedSession != null
+        ? '${importedSession.session} · ${importedSession.exercises.length} ejercicios'
+        : 'Pecho - Tríceps';
+
     return _Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Próxima clase', style: TextStyle(color: Colors.black54)),
           const SizedBox(height: 6),
-          const Text(
-            'Sesión 1',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          Text(
+            sessionTitle,
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 4),
-          const Row(
+          Row(
             children: [
-              Icon(Icons.fitness_center, size: 17, color: Colors.black45),
-              SizedBox(width: 6),
-              Text('Pecho - Tríceps', style: TextStyle(color: Colors.black54)),
+              const Icon(Icons.fitness_center, size: 17, color: Colors.black45),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  sessionSubtitle,
+                  style: const TextStyle(color: Colors.black54),
+                ),
+              ),
             ],
           ),
+          if (importedSession != null) ...[
+            const SizedBox(height: 10),
+            _StatusChip(
+              text: 'Desde Excel',
+              background: const Color(0xFFDFF9EA),
+              textColor: const Color(0xFF12985C),
+            ),
+          ],
           const SizedBox(height: 18),
           SizedBox(
             width: double.infinity,
@@ -2884,6 +2945,147 @@ class _ExerciseCard extends StatelessWidget {
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         hintText: '${item.reps}',
+                        isDense: true,
+                        filled: true,
+                        fillColor: const Color(0xFFF6F8FA),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ImportedWorkoutExerciseCard extends StatelessWidget {
+  final int number;
+  final DemoRoutineExercise exercise;
+
+  const _ImportedWorkoutExerciseCard({
+    required this.number,
+    required this.exercise,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final totalSeries = exercise.series <= 0 ? 1 : exercise.series;
+
+    return _Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 16,
+                backgroundColor: const Color(0xFFE9F8F7),
+                child: Text(
+                  '$number',
+                  style: const TextStyle(
+                    color: Color(0xFF20B2AA),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  exercise.name,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Text(
+                '$totalSeries series',
+                style: const TextStyle(color: Colors.black54, fontSize: 12),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Objetivo: ${exercise.reps}',
+            style: const TextStyle(
+              color: Colors.black54,
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 12),
+          const Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'Serie',
+                  style: TextStyle(
+                    color: Colors.black54,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 76,
+                child: Text(
+                  'kg',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.black54,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              SizedBox(width: 8),
+              SizedBox(
+                width: 76,
+                child: Text(
+                  'reps',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.black54,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          for (int i = 1; i <= totalSeries; i++)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              child: Row(
+                children: [
+                  Expanded(child: Text('Serie $i')),
+                  SizedBox(
+                    width: 76,
+                    child: TextField(
+                      textAlign: TextAlign.center,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        hintText: 'kg',
+                        isDense: true,
+                        filled: true,
+                        fillColor: const Color(0xFFF6F8FA),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  SizedBox(
+                    width: 76,
+                    child: TextField(
+                      textAlign: TextAlign.center,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        hintText: 'reps',
                         isDense: true,
                         filled: true,
                         fillColor: const Color(0xFFF6F8FA),
