@@ -7,7 +7,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:gym_app/main.dart';
+import 'package:gym_app/app.dart';
 
 void main() {
   testWidgets('shows the login screen', (WidgetTester tester) async {
