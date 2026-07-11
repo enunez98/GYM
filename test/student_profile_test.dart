@@ -7,11 +7,11 @@ void main() {
 
     expect(profile, isNotNull);
     expect(profile!.name, 'Felipe Durán');
-    expect(profile.plan, 'Plan 3 sesiones');
-    expect(profile.weeklyAttendanceText, '1/3');
-    expect(profile.weeklyAttendancePercent, 33);
-    expect(profile.monthlyAttendanceText, '5/12');
-    expect(profile.monthlyAttendancePercent, 42);
+    expect(profile.plan, 'Plan 4 sesiones');
+    expect(profile.weeklyAttendanceText, '1/4');
+    expect(profile.weeklyAttendancePercent, 25);
+    expect(profile.monthlyAttendanceText, '5/16');
+    expect(profile.monthlyAttendancePercent, 31);
   });
 
   test('returns null when the user has no student profile', () {

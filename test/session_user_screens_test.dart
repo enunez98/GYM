@@ -29,9 +29,9 @@ void main() {
     );
 
     expect(find.text('Hola, Felipe Durán 👋'), findsOneWidget);
-    expect(find.text('Plan: Plan 3 sesiones'), findsOneWidget);
-    expect(find.text('1/3'), findsOneWidget);
-    expect(find.text('5/12'), findsOneWidget);
+    expect(find.text('Plan: Plan 4 sesiones'), findsOneWidget);
+    expect(find.text('1/4'), findsOneWidget);
+    expect(find.text('5/16'), findsOneWidget);
     expect(find.text('18'), findsOneWidget);
   });
 
@@ -57,7 +57,7 @@ void main() {
     expect(find.text('Felipe Durán'), findsOneWidget);
     expect(find.text('+569 1234 5678 · RUT: 111111111'), findsOneWidget);
     expect(find.text('Mi plan'), findsOneWidget);
-    expect(find.text('Plan 3 sesiones'), findsOneWidget);
+    expect(find.text('Plan 4 sesiones'), findsOneWidget);
     expect(find.text('04-08-2026'), findsOneWidget);
     expect(find.text('Activo'), findsOneWidget);
   });

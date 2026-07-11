@@ -5,18 +5,19 @@ import '../../../core/widgets/screen_header.dart';
 import '../../../core/widgets/status_chip.dart';
 import '../../../models/demo_exercise.dart';
 import '../../../models/routine_models.dart';
-import '../../../services/imported_routine_store.dart';
+import '../../../services/demo_student_profile_service.dart';
+import '../../../services/session_store.dart';
+import '../../../services/student_routine_service.dart';
 
 class WorkoutScreen extends StatelessWidget {
   const WorkoutScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final importedSession = ImportedRoutineStore.sessions.isNotEmpty
-        ? ImportedRoutineStore.sessions.first
-        : null;
-
-    final hasImportedWorkout = importedSession != null;
+    final user = SessionStore.currentUser;
+    final profile = DemoStudentProfileService.getByUserId(user?.id);
+    final assignedSession = StudentRoutineService.getCurrentSession(profile);
+    final hasAssignedWorkout = assignedSession != null;
 
     final exercises = [
       DemoExercise(
@@ -75,8 +76,8 @@ class WorkoutScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            hasImportedWorkout
-                                ? importedSession.session
+                            hasAssignedWorkout
+                                ? assignedSession.session
                                 : 'Semana 2 - Ordinario',
                             style: TextStyle(color: Colors.black54),
                           ),
@@ -85,8 +86,8 @@ class WorkoutScreen extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: Text(
-                                  hasImportedWorkout
-                                      ? importedSession.title
+                                  hasAssignedWorkout
+                                      ? assignedSession.title
                                       : 'Sesión 1',
                                   style: const TextStyle(
                                     fontSize: 26,
@@ -95,13 +96,13 @@ class WorkoutScreen extends StatelessWidget {
                                 ),
                               ),
                               StatusChip(
-                                text: hasImportedWorkout
+                                text: hasAssignedWorkout
                                     ? 'Excel'
                                     : 'Pendiente',
-                                background: hasImportedWorkout
+                                background: hasAssignedWorkout
                                     ? const Color(0xFFDFF9EA)
                                     : const Color(0xFFFFF2D9),
-                                textColor: hasImportedWorkout
+                                textColor: hasAssignedWorkout
                                     ? const Color(0xFF12985C)
                                     : const Color(0xFFD98200),
                               ),
@@ -109,8 +110,8 @@ class WorkoutScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 6),
                           Text(
-                            hasImportedWorkout
-                                ? '${importedSession.exercises.length} ejercicios importados'
+                            hasAssignedWorkout
+                                ? '${assignedSession.exercises.length} ejercicios importados'
                                 : 'Pecho - Tríceps',
                             style: TextStyle(color: Colors.black54),
                           ),
@@ -133,8 +134,8 @@ class WorkoutScreen extends StatelessWidget {
                           const SizedBox(width: 10),
                           Expanded(
                             child: Text(
-                              hasImportedWorkout
-                                  ? 'Esta clase viene desde la planificación Excel cargada por el profesor.'
+                              hasAssignedWorkout
+                                  ? 'Esta clase corresponde al plan del alumno y viene desde la planificación cargada por el admin.'
                                   : 'Debes completar esta sesión para avanzar a la siguiente clase.',
                               style: const TextStyle(
                                 color: Color(0xFF1E3A8A),
@@ -146,15 +147,15 @@ class WorkoutScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 14),
-                    if (hasImportedWorkout)
+                    if (hasAssignedWorkout)
                       for (
                         int i = 0;
-                        i < importedSession.exercises.length;
+                        i < assignedSession.exercises.length;
                         i++
                       ) ...[
                         _ImportedWorkoutExerciseCard(
                           number: i + 1,
-                          exercise: importedSession.exercises[i],
+                          exercise: assignedSession.exercises[i],
                         ),
                         const SizedBox(height: 14),
                       ]

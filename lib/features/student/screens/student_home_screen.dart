@@ -4,9 +4,9 @@ import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/info_row.dart';
 import '../../../core/widgets/metric_card.dart';
 import '../../../core/widgets/status_chip.dart';
-import '../../../services/imported_routine_store.dart';
 import '../../../services/demo_student_profile_service.dart';
 import '../../../services/session_store.dart';
+import '../../../services/student_routine_service.dart';
 
 class StudentHomeScreen extends StatelessWidget {
   final VoidCallback onStartWorkout;
@@ -199,17 +199,16 @@ class _NextWorkoutCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final importedSession = ImportedRoutineStore.sessions.isNotEmpty
-        ? ImportedRoutineStore.sessions.first
-        : null;
-
-    final sessionTitle = importedSession != null
-        ? importedSession.title
-        : 'Sesión 1';
-
-    final sessionSubtitle = importedSession != null
-        ? '${importedSession.session} · ${importedSession.exercises.length} ejercicios'
-        : 'Pecho - Tríceps';
+    final user = SessionStore.currentUser;
+    final profile = DemoStudentProfileService.getByUserId(user?.id);
+    final assignedSession = StudentRoutineService.getCurrentSession(profile);
+    final hasAssignedRoutine = assignedSession != null;
+    final sessionTitle = hasAssignedRoutine
+        ? assignedSession.title
+        : 'Sesión pendiente';
+    final sessionSubtitle = hasAssignedRoutine
+        ? '${assignedSession.session} · ${assignedSession.exercises.length} ejercicios'
+        : 'Aún no hay rutina asignada para este plan';
 
     return AppCard(
       child: Column(
@@ -234,14 +233,16 @@ class _NextWorkoutCard extends StatelessWidget {
               ),
             ],
           ),
-          if (importedSession != null) ...[
-            const SizedBox(height: 10),
-            StatusChip(
-              text: 'Desde Excel',
-              background: const Color(0xFFDFF9EA),
-              textColor: const Color(0xFF12985C),
-            ),
-          ],
+          const SizedBox(height: 10),
+          StatusChip(
+            text: hasAssignedRoutine ? 'Rutina asignada' : 'Sin rutina',
+            background: hasAssignedRoutine
+                ? const Color(0xFFDFF9EA)
+                : const Color(0xFFFFF2D9),
+            textColor: hasAssignedRoutine
+                ? const Color(0xFF12985C)
+                : const Color(0xFFD98200),
+          ),
           const SizedBox(height: 18),
           SizedBox(
             width: double.infinity,
@@ -254,7 +255,7 @@ class _NextWorkoutCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(14),
                 ),
               ),
-              onPressed: onStartWorkout,
+              onPressed: hasAssignedRoutine ? onStartWorkout : null,
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
