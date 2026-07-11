@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/widgets/app_card.dart';
+import '../../../core/widgets/info_row.dart';
 import '../../../core/widgets/logout_option.dart';
+import '../../../services/demo_student_profile_service.dart';
 import '../../../services/session_store.dart';
 
 import '../../auth/login_screen.dart';
@@ -21,8 +23,12 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = SessionStore.currentUser;
-    final userName = user?.name ?? 'Alumno';
-    final userRut = user?.rut ?? '-';
+    final profile = DemoStudentProfileService.getByUserId(user?.id);
+    final userName = profile?.name ?? user?.name ?? 'Alumno';
+    final userRut = profile?.rut ?? user?.rut ?? '-';
+    final phone = profile?.phone ?? '-';
+    final plan = profile?.plan ?? 'Plan no asignado';
+    final endDate = profile?.endDate ?? '-';
 
     return Container(
       color: const Color(0xFF06111F),
@@ -46,7 +52,7 @@ class ProfileScreen extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              'RUT: $userRut',
+              '$phone · RUT: $userRut',
               style: const TextStyle(color: Colors.white70),
             ),
             const SizedBox(height: 24),
@@ -60,6 +66,37 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 child: ListView(
                   children: [
+                    AppCard(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Mi plan',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 14),
+                          InfoRow(
+                            icon: Icons.fitness_center,
+                            label: 'Plan',
+                            value: plan,
+                          ),
+                          InfoRow(
+                            icon: Icons.event_available,
+                            label: 'Vencimiento',
+                            value: endDate,
+                          ),
+                          InfoRow(
+                            icon: Icons.verified_user_outlined,
+                            label: 'Estado',
+                            value: profile?.status ?? 'Activo',
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 10),
                     const _ProfileOption(
                       icon: Icons.person_outline,
                       title: 'Información personal',

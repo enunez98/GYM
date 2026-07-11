@@ -29,11 +29,20 @@ void main() {
     );
 
     expect(find.text('Hola, Felipe Durán 👋'), findsOneWidget);
+    expect(find.text('Plan: Plan 3 sesiones'), findsOneWidget);
+    expect(find.text('1/3'), findsOneWidget);
+    expect(find.text('5/12'), findsOneWidget);
+    expect(find.text('18'), findsOneWidget);
   });
 
   testWidgets('student profile uses the logged-in name and RUT', (
     tester,
   ) async {
+    tester.view.physicalSize = const Size(1440, 1000);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
     SessionStore.signIn(
       const AppUser(
         id: 'student_001',
@@ -46,7 +55,11 @@ void main() {
     await tester.pumpWidget(const MaterialApp(home: ProfileScreen()));
 
     expect(find.text('Felipe Durán'), findsOneWidget);
-    expect(find.text('RUT: 111111111'), findsOneWidget);
+    expect(find.text('+569 1234 5678 · RUT: 111111111'), findsOneWidget);
+    expect(find.text('Mi plan'), findsOneWidget);
+    expect(find.text('Plan 3 sesiones'), findsOneWidget);
+    expect(find.text('04-08-2026'), findsOneWidget);
+    expect(find.text('Activo'), findsOneWidget);
   });
 
   testWidgets('admin panel welcomes the logged-in administrator', (

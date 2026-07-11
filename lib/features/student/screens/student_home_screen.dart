@@ -5,6 +5,7 @@ import '../../../core/widgets/info_row.dart';
 import '../../../core/widgets/metric_card.dart';
 import '../../../core/widgets/status_chip.dart';
 import '../../../services/imported_routine_store.dart';
+import '../../../services/demo_student_profile_service.dart';
 import '../../../services/session_store.dart';
 
 class StudentHomeScreen extends StatelessWidget {
@@ -54,7 +55,10 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = SessionStore.currentUser;
-    final userName = user?.name ?? 'Alumno';
+    final profile = DemoStudentProfileService.getByUserId(user?.id);
+    final userName = profile?.name ?? user?.name ?? 'Alumno';
+    final plan = profile?.plan ?? 'Plan no asignado';
+    final status = profile?.status ?? 'Activo';
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
@@ -79,17 +83,17 @@ class _Header extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-                const Text(
-                  'Plan: 3 sesiones por semana',
-                  style: TextStyle(color: Colors.white70, fontSize: 13),
+                Text(
+                  'Plan: $plan',
+                  style: const TextStyle(color: Colors.white70, fontSize: 13),
                 ),
               ],
             ),
           ),
           StatusChip(
-            text: 'Activo',
-            background: Color(0xFF173D35),
-            textColor: Color(0xFF7CFFC4),
+            text: status,
+            background: const Color(0xFF173D35),
+            textColor: const Color(0xFF7CFFC4),
           ),
         ],
       ),
@@ -102,6 +106,11 @@ class _WeekCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = SessionStore.currentUser;
+    final profile = DemoStudentProfileService.getByUserId(user?.id);
+    final weekLabel = profile?.currentWeekLabel ?? 'Semana actual';
+    final weekDates = profile?.currentWeekDates ?? '-';
+
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,10 +119,13 @@ class _WeekCard extends StatelessWidget {
           const SizedBox(height: 6),
           Row(
             children: [
-              const Expanded(
+              Expanded(
                 child: Text(
-                  'Semana 2 - Ordinario',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  weekLabel,
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               StatusChip(
@@ -124,14 +136,11 @@ class _WeekCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          const Row(
+          Row(
             children: [
-              Icon(Icons.calendar_month, size: 17, color: Colors.black45),
-              SizedBox(width: 6),
-              Text(
-                '06 Jul - 12 Jul 2026',
-                style: TextStyle(color: Colors.black54),
-              ),
+              const Icon(Icons.calendar_month, size: 17, color: Colors.black45),
+              const SizedBox(width: 6),
+              Text(weekDates, style: const TextStyle(color: Colors.black54)),
             ],
           ),
         ],
@@ -145,28 +154,36 @@ class _AttendanceCards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = SessionStore.currentUser;
+    final profile = DemoStudentProfileService.getByUserId(user?.id);
+    final weeklyText = profile?.weeklyAttendanceText ?? '0/0';
+    final weeklyPercent = profile?.weeklyAttendancePercent ?? 0;
+    final monthlyText = profile?.monthlyAttendanceText ?? '0/0';
+    final monthlyPercent = profile?.monthlyAttendancePercent ?? 0;
+    final daysRemaining = profile?.daysRemaining ?? 0;
+
     return Row(
-      children: const [
+      children: [
         Expanded(
           child: MetricCard(
             title: 'Asistencia semanal',
-            value: '1/3',
-            subtitle: '33%',
+            value: weeklyText,
+            subtitle: '$weeklyPercent%',
           ),
         ),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         Expanded(
           child: MetricCard(
             title: 'Asistencia mensual',
-            value: '5/12',
-            subtitle: '42%',
+            value: monthlyText,
+            subtitle: '$monthlyPercent%',
           ),
         ),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         Expanded(
           child: MetricCard(
             title: 'Días restantes',
-            value: '18',
+            value: '$daysRemaining',
             subtitle: 'días',
           ),
         ),
