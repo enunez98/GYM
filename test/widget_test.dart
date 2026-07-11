@@ -14,7 +14,10 @@ void main() {
     await tester.pumpWidget(const GymApp());
 
     expect(find.text('GYM Pro'), findsOneWidget);
-    expect(find.text('Entrar como Alumno'), findsOneWidget);
-    expect(find.text('Entrar como Profesor'), findsOneWidget);
+    expect(find.text('Iniciar sesión'), findsOneWidget);
+    expect(find.text('RUT'), findsOneWidget);
+    expect(find.text('Contraseña'), findsOneWidget);
+    expect(find.text('Demo alumno'), findsOneWidget);
+    expect(find.text('Demo admin'), findsOneWidget);
   });
 }

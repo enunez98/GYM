@@ -1,17 +1,85 @@
 import 'package:flutter/material.dart';
 
+import '../../models/app_user.dart';
+import '../../services/demo_auth_service.dart';
+import '../../services/session_store.dart';
 import '../student/screens/home_shell.dart';
 import '../teacher/screens/teacher_dashboard_screen.dart';
-import '../admin/screens/admin_dashboard_screen.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
-  void _goTo(BuildContext context, Widget screen) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => screen),
-    );
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final rutController = TextEditingController();
+  final passwordController = TextEditingController();
+  bool isLoading = false;
+  bool obscurePassword = true;
+
+  @override
+  void dispose() {
+    rutController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> login() async {
+    final rut = rutController.text.trim();
+    final password = passwordController.text.trim();
+
+    if (rut.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Ingresa RUT y contraseña')));
+      return;
+    }
+
+    setState(() => isLoading = true);
+
+    try {
+      final user = await DemoAuthService.login(rut: rut, password: password);
+      SessionStore.signIn(user);
+
+      if (!mounted) return;
+
+      final Widget destination = user.role == UserRole.student
+          ? const HomeShell()
+          : const TeacherDashboardScreen();
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => destination),
+      );
+    } on AuthException catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(e.message)));
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No se pudo iniciar sesión')),
+      );
+    } finally {
+      if (mounted) setState(() => isLoading = false);
+    }
+  }
+
+  void fillStudentDemo() {
+    setState(() {
+      rutController.text = '11.111.111-1';
+      passwordController.text = '1234';
+    });
+  }
+
+  void fillAdminDemo() {
+    setState(() {
+      rutController.text = '22.222.222-2';
+      passwordController.text = '1234';
+    });
   }
 
   @override
@@ -44,7 +112,7 @@ class LoginScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 const Text(
-                  'Gestión de alumnos, rutinas y progreso',
+                  'Ingresa con tu RUT y contraseña',
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.white70, fontSize: 15),
                 ),
@@ -60,7 +128,7 @@ class LoginScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'Selecciona un perfil',
+                        'Iniciar sesión',
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
@@ -68,105 +136,122 @@ class LoginScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 6),
                       const Text(
-                        'Entrada de prueba antes de conectar Firebase.',
+                        'La app identificará automáticamente si eres alumno o admin.',
                         style: TextStyle(color: Colors.black54),
                       ),
                       const SizedBox(height: 18),
-                      _RoleButton(
-                        icon: Icons.person,
-                        title: 'Entrar como Alumno',
-                        subtitle:
-                            'Dashboard, entrenamiento, progreso y corporal',
-                        color: const Color(0xFF20B2AA),
-                        onTap: () => _goTo(context, const HomeShell()),
+                      TextField(
+                        controller: rutController,
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.next,
+                        decoration: InputDecoration(
+                          labelText: 'RUT',
+                          hintText: 'Ej: 11.111.111-1',
+                          prefixIcon: const Icon(Icons.badge_outlined),
+                          filled: true,
+                          fillColor: const Color(0xFFF6F8FA),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
                       ),
                       const SizedBox(height: 12),
-                      _RoleButton(
-                        icon: Icons.sports,
-                        title: 'Entrar como Profesor',
-                        subtitle: 'Alumnos, rutinas, pesajes y asistencia',
-                        color: const Color(0xFF2563EB),
-                        onTap: () =>
-                            _goTo(context, const TeacherDashboardScreen()),
+                      TextField(
+                        controller: passwordController,
+                        obscureText: obscurePassword,
+                        textInputAction: TextInputAction.done,
+                        onSubmitted: (_) => login(),
+                        decoration: InputDecoration(
+                          labelText: 'Contraseña',
+                          hintText: 'Ingresa tu contraseña',
+                          prefixIcon: const Icon(Icons.lock_outline),
+                          suffixIcon: IconButton(
+                            onPressed: () => setState(
+                              () => obscurePassword = !obscurePassword,
+                            ),
+                            icon: Icon(
+                              obscurePassword
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined,
+                            ),
+                          ),
+                          filled: true,
+                          fillColor: const Color(0xFFF6F8FA),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 18),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 54,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF20B2AA),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                          ),
+                          onPressed: isLoading ? null : login,
+                          child: isLoading
+                              ? const SizedBox(
+                                  width: 22,
+                                  height: 22,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : const Text(
+                                  'Entrar',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFEFF6FF),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: const Text(
+                          'Usuarios demo:\nAlumno: 11.111.111-1 / 1234\nAdmin: 22.222.222-2 / 1234',
+                          style: TextStyle(
+                            color: Color(0xFF1E3A8A),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
                       const SizedBox(height: 12),
-                      _RoleButton(
-                        icon: Icons.admin_panel_settings,
-                        title: 'Entrar como Admin / Dueño',
-                        subtitle: 'Panel general del gimnasio',
-                        color: const Color(0xFF7C3AED),
-                        onTap: () =>
-                            _goTo(context, const AdminDashboardScreen()),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: fillStudentDemo,
+                              child: const Text('Demo alumno'),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: fillAdminDemo,
+                              child: const Text('Demo admin'),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
               ],
             ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _RoleButton extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final Color color;
-  final VoidCallback onTap;
-
-  const _RoleButton({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.color,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: const Color(0xFFF6F8FA),
-      borderRadius: BorderRadius.circular(18),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(18),
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(14),
-          child: Row(
-            children: [
-              CircleAvatar(
-                radius: 24,
-                backgroundColor: color.withOpacity(0.12),
-                child: Icon(icon, color: color),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                    const SizedBox(height: 3),
-                    Text(
-                      subtitle,
-                      style: const TextStyle(
-                        color: Colors.black54,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const Icon(Icons.chevron_right, color: Colors.black38),
-            ],
           ),
         ),
       ),

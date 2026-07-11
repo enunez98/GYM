@@ -5,6 +5,7 @@ import '../../../core/widgets/logout_option.dart';
 import '../../../core/widgets/metric_card.dart';
 import '../../../core/widgets/screen_header.dart';
 import '../../../core/widgets/teacher_action_row.dart';
+import '../../../services/session_store.dart';
 
 import '../../auth/login_screen.dart';
 
@@ -12,6 +13,8 @@ class AdminDashboardScreen extends StatelessWidget {
   const AdminDashboardScreen({super.key});
 
   void _logout(BuildContext context) {
+    SessionStore.signOut();
+
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => const LoginScreen()),

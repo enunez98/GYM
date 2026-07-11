@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/logout_option.dart';
+import '../../../services/session_store.dart';
 
 import '../../auth/login_screen.dart';
 
@@ -9,6 +10,8 @@ class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   void _logout(BuildContext context) {
+    SessionStore.signOut();
+
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => const LoginScreen()),
