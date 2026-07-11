@@ -17,9 +17,7 @@ class GymApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'Arial',
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF20B2AA),
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF20B2AA)),
         scaffoldBackgroundColor: const Color(0xFFF6F8FA),
         useMaterial3: true,
       ),
@@ -70,10 +68,7 @@ class LoginScreen extends StatelessWidget {
                 const Text(
                   'Gestión de alumnos, rutinas y progreso',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 15,
-                  ),
+                  style: TextStyle(color: Colors.white70, fontSize: 15),
                 ),
                 const SizedBox(height: 34),
                 Container(
@@ -228,10 +223,7 @@ class _HomeShellState extends State<HomeShell> {
     ];
 
     return Scaffold(
-      body: IndexedStack(
-        index: currentIndex,
-        children: pages,
-      ),
+      body: IndexedStack(index: currentIndex, children: pages),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,
         onTap: changeTab,
@@ -273,10 +265,7 @@ class _HomeShellState extends State<HomeShell> {
 class StudentHomeScreen extends StatelessWidget {
   final VoidCallback onStartWorkout;
 
-  const StudentHomeScreen({
-    super.key,
-    required this.onStartWorkout,
-  });
+  const StudentHomeScreen({super.key, required this.onStartWorkout});
 
   @override
   Widget build(BuildContext context) {
@@ -292,9 +281,7 @@ class StudentHomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 decoration: const BoxDecoration(
                   color: Color(0xFFF6F8FA),
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(28),
-                  ),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                 ),
                 child: ListView(
                   children: [
@@ -369,9 +356,7 @@ class WorkoutScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 decoration: const BoxDecoration(
                   color: Color(0xFFF6F8FA),
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(28),
-                  ),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                 ),
                 child: ListView(
                   children: [
@@ -435,10 +420,7 @@ class WorkoutScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 14),
                     for (int i = 0; i < exercises.length; i++) ...[
-                      _ExerciseCard(
-                        number: i + 1,
-                        exercise: exercises[i],
-                      ),
+                      _ExerciseCard(number: i + 1, exercise: exercises[i]),
                       const SizedBox(height: 14),
                     ],
                     SizedBox(
@@ -454,8 +436,9 @@ class WorkoutScreen extends StatelessWidget {
                         onPressed: () {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content:
-                                  Text('Entrenamiento guardado correctamente'),
+                              content: Text(
+                                'Entrenamiento guardado correctamente',
+                              ),
                             ),
                           );
                         },
@@ -528,9 +511,7 @@ class ProgressScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 decoration: const BoxDecoration(
                   color: Color(0xFFF6F8FA),
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(28),
-                  ),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                 ),
                 child: ListView(
                   children: [
@@ -729,9 +710,7 @@ class BodyEvaluationScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 decoration: const BoxDecoration(
                   color: Color(0xFFF6F8FA),
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(28),
-                  ),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                 ),
                 child: ListView(
                   children: [
@@ -1012,11 +991,7 @@ class ProfileScreen extends StatelessWidget {
             const CircleAvatar(
               radius: 44,
               backgroundColor: Color(0xFF20B2AA),
-              child: Icon(
-                Icons.person,
-                color: Colors.white,
-                size: 48,
-              ),
+              child: Icon(Icons.person, color: Colors.white, size: 48),
             ),
             const SizedBox(height: 12),
             const Text(
@@ -1039,9 +1014,7 @@ class ProfileScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 decoration: const BoxDecoration(
                   color: Color(0xFFF6F8FA),
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(28),
-                  ),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                 ),
                 child: ListView(
                   children: [
@@ -1107,36 +1080,28 @@ class TeacherDashboardScreen extends StatelessWidget {
   void _openRegisterBodyEvaluation(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => const RegisterBodyEvaluationScreen(),
-      ),
+      MaterialPageRoute(builder: (_) => const RegisterBodyEvaluationScreen()),
     );
   }
 
   void _openStudentsList(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => const StudentsListScreen(),
-      ),
+      MaterialPageRoute(builder: (_) => const StudentsListScreen()),
     );
   }
 
   void _openWeeklyRoutine(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => const WeeklyRoutineScreen(),
-      ),
+      MaterialPageRoute(builder: (_) => const WeeklyRoutineScreen()),
     );
   }
 
   void _openImportRoutines(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => const ImportRoutinesScreen(),
-      ),
+      MaterialPageRoute(builder: (_) => const ImportRoutinesScreen()),
     );
   }
 
@@ -1158,9 +1123,7 @@ class TeacherDashboardScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 decoration: const BoxDecoration(
                   color: Color(0xFFF6F8FA),
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(28),
-                  ),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                 ),
                 child: ListView(
                   children: [
@@ -1213,7 +1176,8 @@ class TeacherDashboardScreen extends StatelessWidget {
                           _TeacherActionRow(
                             icon: Icons.groups,
                             title: 'Ver alumnos',
-                            subtitle: 'Listado, estado, plan y ficha del alumno',
+                            subtitle:
+                                'Listado, estado, plan y ficha del alumno',
                             onTap: () => _openStudentsList(context),
                           ),
                           _TeacherActionRow(
@@ -1350,9 +1314,7 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
                 padding: const EdgeInsets.all(16),
                 decoration: const BoxDecoration(
                   color: Color(0xFFF6F8FA),
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(28),
-                  ),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                 ),
                 child: ListView(
                   children: [
@@ -1621,9 +1583,7 @@ class _RegisterBodyEvaluationScreenState
                 padding: const EdgeInsets.all(16),
                 decoration: const BoxDecoration(
                   color: Color(0xFFF6F8FA),
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(28),
-                  ),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                 ),
                 child: ListView(
                   children: [
@@ -2001,9 +1961,7 @@ class StudentsListScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 decoration: const BoxDecoration(
                   color: Color(0xFFF6F8FA),
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(28),
-                  ),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                 ),
                 child: ListView(
                   children: [
@@ -2068,9 +2026,7 @@ class StudentsListScreen extends StatelessWidget {
 class _StudentListCard extends StatelessWidget {
   final DemoStudent student;
 
-  const _StudentListCard({
-    required this.student,
-  });
+  const _StudentListCard({required this.student});
 
   @override
   Widget build(BuildContext context) {
@@ -2155,10 +2111,7 @@ class _StudentListCard extends StatelessWidget {
 class StudentDetailScreen extends StatelessWidget {
   final DemoStudent student;
 
-  const StudentDetailScreen({
-    super.key,
-    required this.student,
-  });
+  const StudentDetailScreen({super.key, required this.student});
 
   @override
   Widget build(BuildContext context) {
@@ -2179,9 +2132,7 @@ class StudentDetailScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 decoration: const BoxDecoration(
                   color: Color(0xFFF6F8FA),
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(28),
-                  ),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                 ),
                 child: ListView(
                   children: [
@@ -2380,9 +2331,7 @@ class AdminDashboardScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 decoration: const BoxDecoration(
                   color: Color(0xFFF6F8FA),
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(28),
-                  ),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                 ),
                 child: ListView(
                   children: [
@@ -2524,10 +2473,7 @@ class _Header extends StatelessWidget {
                 SizedBox(height: 4),
                 Text(
                   'Plan: 3 sesiones por semana',
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 13,
-                  ),
+                  style: TextStyle(color: Colors.white70, fontSize: 13),
                 ),
               ],
             ),
@@ -2581,10 +2527,7 @@ class _ScreenHeader extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   subtitle,
-                  style: const TextStyle(
-                    color: Colors.white70,
-                    fontSize: 13,
-                  ),
+                  style: const TextStyle(color: Colors.white70, fontSize: 13),
                 ),
               ],
             ),
@@ -2640,10 +2583,7 @@ class _FormHeader extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   subtitle,
-                  style: const TextStyle(
-                    color: Colors.white70,
-                    fontSize: 13,
-                  ),
+                  style: const TextStyle(color: Colors.white70, fontSize: 13),
                 ),
               ],
             ),
@@ -2670,10 +2610,7 @@ class _WeekCard extends StatelessWidget {
               const Expanded(
                 child: Text(
                   'Semana 2 - Ordinario',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
               ),
               _StatusChip(
@@ -2738,9 +2675,7 @@ class _AttendanceCards extends StatelessWidget {
 class _NextWorkoutCard extends StatelessWidget {
   final VoidCallback onStartWorkout;
 
-  const _NextWorkoutCard({
-    required this.onStartWorkout,
-  });
+  const _NextWorkoutCard({required this.onStartWorkout});
 
   @override
   Widget build(BuildContext context) {
@@ -2752,20 +2687,14 @@ class _NextWorkoutCard extends StatelessWidget {
           const SizedBox(height: 6),
           const Text(
             'Sesión 1',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 4),
           const Row(
             children: [
               Icon(Icons.fitness_center, size: 17, color: Colors.black45),
               SizedBox(width: 6),
-              Text(
-                'Pecho - Tríceps',
-                style: TextStyle(color: Colors.black54),
-              ),
+              Text('Pecho - Tríceps', style: TextStyle(color: Colors.black54)),
             ],
           ),
           const SizedBox(height: 18),
@@ -2786,10 +2715,7 @@ class _NextWorkoutCard extends StatelessWidget {
                 children: [
                   Text(
                     'Comenzar entrenamiento',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(width: 10),
                   Icon(Icons.play_arrow),
@@ -2814,10 +2740,7 @@ class _BodySummaryCard extends StatelessWidget {
         children: [
           const Text(
             'Resumen rápido',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 14),
           _InfoRow(
@@ -2851,10 +2774,7 @@ class _ExerciseCard extends StatelessWidget {
   final int number;
   final DemoExercise exercise;
 
-  const _ExerciseCard({
-    required this.number,
-    required this.exercise,
-  });
+  const _ExerciseCard({required this.number, required this.exercise});
 
   @override
   Widget build(BuildContext context) {
@@ -2887,20 +2807,14 @@ class _ExerciseCard extends StatelessWidget {
               ),
               Text(
                 '${exercise.series.length} series',
-                style: const TextStyle(
-                  color: Colors.black54,
-                  fontSize: 12,
-                ),
+                style: const TextStyle(color: Colors.black54, fontSize: 12),
               ),
             ],
           ),
           const SizedBox(height: 4),
           Text(
             exercise.muscleGroup,
-            style: const TextStyle(
-              color: Colors.black54,
-              fontSize: 13,
-            ),
+            style: const TextStyle(color: Colors.black54, fontSize: 13),
           ),
           const SizedBox(height: 12),
           const Row(
@@ -3027,19 +2941,13 @@ class _BestSetRow extends StatelessWidget {
                   exercise,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
-                Text(
-                  result,
-                  style: const TextStyle(color: Colors.black54),
-                ),
+                Text(result, style: const TextStyle(color: Colors.black54)),
               ],
             ),
           ),
           Text(
             date,
-            style: const TextStyle(
-              color: Colors.black45,
-              fontSize: 12,
-            ),
+            style: const TextStyle(color: Colors.black45, fontSize: 12),
           ),
         ],
       ),
@@ -3071,10 +2979,7 @@ class _BodyMetricTile extends StatelessWidget {
           const SizedBox(height: 10),
           Text(
             title,
-            style: const TextStyle(
-              color: Colors.black54,
-              fontSize: 12,
-            ),
+            style: const TextStyle(color: Colors.black54, fontSize: 12),
           ),
           const SizedBox(height: 6),
           Row(
@@ -3112,10 +3017,7 @@ class _BodyControlRow extends StatelessWidget {
   final String label;
   final String value;
 
-  const _BodyControlRow({
-    required this.label,
-    required this.value,
-  });
+  const _BodyControlRow({required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -3133,10 +3035,7 @@ class _BodyControlRow extends StatelessWidget {
           Expanded(child: Text(label)),
           Text(
             value,
-            style: TextStyle(
-              color: color,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(color: color, fontWeight: FontWeight.bold),
           ),
         ],
       ),
@@ -3172,10 +3071,7 @@ class _BodyProgressRow extends StatelessWidget {
                   style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
               ),
-              Text(
-                value,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
+              Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
             ],
           ),
           const SizedBox(height: 8),
@@ -3223,11 +3119,7 @@ class _TeacherActionRow extends StatelessWidget {
         CircleAvatar(
           radius: 22,
           backgroundColor: const Color(0xFFE9F8F7),
-          child: Icon(
-            icon,
-            color: const Color(0xFF20B2AA),
-            size: 22,
-          ),
+          child: Icon(icon, color: const Color(0xFF20B2AA), size: 22),
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -3237,10 +3129,7 @@ class _TeacherActionRow extends StatelessWidget {
               Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
               Text(
                 subtitle,
-                style: const TextStyle(
-                  color: Colors.black54,
-                  fontSize: 12,
-                ),
+                style: const TextStyle(color: Colors.black54, fontSize: 12),
               ),
             ],
           ),
@@ -3298,20 +3187,19 @@ class _StudentMiniRow extends StatelessWidget {
                 Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
                 Text(
                   plan,
-                  style: const TextStyle(
-                    color: Colors.black54,
-                    fontSize: 12,
-                  ),
+                  style: const TextStyle(color: Colors.black54, fontSize: 12),
                 ),
               ],
             ),
           ),
           _StatusChip(
             text: status,
-            background:
-                isWarning ? const Color(0xFFFFF2D9) : const Color(0xFFDFF9EA),
-            textColor:
-                isWarning ? const Color(0xFFD98200) : const Color(0xFF12985C),
+            background: isWarning
+                ? const Color(0xFFFFF2D9)
+                : const Color(0xFFDFF9EA),
+            textColor: isWarning
+                ? const Color(0xFFD98200)
+                : const Color(0xFF12985C),
           ),
         ],
       ),
@@ -3346,13 +3234,13 @@ class _AdminAlertRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text(
+                  title,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
                 Text(
                   subtitle,
-                  style: const TextStyle(
-                    color: Colors.black54,
-                    fontSize: 12,
-                  ),
+                  style: const TextStyle(color: Colors.black54, fontSize: 12),
                 ),
               ],
             ),
@@ -3367,10 +3255,7 @@ class _ProfileOption extends StatelessWidget {
   final IconData icon;
   final String title;
 
-  const _ProfileOption({
-    required this.icon,
-    required this.title,
-  });
+  const _ProfileOption({required this.icon, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -3396,9 +3281,7 @@ class _ProfileOption extends StatelessWidget {
 class _LogoutOption extends StatelessWidget {
   final VoidCallback onTap;
 
-  const _LogoutOption({
-    required this.onTap,
-  });
+  const _LogoutOption({required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -3459,9 +3342,7 @@ class _AppTextField extends StatelessWidget {
         prefixIcon: Icon(icon),
         filled: true,
         fillColor: const Color(0xFFF6F8FA),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
       ),
     );
   }
@@ -3487,18 +3368,12 @@ class _MetricCard extends StatelessWidget {
           Text(
             title,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 11,
-              color: Colors.black54,
-            ),
+            style: const TextStyle(fontSize: 11, color: Colors.black54),
           ),
           const SizedBox(height: 8),
           Text(
             value,
-            style: const TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
           Text(
             subtitle,
@@ -3544,10 +3419,7 @@ class _InfoRow extends StatelessWidget {
               ),
             ),
           )
-        : Text(
-            value,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          );
+        : Text(value, style: const TextStyle(fontWeight: FontWeight.bold));
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
@@ -3598,10 +3470,7 @@ class _Card extends StatelessWidget {
   final Widget child;
   final EdgeInsets padding;
 
-  const _Card({
-    required this.child,
-    this.padding = const EdgeInsets.all(16),
-  });
+  const _Card({required this.child, this.padding = const EdgeInsets.all(16)});
 
   @override
   Widget build(BuildContext context) {
@@ -3648,9 +3517,7 @@ class ProgressChartPainter extends CustomPainter {
       ..color = const Color(0xFF20B2AA)
       ..style = PaintingStyle.fill;
 
-    final gridTextPainter = TextPainter(
-      textDirection: TextDirection.ltr,
-    );
+    final gridTextPainter = TextPainter(textDirection: TextDirection.ltr);
 
     const leftPadding = 36.0;
     const topPadding = 10.0;
@@ -3674,10 +3541,7 @@ class ProgressChartPainter extends CustomPainter {
       final labelValue = (maxValue - ((maxValue - minValue) * i / 3)).round();
       gridTextPainter.text = TextSpan(
         text: '$labelValue',
-        style: const TextStyle(
-          color: Colors.black45,
-          fontSize: 11,
-        ),
+        style: const TextStyle(color: Colors.black45, fontSize: 11),
       );
       gridTextPainter.layout();
       gridTextPainter.paint(canvas, Offset(0, y - 7));
@@ -3732,7 +3596,11 @@ class WeeklyRoutineScreen extends StatefulWidget {
 }
 
 class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
-  String selectedPlan = 'Plan 3 sesiones';
+  String selectedPlan = ImportedRoutineStore.hasData
+      ? ImportedRoutineStore.plan
+      : 'Plan 3 sesiones';
+
+  String selectedWeek = 'Semana 1';
 
   final routines = {
     'Plan 2 sesiones': [
@@ -3750,7 +3618,11 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
         session: 'Sesión 2',
         title: 'Full body B',
         exercises: [
-          DemoRoutineExercise(name: 'Peso muerto rumano', series: 4, reps: '10'),
+          DemoRoutineExercise(
+            name: 'Peso muerto rumano',
+            series: 4,
+            reps: '10',
+          ),
           DemoRoutineExercise(name: 'Press militar', series: 4, reps: '8-10'),
           DemoRoutineExercise(name: 'Jalón al pecho', series: 4, reps: '10-12'),
           DemoRoutineExercise(name: 'Curl bíceps', series: 3, reps: '12'),
@@ -3762,10 +3634,26 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
         session: 'Sesión 1',
         title: 'Pecho - Tríceps',
         exercises: [
-          DemoRoutineExercise(name: 'Press banca plano', series: 4, reps: '8-10'),
-          DemoRoutineExercise(name: 'Press inclinado mancuernas', series: 4, reps: '10-12'),
-          DemoRoutineExercise(name: 'Aperturas en máquina', series: 3, reps: '12-15'),
-          DemoRoutineExercise(name: 'Extensión de tríceps', series: 3, reps: '10-12'),
+          DemoRoutineExercise(
+            name: 'Press banca plano',
+            series: 4,
+            reps: '8-10',
+          ),
+          DemoRoutineExercise(
+            name: 'Press inclinado mancuernas',
+            series: 4,
+            reps: '10-12',
+          ),
+          DemoRoutineExercise(
+            name: 'Aperturas en máquina',
+            series: 3,
+            reps: '12-15',
+          ),
+          DemoRoutineExercise(
+            name: 'Extensión de tríceps',
+            series: 3,
+            reps: '10-12',
+          ),
         ],
       ),
       DemoRoutineSession(
@@ -3784,7 +3672,11 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
         exercises: [
           DemoRoutineExercise(name: 'Sentadilla', series: 4, reps: '8-10'),
           DemoRoutineExercise(name: 'Prensa', series: 4, reps: '10-12'),
-          DemoRoutineExercise(name: 'Elevaciones laterales', series: 3, reps: '12-15'),
+          DemoRoutineExercise(
+            name: 'Elevaciones laterales',
+            series: 3,
+            reps: '12-15',
+          ),
           DemoRoutineExercise(name: 'Press hombro', series: 4, reps: '8-10'),
         ],
       ),
@@ -3794,7 +3686,11 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
         session: 'Sesión 1',
         title: 'Pecho',
         exercises: [
-          DemoRoutineExercise(name: 'Press banca plano', series: 4, reps: '8-10'),
+          DemoRoutineExercise(
+            name: 'Press banca plano',
+            series: 4,
+            reps: '8-10',
+          ),
           DemoRoutineExercise(name: 'Press inclinado', series: 4, reps: '10'),
           DemoRoutineExercise(name: 'Crossover', series: 3, reps: '12-15'),
         ],
@@ -3814,7 +3710,11 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
         exercises: [
           DemoRoutineExercise(name: 'Sentadilla', series: 4, reps: '8-10'),
           DemoRoutineExercise(name: 'Prensa', series: 4, reps: '10-12'),
-          DemoRoutineExercise(name: 'Extensión cuádriceps', series: 3, reps: '12-15'),
+          DemoRoutineExercise(
+            name: 'Extensión cuádriceps',
+            series: 3,
+            reps: '12-15',
+          ),
         ],
       ),
       DemoRoutineSession(
@@ -3822,7 +3722,11 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
         title: 'Hombros - Brazos',
         exercises: [
           DemoRoutineExercise(name: 'Press hombro', series: 4, reps: '8-10'),
-          DemoRoutineExercise(name: 'Elevaciones laterales', series: 3, reps: '12-15'),
+          DemoRoutineExercise(
+            name: 'Elevaciones laterales',
+            series: 3,
+            reps: '12-15',
+          ),
           DemoRoutineExercise(name: 'Curl bíceps', series: 3, reps: '10-12'),
           DemoRoutineExercise(name: 'Tríceps polea', series: 3, reps: '10-12'),
         ],
@@ -3830,9 +3734,39 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
     ],
   };
 
+  int getWeekNumber(String value) {
+    final match = RegExp(r'\d+').firstMatch(value);
+    if (match == null) return 0;
+    return int.tryParse(match.group(0) ?? '0') ?? 0;
+  }
+
+  List<String> get importedWeeks {
+    final weeks = ImportedRoutineStore.sessions
+        .map((session) => session.session)
+        .toSet()
+        .toList();
+
+    weeks.sort((a, b) => getWeekNumber(a).compareTo(getWeekNumber(b)));
+
+    return weeks;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final selectedSessions = routines[selectedPlan] ?? [];
+    final hasImportedRoutine = ImportedRoutineStore.hasData;
+    final weeks = importedWeeks;
+
+    if (hasImportedRoutine &&
+        weeks.isNotEmpty &&
+        !weeks.contains(selectedWeek)) {
+      selectedWeek = weeks.first;
+    }
+
+    final selectedSessions = hasImportedRoutine
+        ? ImportedRoutineStore.sessions
+              .where((session) => session.session == selectedWeek)
+              .toList()
+        : routines[selectedPlan] ?? [];
 
     return Scaffold(
       backgroundColor: const Color(0xFF06111F),
@@ -3851,77 +3785,145 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
                 padding: const EdgeInsets.all(16),
                 decoration: const BoxDecoration(
                   color: Color(0xFFF6F8FA),
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(28),
-                  ),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                 ),
                 child: ListView(
                   children: [
-                    _Card(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Seleccionar plan',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 14),
-                          DropdownButtonFormField<String>(
-                            value: selectedPlan,
-                            decoration: InputDecoration(
-                              labelText: 'Plan',
-                              prefixIcon: const Icon(Icons.assignment),
-                              filled: true,
-                              fillColor: const Color(0xFFF6F8FA),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(14),
+                    if (hasImportedRoutine) ...[
+                      _Card(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Rutina importada desde Excel',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                            items: const [
-                              DropdownMenuItem(
-                                value: 'Plan 2 sesiones',
-                                child: Text('Plan 2 sesiones'),
+                            const SizedBox(height: 6),
+                            Text(
+                              '${ImportedRoutineStore.plan} · ${ImportedRoutineStore.sessions.length} sesiones',
+                              style: const TextStyle(color: Colors.black54),
+                            ),
+                          ],
+                        ),
+                      ),
+                      if (weeks.isNotEmpty) ...[
+                        const SizedBox(height: 14),
+                        _Card(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Seleccionar semana',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                              DropdownMenuItem(
-                                value: 'Plan 3 sesiones',
-                                child: Text('Plan 3 sesiones'),
-                              ),
-                              DropdownMenuItem(
-                                value: 'Plan 4 sesiones',
-                                child: Text('Plan 4 sesiones'),
+                              const SizedBox(height: 14),
+                              DropdownButtonFormField<String>(
+                                value: selectedWeek,
+                                decoration: InputDecoration(
+                                  labelText: 'Semana',
+                                  prefixIcon: const Icon(Icons.calendar_month),
+                                  filled: true,
+                                  fillColor: const Color(0xFFF6F8FA),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(14),
+                                  ),
+                                ),
+                                items: weeks
+                                    .map(
+                                      (week) => DropdownMenuItem(
+                                        value: week,
+                                        child: Text(week),
+                                      ),
+                                    )
+                                    .toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedWeek = value ?? weeks.first;
+                                  });
+                                },
                               ),
                             ],
-                            onChanged: (value) {
-                              setState(() {
-                                selectedPlan = value ?? 'Plan 3 sesiones';
-                              });
-                            },
                           ),
-                        ],
+                        ),
+                      ],
+                      const SizedBox(height: 14),
+                    ],
+                    if (!hasImportedRoutine)
+                      _Card(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Seleccionar plan',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 14),
+                            DropdownButtonFormField<String>(
+                              value: selectedPlan,
+                              decoration: InputDecoration(
+                                labelText: 'Plan',
+                                prefixIcon: const Icon(Icons.assignment),
+                                filled: true,
+                                fillColor: const Color(0xFFF6F8FA),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                              ),
+                              items: const [
+                                DropdownMenuItem(
+                                  value: 'Plan 2 sesiones',
+                                  child: Text('Plan 2 sesiones'),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'Plan 3 sesiones',
+                                  child: Text('Plan 3 sesiones'),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'Plan 4 sesiones',
+                                  child: Text('Plan 4 sesiones'),
+                                ),
+                              ],
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedPlan = value ?? 'Plan 3 sesiones';
+                                });
+                              },
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 14),
+                    if (!hasImportedRoutine) const SizedBox(height: 14),
                     _Card(
                       child: Row(
                         children: [
-                          const Expanded(
+                          Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Semana 2 - Ordinario',
-                                  style: TextStyle(
+                                  hasImportedRoutine
+                                      ? selectedWeek
+                                      : 'Semana 2 - Ordinario',
+                                  style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 SizedBox(height: 4),
                                 Text(
-                                  '06 Jul - 12 Jul 2026',
-                                  style: TextStyle(color: Colors.black54),
+                                  hasImportedRoutine
+                                      ? 'Mostrando sesiones importadas para esta semana'
+                                      : '06 Jul - 12 Jul 2026',
+                                  style: const TextStyle(color: Colors.black54),
                                 ),
                               ],
                             ),
@@ -3939,6 +3941,40 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
                       _RoutineSessionCard(session: session),
                       const SizedBox(height: 14),
                     ],
+                    if (hasImportedRoutine) ...[
+                      const SizedBox(height: 4),
+                      SizedBox(
+                        height: 54,
+                        child: OutlinedButton.icon(
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Colors.red,
+                            side: const BorderSide(color: Colors.red),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              ImportedRoutineStore.clear();
+                              selectedPlan = 'Plan 3 sesiones';
+                              selectedWeek = 'Semana 1';
+                            });
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Rutina importada eliminada'),
+                              ),
+                            );
+                          },
+                          icon: const Icon(Icons.delete_outline),
+                          label: const Text(
+                            'Limpiar rutina importada',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+                    ],
                     const SizedBox(height: 24),
                   ],
                 ),
@@ -3954,9 +3990,7 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
 class _RoutineSessionCard extends StatelessWidget {
   final DemoRoutineSession session;
 
-  const _RoutineSessionCard({
-    required this.session,
-  });
+  const _RoutineSessionCard({required this.session});
 
   @override
   Widget build(BuildContext context) {
@@ -3964,26 +3998,16 @@ class _RoutineSessionCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            session.session,
-            style: const TextStyle(color: Colors.black54),
-          ),
+          Text(session.session, style: const TextStyle(color: Colors.black54)),
           const SizedBox(height: 4),
           Text(
             session.title,
-            style: const TextStyle(
-              fontSize: 21,
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 14),
           for (int i = 0; i < session.exercises.length; i++) ...[
-            _RoutineExerciseRow(
-              number: i + 1,
-              exercise: session.exercises[i],
-            ),
-            if (i < session.exercises.length - 1)
-              const Divider(height: 18),
+            _RoutineExerciseRow(number: i + 1, exercise: session.exercises[i]),
+            if (i < session.exercises.length - 1) const Divider(height: 18),
           ],
         ],
       ),
@@ -3995,10 +4019,7 @@ class _RoutineExerciseRow extends StatelessWidget {
   final int number;
   final DemoRoutineExercise exercise;
 
-  const _RoutineExerciseRow({
-    required this.number,
-    required this.exercise,
-  });
+  const _RoutineExerciseRow({required this.number, required this.exercise});
 
   @override
   Widget build(BuildContext context) {
@@ -4027,16 +4048,11 @@ class _RoutineExerciseRow extends StatelessWidget {
           children: [
             Text(
               '${exercise.series} series',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             Text(
               exercise.reps,
-              style: const TextStyle(
-                color: Colors.black54,
-                fontSize: 12,
-              ),
+              style: const TextStyle(color: Colors.black54, fontSize: 12),
             ),
           ],
         ),
@@ -4067,6 +4083,26 @@ class DemoRoutineExercise {
     required this.series,
     required this.reps,
   });
+}
+
+class ImportedRoutineStore {
+  static String plan = 'Plan 3 sesiones';
+  static List<DemoRoutineSession> sessions = [];
+
+  static bool get hasData => sessions.isNotEmpty;
+
+  static void save({
+    required String selectedPlan,
+    required List<DemoRoutineSession> importedSessions,
+  }) {
+    plan = selectedPlan;
+    sessions = List<DemoRoutineSession>.from(importedSessions);
+  }
+
+  static void clear() {
+    plan = 'Plan 3 sesiones';
+    sessions = [];
+  }
 }
 
 class ImportRoutinesScreen extends StatefulWidget {
@@ -4137,9 +4173,7 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
           extractedRoutinePreview = [];
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('El Excel no contiene hojas'),
-          ),
+          const SnackBar(content: Text('El Excel no contiene hojas')),
         );
         return;
       }
@@ -4161,9 +4195,7 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
           extractedRoutinePreview = [];
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('La hoja de planificación está vacía'),
-          ),
+          const SnackBar(content: Text('La hoja de planificación está vacía')),
         );
         return;
       }
@@ -4204,7 +4236,11 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
         },
       ];
       final parsedSessions = <DemoRoutineSession>[];
-      for (int blockIndex = 0; blockIndex < sessionHeaderRows.length; blockIndex++) {
+      for (
+        int blockIndex = 0;
+        blockIndex < sessionHeaderRows.length;
+        blockIndex++
+      ) {
         final startRow = sessionHeaderRows[blockIndex];
         final endRow = blockIndex + 1 < sessionHeaderRows.length
             ? sessionHeaderRows[blockIndex + 1]
@@ -4223,8 +4259,12 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
             if (exerciseName.isEmpty) continue;
             if (normalizeText(exerciseName).contains('medios')) continue;
             if (normalizeText(exerciseName).contains('sesion')) continue;
-            final seriesText = seriesCol < row.length ? cellToText(row[seriesCol]) : '';
-            final volumeText = volumeCol < row.length ? cellToText(row[volumeCol]) : '';
+            final seriesText = seriesCol < row.length
+                ? cellToText(row[seriesCol])
+                : '';
+            final volumeText = volumeCol < row.length
+                ? cellToText(row[volumeCol])
+                : '';
             final parsedSeries = int.tryParse(
               seriesText.replaceAll('.0', '').trim(),
             );
@@ -4258,7 +4298,10 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
               session.session,
               session.title,
               '${session.exercises.length} ejercicios',
-              session.exercises.take(3).map((exercise) => exercise.name).join(', '),
+              session.exercises
+                  .take(3)
+                  .map((exercise) => exercise.name)
+                  .join(', '),
             ],
           )
           .toList();
@@ -4266,7 +4309,10 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
         detectedSheetName = firstSheetName;
         detectedSheets = sheetNames.length;
         detectedRows = rows.length;
-        detectedColumnsCount = rows.fold<int>(0, (max, row) => row.length > max ? row.length : max);
+        detectedColumnsCount = rows.fold<int>(
+          0,
+          (max, row) => row.length > max ? row.length : max,
+        );
         detectedColumns = [
           'Formato matriz detectado',
           'Semanas',
@@ -4297,11 +4343,9 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
         detectedExercises = 0;
         extractedRoutinePreview = [];
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('No se pudo leer el Excel: $e'),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('No se pudo leer el Excel: $e')));
     }
   }
 
@@ -4325,9 +4369,7 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
 
     if (file == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No se seleccionó ningún archivo'),
-        ),
+        const SnackBar(content: Text('No se seleccionó ningún archivo')),
       );
       return;
     }
@@ -4336,9 +4378,7 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
 
     if (!fileName.toLowerCase().endsWith('.xlsx')) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('El archivo debe estar en formato .xlsx'),
-        ),
+        const SnackBar(content: Text('El archivo debe estar en formato .xlsx')),
       );
       return;
     }
@@ -4355,19 +4395,15 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
 
     readExcelPreview(bytes);
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Archivo seleccionado: $fileName'),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Archivo seleccionado: $fileName')));
   }
 
   void validateFile() {
     if (!fileSelected || selectedFileBytes == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Primero selecciona un archivo Excel'),
-        ),
+        const SnackBar(content: Text('Primero selecciona un archivo Excel')),
       );
       return;
     }
@@ -4379,9 +4415,7 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No se encontró la hoja PLANIFICACION'),
-        ),
+        const SnackBar(content: Text('No se encontró la hoja PLANIFICACION')),
       );
       return;
     }
@@ -4423,6 +4457,10 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
       );
       return;
     }
+    ImportedRoutineStore.save(
+      selectedPlan: selectedPlan,
+      importedSessions: extractedRoutinePreview,
+    );
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -4452,9 +4490,7 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
                 padding: const EdgeInsets.all(16),
                 decoration: const BoxDecoration(
                   color: Color(0xFFF6F8FA),
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(28),
-                  ),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                 ),
                 child: ListView(
                   children: [
@@ -4683,9 +4719,7 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
                             const SizedBox(height: 8),
                             const Text(
                               'Columnas encontradas',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(height: 8),
                             Wrap(
@@ -4741,7 +4775,11 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
                               ),
                             ),
                             const SizedBox(height: 14),
-                            for (int i = 0; i < extractedRoutinePreview.take(8).length; i++) ...[
+                            for (
+                              int i = 0;
+                              i < extractedRoutinePreview.take(8).length;
+                              i++
+                            ) ...[
                               Text(
                                 '${extractedRoutinePreview[i].session} · ${extractedRoutinePreview[i].title}',
                                 style: const TextStyle(
@@ -4751,8 +4789,7 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
                               ),
                               const SizedBox(height: 6),
                               Text(
-                                extractedRoutinePreview[i]
-                                    .exercises
+                                extractedRoutinePreview[i].exercises
                                     .take(4)
                                     .map((exercise) => exercise.name)
                                     .join(' | '),
@@ -4761,7 +4798,8 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
                                   fontSize: 12,
                                 ),
                               ),
-                              if (i < extractedRoutinePreview.take(8).length - 1)
+                              if (i <
+                                  extractedRoutinePreview.take(8).length - 1)
                                 const Divider(height: 18),
                             ],
                           ],
@@ -4882,10 +4920,7 @@ class _ImportColumnRow extends StatelessWidget {
   final String name;
   final String description;
 
-  const _ImportColumnRow({
-    required this.name,
-    required this.description,
-  });
+  const _ImportColumnRow({required this.name, required this.description});
 
   @override
   Widget build(BuildContext context) {
@@ -4907,10 +4942,7 @@ class _ImportColumnRow extends StatelessWidget {
           ),
           Text(
             description,
-            style: const TextStyle(
-              color: Colors.black54,
-              fontSize: 12,
-            ),
+            style: const TextStyle(color: Colors.black54, fontSize: 12),
           ),
         ],
       ),
@@ -4922,10 +4954,7 @@ class _ValidationRow extends StatelessWidget {
   final String label;
   final bool isOk;
 
-  const _ValidationRow({
-    required this.label,
-    required this.isOk,
-  });
+  const _ValidationRow({required this.label, required this.isOk});
 
   @override
   Widget build(BuildContext context) {
@@ -4971,9 +5000,5 @@ class DemoSet {
   final int kg;
   final int reps;
 
-  DemoSet({
-    required this.serie,
-    required this.kg,
-    required this.reps,
-  });
+  DemoSet({required this.serie, required this.kg, required this.reps});
 }
