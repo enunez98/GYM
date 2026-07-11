@@ -20,6 +20,10 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = SessionStore.currentUser;
+    final userName = user?.name ?? 'Alumno';
+    final userRut = user?.rut ?? '-';
+
     return Container(
       color: const Color(0xFF06111F),
       child: SafeArea(
@@ -32,18 +36,18 @@ class ProfileScreen extends StatelessWidget {
               child: Icon(Icons.person, color: Colors.white, size: 48),
             ),
             const SizedBox(height: 12),
-            const Text(
-              'Felipe Durán',
-              style: TextStyle(
+            Text(
+              userName,
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 4),
-            const Text(
-              '+569 1234 5678',
-              style: TextStyle(color: Colors.white70),
+            Text(
+              'RUT: $userRut',
+              style: const TextStyle(color: Colors.white70),
             ),
             const SizedBox(height: 24),
             Expanded(

@@ -64,14 +64,17 @@ class TeacherDashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = SessionStore.currentUser;
+    final userName = user?.name ?? 'Admin';
+
     return Scaffold(
       backgroundColor: const Color(0xFF06111F),
       body: SafeArea(
         child: Column(
           children: [
-            const ScreenHeader(
+            ScreenHeader(
               title: 'Panel Admin',
-              subtitle: 'Gestión de alumnos, rutinas y evaluaciones',
+              subtitle: 'Bienvenido, $userName',
               icon: Icons.sports,
             ),
             Expanded(

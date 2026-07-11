@@ -5,6 +5,7 @@ import '../../../core/widgets/info_row.dart';
 import '../../../core/widgets/metric_card.dart';
 import '../../../core/widgets/status_chip.dart';
 import '../../../services/imported_routine_store.dart';
+import '../../../services/session_store.dart';
 
 class StudentHomeScreen extends StatelessWidget {
   final VoidCallback onStartWorkout;
@@ -52,6 +53,9 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = SessionStore.currentUser;
+    final userName = user?.name ?? 'Alumno';
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
       child: Row(
@@ -62,20 +66,20 @@ class _Header extends StatelessWidget {
             child: Icon(Icons.person, color: Colors.white),
           ),
           const SizedBox(width: 14),
-          const Expanded(
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Hola, Felipe 👋',
-                  style: TextStyle(
+                  'Hola, $userName 👋',
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 23,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 4),
-                Text(
+                const SizedBox(height: 4),
+                const Text(
                   'Plan: 3 sesiones por semana',
                   style: TextStyle(color: Colors.white70, fontSize: 13),
                 ),
