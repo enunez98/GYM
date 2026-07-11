@@ -1,6 +1,7 @@
 import '../models/routine_models.dart';
 import '../models/student_profile.dart';
 import 'imported_routine_store.dart';
+import 'student_workout_progress_store.dart';
 
 class StudentRoutineService {
   static DemoRoutineSession? getCurrentSession(StudentProfile? profile) {
@@ -8,7 +9,38 @@ class StudentRoutineService {
 
     if (sessions.isEmpty) return null;
 
-    return sessions.first;
+    final currentIndex = StudentWorkoutProgressStore.getCurrentSessionIndex(
+      profile,
+      sessions.length,
+    );
+
+    if (currentIndex == -1) return null;
+
+    return sessions[currentIndex];
+  }
+
+  static int getCurrentSessionNumber(StudentProfile? profile) {
+    final sessions = getCurrentWeekSessions(profile);
+    if (sessions.isEmpty) return 0;
+
+    final currentIndex = StudentWorkoutProgressStore.getCurrentSessionIndex(
+      profile,
+      sessions.length,
+    );
+
+    if (currentIndex == -1) return sessions.length;
+    return currentIndex + 1;
+  }
+
+  static int getTotalSessionsForCurrentWeek(StudentProfile? profile) {
+    return getCurrentWeekSessions(profile).length;
+  }
+
+  static bool isCurrentWeekFinished(StudentProfile? profile) {
+    final sessions = getCurrentWeekSessions(profile);
+    if (sessions.isEmpty) return false;
+
+    return StudentWorkoutProgressStore.isWeekFinished(profile, sessions.length);
   }
 
   static List<DemoRoutineSession> getCurrentWeekSessions(

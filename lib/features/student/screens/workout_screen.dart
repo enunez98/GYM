@@ -8,16 +8,24 @@ import '../../../models/routine_models.dart';
 import '../../../services/demo_student_profile_service.dart';
 import '../../../services/session_store.dart';
 import '../../../services/student_routine_service.dart';
+import '../../../services/student_workout_progress_store.dart';
 
-class WorkoutScreen extends StatelessWidget {
+class WorkoutScreen extends StatefulWidget {
   const WorkoutScreen({super.key});
 
+  @override
+  State<WorkoutScreen> createState() => _WorkoutScreenState();
+}
+
+class _WorkoutScreenState extends State<WorkoutScreen> {
   @override
   Widget build(BuildContext context) {
     final user = SessionStore.currentUser;
     final profile = DemoStudentProfileService.getByUserId(user?.id);
+    final weekSessions = StudentRoutineService.getCurrentWeekSessions(profile);
     final assignedSession = StudentRoutineService.getCurrentSession(profile);
     final hasAssignedWorkout = assignedSession != null;
+    final weekFinished = weekSessions.isNotEmpty && assignedSession == null;
 
     final exercises = [
       DemoExercise(
@@ -76,7 +84,9 @@ class WorkoutScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            hasAssignedWorkout
+                            weekFinished
+                                ? 'Semana completada'
+                                : hasAssignedWorkout
                                 ? assignedSession.session
                                 : 'Semana 2 - Ordinario',
                             style: TextStyle(color: Colors.black54),
@@ -86,7 +96,9 @@ class WorkoutScreen extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: Text(
-                                  hasAssignedWorkout
+                                  weekFinished
+                                      ? 'Sin sesiones pendientes'
+                                      : hasAssignedWorkout
                                       ? assignedSession.title
                                       : 'Sesión 1',
                                   style: const TextStyle(
@@ -110,7 +122,9 @@ class WorkoutScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 6),
                           Text(
-                            hasAssignedWorkout
+                            weekFinished
+                                ? 'Todas las sesiones de esta semana ya fueron avanzadas'
+                                : hasAssignedWorkout
                                 ? '${assignedSession.exercises.length} ejercicios importados'
                                 : 'Pecho - Tríceps',
                             style: TextStyle(color: Colors.black54),
@@ -174,15 +188,22 @@ class WorkoutScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(14),
                           ),
                         ),
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                'Entrenamiento guardado correctamente',
-                              ),
-                            ),
-                          );
-                        },
+                        onPressed: hasAssignedWorkout
+                            ? () {
+                                StudentWorkoutProgressStore.completeCurrentSession(
+                                  profile,
+                                  weekSessions.length,
+                                );
+                                setState(() {});
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Entrenamiento guardado. Avanzaste a la siguiente sesión.',
+                                    ),
+                                  ),
+                                );
+                              }
+                            : null,
                         child: const Text(
                           'Guardar entrenamiento',
                           style: TextStyle(
@@ -203,11 +224,22 @@ class WorkoutScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(14),
                           ),
                         ),
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Sesión omitida')),
-                          );
-                        },
+                        onPressed: hasAssignedWorkout
+                            ? () {
+                                StudentWorkoutProgressStore.skipCurrentSession(
+                                  profile,
+                                  weekSessions.length,
+                                );
+                                setState(() {});
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Sesión omitida. Avanzaste sin sumar asistencia.',
+                                    ),
+                                  ),
+                                );
+                              }
+                            : null,
                         child: const Text(
                           'Omitir sesión',
                           style: TextStyle(

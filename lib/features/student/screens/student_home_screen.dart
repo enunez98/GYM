@@ -202,12 +202,23 @@ class _NextWorkoutCard extends StatelessWidget {
     final user = SessionStore.currentUser;
     final profile = DemoStudentProfileService.getByUserId(user?.id);
     final assignedSession = StudentRoutineService.getCurrentSession(profile);
+    final totalSessions = StudentRoutineService.getTotalSessionsForCurrentWeek(
+      profile,
+    );
+    final currentSessionNumber = StudentRoutineService.getCurrentSessionNumber(
+      profile,
+    );
+    final weekFinished = StudentRoutineService.isCurrentWeekFinished(profile);
     final hasAssignedRoutine = assignedSession != null;
-    final sessionTitle = hasAssignedRoutine
+    final sessionTitle = weekFinished
+        ? 'Semana completada'
+        : hasAssignedRoutine
         ? assignedSession.title
         : 'Sesión pendiente';
-    final sessionSubtitle = hasAssignedRoutine
-        ? '${assignedSession.session} · ${assignedSession.exercises.length} ejercicios'
+    final sessionSubtitle = weekFinished
+        ? 'Ya completaste u omitiste todas las sesiones de esta semana'
+        : hasAssignedRoutine
+        ? 'Sesión $currentSessionNumber de $totalSessions · ${assignedSession.exercises.length} ejercicios'
         : 'Aún no hay rutina asignada para este plan';
 
     return AppCard(
@@ -235,11 +246,15 @@ class _NextWorkoutCard extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           StatusChip(
-            text: hasAssignedRoutine ? 'Rutina asignada' : 'Sin rutina',
-            background: hasAssignedRoutine
+            text: weekFinished
+                ? 'Semana lista'
+                : hasAssignedRoutine
+                ? 'Rutina asignada'
+                : 'Sin rutina',
+            background: weekFinished || hasAssignedRoutine
                 ? const Color(0xFFDFF9EA)
                 : const Color(0xFFFFF2D9),
-            textColor: hasAssignedRoutine
+            textColor: weekFinished || hasAssignedRoutine
                 ? const Color(0xFF12985C)
                 : const Color(0xFFD98200),
           ),

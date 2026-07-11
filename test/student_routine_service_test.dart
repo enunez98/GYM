@@ -3,6 +3,7 @@ import 'package:gym_app/models/routine_models.dart';
 import 'package:gym_app/services/demo_student_profile_service.dart';
 import 'package:gym_app/services/imported_routine_store.dart';
 import 'package:gym_app/services/student_routine_service.dart';
+import 'package:gym_app/services/student_workout_progress_store.dart';
 
 void main() {
   final profile = DemoStudentProfileService.getByUserId('student_001');
@@ -22,7 +23,10 @@ void main() {
     exercises: [DemoRoutineExercise(name: 'Remo', series: 3, reps: '12')],
   );
 
-  tearDown(ImportedRoutineStore.clear);
+  tearDown(() {
+    ImportedRoutineStore.clear();
+    StudentWorkoutProgressStore.resetProgress(profile);
+  });
 
   test('assigns sessions matching the student plan and current week', () {
     ImportedRoutineStore.save(
@@ -34,6 +38,9 @@ void main() {
 
     expect(sessions, [weekTwoFirst, weekTwoSecond]);
     expect(StudentRoutineService.getCurrentSession(profile), weekTwoFirst);
+    expect(StudentRoutineService.getCurrentSessionNumber(profile), 1);
+    expect(StudentRoutineService.getTotalSessionsForCurrentWeek(profile), 2);
+    expect(StudentRoutineService.isCurrentWeekFinished(profile), isFalse);
     expect(StudentRoutineService.hasRoutineAssigned(profile), isTrue);
   });
 
