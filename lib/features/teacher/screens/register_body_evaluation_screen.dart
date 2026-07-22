@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/app_text_field.dart';
 import '../../../core/widgets/form_header.dart';
+import '../../../models/body_evaluation.dart';
+import '../../../services/body_evaluation_store.dart';
 
 class RegisterBodyEvaluationScreen extends StatefulWidget {
   const RegisterBodyEvaluationScreen({super.key});
@@ -52,24 +54,97 @@ class _RegisterBodyEvaluationScreenState
     super.dispose();
   }
 
-  void saveEvaluation() {
-    final weight = weightController.text.trim();
-    final bodyFat = bodyFatController.text.trim();
-    final muscle = muscleMassController.text.trim();
+  double parseDouble(String value) {
+    return double.tryParse(value.replaceAll(',', '.').trim()) ?? 0;
+  }
 
-    if (weight.isEmpty || bodyFat.isEmpty || muscle.isEmpty) {
+  int parseInt(String value) {
+    return int.tryParse(value.trim()) ?? 0;
+  }
+
+  DateTime parseDate(String value) {
+    final parts = value.trim().split(RegExp(r'[-/]'));
+    if (parts.length == 3) {
+      final day = int.tryParse(parts[0]);
+      final month = int.tryParse(parts[1]);
+      final year = int.tryParse(parts[2]);
+      if (day != null && month != null && year != null) {
+        return DateTime(year, month, day);
+      }
+    }
+    return DateTime.now();
+  }
+
+  ({String userId, String profileId}) studentIds(String name) {
+    return switch (name) {
+      'Camila Rojas' => (
+        userId: 'student_002',
+        profileId: 'student_profile_002',
+      ),
+      'Matías Soto' => (
+        userId: 'student_003',
+        profileId: 'student_profile_003',
+      ),
+      _ => (userId: 'student_001', profileId: 'student_profile_001'),
+    };
+  }
+
+  void saveEvaluation() {
+    final weight = parseDouble(weightController.text);
+    final bodyFatPercent = parseDouble(bodyFatController.text);
+    final muscleMass = parseDouble(muscleMassController.text);
+    final bodyScore = parseInt(scoreController.text);
+
+    if (weight <= 0 ||
+        bodyFatPercent <= 0 ||
+        muscleMass <= 0 ||
+        bodyScore <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Completa peso, grasa corporal y masa muscular'),
+          content: Text(
+            'Completa peso, grasa corporal, masa muscular y puntuación',
+          ),
         ),
       );
       return;
     }
 
+    final ids = studentIds(selectedStudent);
+    final bodyFatKg = parseDouble(fatKgController.text);
+    final waterPercent = parseDouble(waterController.text);
+    final evaluation = BodyEvaluation(
+      id: 'body_${DateTime.now().microsecondsSinceEpoch}',
+      userId: ids.userId,
+      studentProfileId: ids.profileId,
+      studentName: selectedStudent,
+      createdAt: parseDate(dateController.text),
+      bodyScore: bodyScore,
+      weightKg: weight,
+      bodyFatKg: bodyFatKg,
+      bodyFatPercent: bodyFatPercent,
+      muscleMassKg: muscleMass,
+      skeletalMuscleKg: parseDouble(skeletalMuscleController.text),
+      proteinKg: 0,
+      bodyWaterKg: weight * waterPercent / 100,
+      bodyWaterPercent: waterPercent,
+      bmi: parseDouble(imcController.text),
+      fatFreeMassKg: weight - bodyFatKg,
+      subcutaneousFatPercent: 0,
+      visceralFat: parseInt(visceralFatController.text),
+      smi: 0,
+      bodyAge: 0,
+      whr: 0,
+      basalMetabolicRate: parseInt(metabolismController.text),
+      targetWeightKg: parseDouble(targetWeightController.text),
+      weightControlKg: parseDouble(weightControlController.text),
+      fatControlKg: parseDouble(fatControlController.text),
+      muscleControlKg: parseDouble(muscleControlController.text),
+    );
+
+    BodyEvaluationStore.add(evaluation);
+
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Evaluación corporal guardada para $selectedStudent'),
-      ),
+      const SnackBar(content: Text('Evaluación corporal guardada')),
     );
 
     Navigator.pop(context);

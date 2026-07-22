@@ -4,12 +4,33 @@ import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/info_row.dart';
 import '../../../core/widgets/screen_header.dart';
 import '../../../core/widgets/status_chip.dart';
+import '../../../services/body_evaluation_store.dart';
+import '../../../services/session_store.dart';
 
 class BodyEvaluationScreen extends StatelessWidget {
   const BodyEvaluationScreen({super.key});
 
+  String _number(double value) {
+    if (value % 1 == 0) return value.toStringAsFixed(0);
+    return value.toStringAsFixed(1);
+  }
+
+  String _signed(double value) {
+    final prefix = value > 0 ? '+' : '';
+    return '$prefix${_number(value)}';
+  }
+
+  String _date(DateTime date) {
+    final day = date.day.toString().padLeft(2, '0');
+    final month = date.month.toString().padLeft(2, '0');
+    return '$day-$month-${date.year}';
+  }
+
   @override
   Widget build(BuildContext context) {
+    final user = SessionStore.currentUser;
+    final evaluation = BodyEvaluationStore.getLastByUserId(user?.id);
+
     return Container(
       color: const Color(0xFF06111F),
       child: SafeArea(
@@ -28,255 +49,308 @@ class BodyEvaluationScreen extends StatelessWidget {
                   color: Color(0xFFF6F8FA),
                   borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                 ),
-                child: ListView(
-                  children: [
-                    AppCard(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Última evaluación',
-                            style: TextStyle(color: Colors.black54),
-                          ),
-                          const SizedBox(height: 6),
-                          Row(
-                            children: [
-                              const Expanded(
-                                child: Text(
-                                  '26 May 2026',
+                child: evaluation == null
+                    ? ListView(
+                        children: const [
+                          AppCard(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Sin evaluación corporal',
                                   style: TextStyle(
                                     fontSize: 22,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                              ),
-                              StatusChip(
-                                text: 'Estándar',
-                                background: const Color(0xFFDFF9EA),
-                                textColor: const Color(0xFF12985C),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-                          const Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                '72',
-                                style: TextStyle(
-                                  fontSize: 54,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF20B2AA),
+                                SizedBox(height: 8),
+                                Text(
+                                  'Aún no tienes una evaluación corporal registrada.',
+                                  style: TextStyle(color: Colors.black54),
                                 ),
-                              ),
-                              SizedBox(width: 4),
-                              Padding(
-                                padding: EdgeInsets.only(bottom: 10),
-                                child: Text(
-                                  '/100 puntos',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.black54,
+                              ],
+                            ),
+                          ),
+                        ],
+                      )
+                    : ListView(
+                        children: [
+                          AppCard(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Última evaluación',
+                                  style: TextStyle(color: Colors.black54),
+                                ),
+                                const SizedBox(height: 6),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        _date(evaluation.createdAt),
+                                        style: const TextStyle(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    StatusChip(
+                                      text: 'Registrada',
+                                      background: const Color(0xFFDFF9EA),
+                                      textColor: const Color(0xFF12985C),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 16),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      '${evaluation.bodyScore}',
+                                      style: const TextStyle(
+                                        fontSize: 54,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xFF20B2AA),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    const Padding(
+                                      padding: EdgeInsets.only(bottom: 10),
+                                      child: Text(
+                                        '/100 puntos',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.black54,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 12),
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: LinearProgressIndicator(
+                                    value:
+                                        evaluation.bodyScore.clamp(0, 100) /
+                                        100,
+                                    minHeight: 12,
+                                    backgroundColor: const Color(0xFFE5E7EB),
+                                    color: const Color(0xFF20B2AA),
                                   ),
                                 ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 14),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: _BodyMetricTile(
+                                  icon: Icons.monitor_weight,
+                                  title: 'Peso',
+                                  value: _number(evaluation.weightKg),
+                                  unit: 'kg',
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: _BodyMetricTile(
+                                  icon: Icons.percent,
+                                  title: 'Grasa',
+                                  value: _number(evaluation.bodyFatPercent),
+                                  unit: '%',
+                                ),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 12),
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: const LinearProgressIndicator(
-                              value: 0.72,
-                              minHeight: 12,
-                              backgroundColor: Color(0xFFE5E7EB),
-                              color: Color(0xFF20B2AA),
+                          const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: _BodyMetricTile(
+                                  icon: Icons.accessibility_new,
+                                  title: 'Masa muscular',
+                                  value: _number(evaluation.muscleMassKg),
+                                  unit: 'kg',
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: _BodyMetricTile(
+                                  icon: Icons.water_drop_outlined,
+                                  title: 'Agua corporal',
+                                  value: _number(evaluation.bodyWaterPercent),
+                                  unit: '%',
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: _BodyMetricTile(
+                                  icon: Icons.health_and_safety_outlined,
+                                  title: 'IMC',
+                                  value: _number(evaluation.bmi),
+                                  unit: '',
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: _BodyMetricTile(
+                                  icon: Icons.local_fire_department_outlined,
+                                  title: 'Metabolismo',
+                                  value: '${evaluation.basalMetabolicRate}',
+                                  unit: 'kcal',
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 14),
+                          AppCard(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Control recomendado',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 14),
+                                _BodyControlRow(
+                                  label: 'Peso objetivo',
+                                  value:
+                                      '${_number(evaluation.targetWeightKg)} kg',
+                                ),
+                                _BodyControlRow(
+                                  label: 'Control de peso',
+                                  value:
+                                      '${_signed(evaluation.weightControlKg)} kg',
+                                ),
+                                _BodyControlRow(
+                                  label: 'Control de grasa',
+                                  value:
+                                      '${_signed(evaluation.fatControlKg)} kg',
+                                ),
+                                _BodyControlRow(
+                                  label: 'Control muscular',
+                                  value:
+                                      '${_signed(evaluation.muscleControlKg)} kg',
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 14),
-                    Row(
-                      children: const [
-                        Expanded(
-                          child: _BodyMetricTile(
-                            icon: Icons.monitor_weight,
-                            title: 'Peso',
-                            value: '70.0',
-                            unit: 'kg',
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        Expanded(
-                          child: _BodyMetricTile(
-                            icon: Icons.percent,
-                            title: 'Grasa',
-                            value: '21.7',
-                            unit: '%',
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: const [
-                        Expanded(
-                          child: _BodyMetricTile(
-                            icon: Icons.accessibility_new,
-                            title: 'Masa muscular',
-                            value: '51.2',
-                            unit: 'kg',
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        Expanded(
-                          child: _BodyMetricTile(
-                            icon: Icons.water_drop_outlined,
-                            title: 'Agua corporal',
-                            value: '57.4',
-                            unit: '%',
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: const [
-                        Expanded(
-                          child: _BodyMetricTile(
-                            icon: Icons.health_and_safety_outlined,
-                            title: 'IMC',
-                            value: '22.9',
-                            unit: '',
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        Expanded(
-                          child: _BodyMetricTile(
-                            icon: Icons.local_fire_department_outlined,
-                            title: 'Metabolismo',
-                            value: '1553',
-                            unit: 'kcal',
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 14),
-                    AppCard(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
-                            'Control recomendado',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                          const SizedBox(height: 14),
+                          AppCard(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Indicadores principales',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 14),
+                                _BodyProgressRow(
+                                  label: 'IMC',
+                                  value: _number(evaluation.bmi),
+                                  progress: (evaluation.bmi / 40).clamp(0, 1),
+                                  status: 'Registrado',
+                                ),
+                                _BodyProgressRow(
+                                  label: 'Grasa corporal',
+                                  value:
+                                      '${_number(evaluation.bodyFatPercent)}%',
+                                  progress: (evaluation.bodyFatPercent / 50)
+                                      .clamp(0, 1),
+                                  status: 'Registrado',
+                                ),
+                                _BodyProgressRow(
+                                  label: 'Masa muscular',
+                                  value:
+                                      '${_number(evaluation.muscleMassKg)} kg',
+                                  progress: (evaluation.muscleMassKg / 80)
+                                      .clamp(0, 1),
+                                  status: 'Registrado',
+                                ),
+                                _BodyProgressRow(
+                                  label: 'Agua corporal',
+                                  value:
+                                      '${_number(evaluation.bodyWaterPercent)}%',
+                                  progress: (evaluation.bodyWaterPercent / 100)
+                                      .clamp(0, 1),
+                                  status: 'Registrado',
+                                ),
+                              ],
                             ),
                           ),
-                          SizedBox(height: 14),
-                          _BodyControlRow(
-                            label: 'Peso objetivo',
-                            value: '67.5 kg',
-                          ),
-                          _BodyControlRow(
-                            label: 'Control de peso',
-                            value: '-2.5 kg',
-                          ),
-                          _BodyControlRow(
-                            label: 'Control de grasa',
-                            value: '-5.0 kg',
-                          ),
-                          _BodyControlRow(
-                            label: 'Control muscular',
-                            value: '+2.5 kg',
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 14),
-                    AppCard(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
-                            'Indicadores principales',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                          const SizedBox(height: 14),
+                          AppCard(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Otros indicadores',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 14),
+                                InfoRow(
+                                  icon: Icons.scale,
+                                  label: 'Grasa corporal',
+                                  value: '${_number(evaluation.bodyFatKg)} kg',
+                                ),
+                                InfoRow(
+                                  icon: Icons.fitness_center,
+                                  label: 'Músculo esquelético',
+                                  value:
+                                      '${_number(evaluation.skeletalMuscleKg)} kg',
+                                ),
+                                InfoRow(
+                                  icon: Icons.water_drop,
+                                  label: 'Agua corporal',
+                                  value:
+                                      '${_number(evaluation.bodyWaterKg)} kg',
+                                ),
+                                InfoRow(
+                                  icon: Icons.scale_outlined,
+                                  label: 'Peso sin grasa',
+                                  value:
+                                      '${_number(evaluation.fatFreeMassKg)} kg',
+                                ),
+                                InfoRow(
+                                  icon: Icons.bloodtype_outlined,
+                                  label: 'Grasa visceral',
+                                  value: '${evaluation.visceralFat}',
+                                ),
+                                InfoRow(
+                                  icon: Icons.cake_outlined,
+                                  label: 'Edad corporal',
+                                  value: evaluation.bodyAge == 0
+                                      ? '-'
+                                      : '${evaluation.bodyAge}',
+                                ),
+                                InfoRow(
+                                  icon: Icons.straighten,
+                                  label: 'WHR',
+                                  value: evaluation.whr == 0
+                                      ? '-'
+                                      : _number(evaluation.whr),
+                                ),
+                              ],
                             ),
                           ),
-                          SizedBox(height: 14),
-                          _BodyProgressRow(
-                            label: 'IMC',
-                            value: '22.9',
-                            progress: 0.55,
-                            status: 'Estándar',
-                          ),
-                          _BodyProgressRow(
-                            label: 'Grasa corporal',
-                            value: '21.7%',
-                            progress: 0.62,
-                            status: 'Estándar',
-                          ),
-                          _BodyProgressRow(
-                            label: 'Masa muscular',
-                            value: '51.2 kg',
-                            progress: 0.73,
-                            status: 'Estándar',
-                          ),
-                          _BodyProgressRow(
-                            label: 'Agua corporal',
-                            value: '57.4%',
-                            progress: 0.70,
-                            status: 'Estándar',
-                          ),
+                          const SizedBox(height: 24),
                         ],
                       ),
-                    ),
-                    const SizedBox(height: 14),
-                    AppCard(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
-                            'Otros indicadores',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 14),
-                          InfoRow(
-                            icon: Icons.bloodtype_outlined,
-                            label: 'Grasa visceral',
-                            value: '5',
-                          ),
-                          InfoRow(
-                            icon: Icons.fitness_center,
-                            label: 'Músculo esquelético',
-                            value: '30.9 kg',
-                          ),
-                          InfoRow(
-                            icon: Icons.scale_outlined,
-                            label: 'Peso sin grasa',
-                            value: '54.9 kg',
-                          ),
-                          InfoRow(
-                            icon: Icons.cake_outlined,
-                            label: 'Edad corporal',
-                            value: '31',
-                          ),
-                          InfoRow(
-                            icon: Icons.straighten,
-                            label: 'WHR',
-                            value: '0.84',
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                  ],
-                ),
               ),
             ),
           ],
