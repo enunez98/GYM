@@ -4,11 +4,15 @@ import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/screen_header.dart';
 import '../../../core/widgets/status_chip.dart';
 import '../../../models/demo_exercise.dart';
+import '../../../models/app_user.dart';
 import '../../../models/routine_models.dart';
+import '../../../models/student_profile.dart';
+import '../../../models/workout_log.dart';
 import '../../../services/demo_student_profile_service.dart';
 import '../../../services/session_store.dart';
 import '../../../services/student_routine_service.dart';
 import '../../../services/student_workout_progress_store.dart';
+import '../../../services/workout_history_store.dart';
 
 class WorkoutScreen extends StatefulWidget {
   const WorkoutScreen({super.key});
@@ -18,6 +22,199 @@ class WorkoutScreen extends StatefulWidget {
 }
 
 class _WorkoutScreenState extends State<WorkoutScreen> {
+  final Map<String, TextEditingController> _workoutControllers = {};
+
+  String _controllerKey({
+    required String type,
+    required int exerciseIndex,
+    required int seriesNumber,
+  }) {
+    return '$type-$exerciseIndex-$seriesNumber';
+  }
+
+  TextEditingController _controllerFor({
+    required String type,
+    required int exerciseIndex,
+    required int seriesNumber,
+  }) {
+    final key = _controllerKey(
+      type: type,
+      exerciseIndex: exerciseIndex,
+      seriesNumber: seriesNumber,
+    );
+    _workoutControllers.putIfAbsent(key, TextEditingController.new);
+    return _workoutControllers[key]!;
+  }
+
+  double _parseKg(String value) {
+    return double.tryParse(value.replaceAll(',', '.').trim()) ?? 0;
+  }
+
+  int _parseReps(String value) {
+    return int.tryParse(value.trim()) ?? 0;
+  }
+
+  void _clearWorkoutInputs() {
+    for (final controller in _workoutControllers.values) {
+      controller.clear();
+    }
+  }
+
+  @override
+  void dispose() {
+    for (final controller in _workoutControllers.values) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
+  WorkoutLog _buildCompletedWorkoutLog({
+    required AppUser? user,
+    required StudentProfile? profile,
+    required DemoRoutineSession session,
+  }) {
+    final exerciseLogs = <WorkoutExerciseLog>[];
+
+    for (
+      int exerciseIndex = 0;
+      exerciseIndex < session.exercises.length;
+      exerciseIndex++
+    ) {
+      final exercise = session.exercises[exerciseIndex];
+      final totalSeries = exercise.series <= 0 ? 1 : exercise.series;
+      final setLogs = <WorkoutSetLog>[];
+
+      for (int seriesNumber = 1; seriesNumber <= totalSeries; seriesNumber++) {
+        final kg = _parseKg(
+          _controllerFor(
+            type: 'kg',
+            exerciseIndex: exerciseIndex,
+            seriesNumber: seriesNumber,
+          ).text,
+        );
+        final reps = _parseReps(
+          _controllerFor(
+            type: 'reps',
+            exerciseIndex: exerciseIndex,
+            seriesNumber: seriesNumber,
+          ).text,
+        );
+
+        if (kg > 0 || reps > 0) {
+          setLogs.add(
+            WorkoutSetLog(setNumber: seriesNumber, kg: kg, reps: reps),
+          );
+        }
+      }
+
+      if (setLogs.isNotEmpty) {
+        exerciseLogs.add(
+          WorkoutExerciseLog(
+            exerciseName: exercise.name,
+            plannedSeries: totalSeries,
+            targetReps: exercise.reps,
+            sets: setLogs,
+          ),
+        );
+      }
+    }
+
+    return WorkoutLog(
+      id: 'workout_${DateTime.now().microsecondsSinceEpoch}',
+      userId: profile?.userId ?? user?.id ?? '',
+      studentProfileId: profile?.id ?? '',
+      studentName: profile?.name ?? user?.name ?? 'Alumno',
+      plan: profile?.plan ?? '',
+      weekLabel: profile?.currentWeekLabel ?? session.session,
+      sessionLabel: session.session,
+      sessionTitle: session.title,
+      createdAt: DateTime.now(),
+      status: WorkoutLogStatus.completed,
+      exercises: exerciseLogs,
+    );
+  }
+
+  void _saveWorkout({
+    required AppUser? user,
+    required StudentProfile? profile,
+    required DemoRoutineSession? assignedSession,
+    required int totalSessions,
+  }) {
+    if (assignedSession == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No hay sesión asignada para guardar')),
+      );
+      return;
+    }
+
+    final log = _buildCompletedWorkoutLog(
+      user: user,
+      profile: profile,
+      session: assignedSession,
+    );
+
+    if (log.exercises.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Ingresa al menos una serie con kg o repeticiones'),
+        ),
+      );
+      return;
+    }
+
+    WorkoutHistoryStore.add(log);
+    StudentWorkoutProgressStore.completeCurrentSession(profile, totalSessions);
+    _clearWorkoutInputs();
+    setState(() {});
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'Entrenamiento guardado: ${log.totalSets} series, ${log.totalVolume.toStringAsFixed(0)} kg de volumen',
+        ),
+      ),
+    );
+  }
+
+  void _skipWorkout({
+    required AppUser? user,
+    required StudentProfile? profile,
+    required DemoRoutineSession? assignedSession,
+    required int totalSessions,
+  }) {
+    if (assignedSession == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No hay sesión asignada para omitir')),
+      );
+      return;
+    }
+
+    final log = WorkoutLog(
+      id: 'workout_${DateTime.now().microsecondsSinceEpoch}',
+      userId: profile?.userId ?? user?.id ?? '',
+      studentProfileId: profile?.id ?? '',
+      studentName: profile?.name ?? user?.name ?? 'Alumno',
+      plan: profile?.plan ?? '',
+      weekLabel: profile?.currentWeekLabel ?? assignedSession.session,
+      sessionLabel: assignedSession.session,
+      sessionTitle: assignedSession.title,
+      createdAt: DateTime.now(),
+      status: WorkoutLogStatus.skipped,
+      exercises: const [],
+    );
+
+    WorkoutHistoryStore.add(log);
+    StudentWorkoutProgressStore.skipCurrentSession(profile, totalSessions);
+    _clearWorkoutInputs();
+    setState(() {});
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Sesión omitida. Avanzaste sin sumar asistencia.'),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = SessionStore.currentUser;
@@ -169,7 +366,18 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                       ) ...[
                         _ImportedWorkoutExerciseCard(
                           number: i + 1,
+                          exerciseIndex: i,
                           exercise: assignedSession.exercises[i],
+                          kgControllerFor: (seriesNumber) => _controllerFor(
+                            type: 'kg',
+                            exerciseIndex: i,
+                            seriesNumber: seriesNumber,
+                          ),
+                          repsControllerFor: (seriesNumber) => _controllerFor(
+                            type: 'reps',
+                            exerciseIndex: i,
+                            seriesNumber: seriesNumber,
+                          ),
                         ),
                         const SizedBox(height: 14),
                       ]
@@ -190,17 +398,11 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                         ),
                         onPressed: hasAssignedWorkout
                             ? () {
-                                StudentWorkoutProgressStore.completeCurrentSession(
-                                  profile,
-                                  weekSessions.length,
-                                );
-                                setState(() {});
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                      'Entrenamiento guardado. Avanzaste a la siguiente sesión.',
-                                    ),
-                                  ),
+                                _saveWorkout(
+                                  user: user,
+                                  profile: profile,
+                                  assignedSession: assignedSession,
+                                  totalSessions: weekSessions.length,
                                 );
                               }
                             : null,
@@ -226,17 +428,11 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                         ),
                         onPressed: hasAssignedWorkout
                             ? () {
-                                StudentWorkoutProgressStore.skipCurrentSession(
-                                  profile,
-                                  weekSessions.length,
-                                );
-                                setState(() {});
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                      'Sesión omitida. Avanzaste sin sumar asistencia.',
-                                    ),
-                                  ),
+                                _skipWorkout(
+                                  user: user,
+                                  profile: profile,
+                                  assignedSession: assignedSession,
+                                  totalSessions: weekSessions.length,
                                 );
                               }
                             : null,
@@ -395,11 +591,17 @@ class _ExerciseCard extends StatelessWidget {
 
 class _ImportedWorkoutExerciseCard extends StatelessWidget {
   final int number;
+  final int exerciseIndex;
   final DemoRoutineExercise exercise;
+  final TextEditingController Function(int seriesNumber) kgControllerFor;
+  final TextEditingController Function(int seriesNumber) repsControllerFor;
 
   const _ImportedWorkoutExerciseCard({
     required this.number,
+    required this.exerciseIndex,
     required this.exercise,
+    required this.kgControllerFor,
+    required this.repsControllerFor,
   });
 
   @override
@@ -486,17 +688,24 @@ class _ImportedWorkoutExerciseCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          for (int i = 1; i <= totalSeries; i++)
+          for (
+            int seriesNumber = 1;
+            seriesNumber <= totalSeries;
+            seriesNumber++
+          )
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 6),
               child: Row(
                 children: [
-                  Expanded(child: Text('Serie $i')),
+                  Expanded(child: Text('Serie $seriesNumber')),
                   SizedBox(
                     width: 76,
                     child: TextField(
+                      controller: kgControllerFor(seriesNumber),
                       textAlign: TextAlign.center,
-                      keyboardType: TextInputType.number,
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
                       decoration: InputDecoration(
                         hintText: 'kg',
                         isDense: true,
@@ -512,6 +721,7 @@ class _ImportedWorkoutExerciseCard extends StatelessWidget {
                   SizedBox(
                     width: 76,
                     child: TextField(
+                      controller: repsControllerFor(seriesNumber),
                       textAlign: TextAlign.center,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
