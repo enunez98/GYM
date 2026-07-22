@@ -4,7 +4,10 @@ import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/form_header.dart';
 import '../../../core/widgets/metric_card.dart';
 import '../../../core/widgets/status_chip.dart';
-import '../../../models/demo_student.dart';
+import '../../../models/student_profile.dart';
+import '../../../services/body_evaluation_store.dart';
+import '../../../services/student_attendance_service.dart';
+import '../../../services/student_profile_store.dart';
 
 import 'student_detail_screen.dart';
 
@@ -13,44 +16,16 @@ class StudentsListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final students = [
-      DemoStudent(
-        name: 'Felipe Durán',
-        phone: '+569 1234 5678',
-        plan: 'Plan 3 sesiones',
-        status: 'Activo',
-        attendance: '5/12',
-        bodyScore: '72/100',
-        expiresAt: '30-07-2026',
-      ),
-      DemoStudent(
-        name: 'Camila Rojas',
-        phone: '+569 9876 5432',
-        plan: 'Plan 2 sesiones',
-        status: 'Activo',
-        attendance: '3/8',
-        bodyScore: '68/100',
-        expiresAt: '04-08-2026',
-      ),
-      DemoStudent(
-        name: 'Matías Soto',
-        phone: '+569 5555 4444',
-        plan: 'Plan 4 sesiones',
-        status: 'Por vencer',
-        attendance: '7/16',
-        bodyScore: '75/100',
-        expiresAt: '08-07-2026',
-      ),
-      DemoStudent(
-        name: 'Valentina Pérez',
-        phone: '+569 2222 1111',
-        plan: 'Plan 3 sesiones',
-        status: 'Vencido',
-        attendance: '2/12',
-        bodyScore: '70/100',
-        expiresAt: '01-07-2026',
-      ),
-    ];
+    final students = StudentProfileStore.all;
+    final activeCount = students
+        .where((student) => student.status == 'Activo')
+        .length;
+    final expiringCount = students
+        .where((student) => student.status == 'Por vencer')
+        .length;
+    final expiredCount = students
+        .where((student) => student.status == 'Vencido')
+        .length;
 
     return Scaffold(
       backgroundColor: const Color(0xFF06111F),
@@ -88,27 +63,27 @@ class StudentsListScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 14),
                     Row(
-                      children: const [
+                      children: [
                         Expanded(
                           child: MetricCard(
                             title: 'Activos',
-                            value: '42',
+                            value: '$activeCount',
                             subtitle: 'alumnos',
                           ),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: MetricCard(
                             title: 'Por vencer',
-                            value: '9',
+                            value: '$expiringCount',
                             subtitle: 'planes',
                           ),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: MetricCard(
                             title: 'Vencidos',
-                            value: '4',
+                            value: '$expiredCount',
                             subtitle: 'planes',
                           ),
                         ),
@@ -132,12 +107,15 @@ class StudentsListScreen extends StatelessWidget {
 }
 
 class _StudentListCard extends StatelessWidget {
-  final DemoStudent student;
+  final StudentProfile student;
 
   const _StudentListCard({required this.student});
 
   @override
   Widget build(BuildContext context) {
+    final attendance = StudentAttendanceService.getSummary(student);
+    final evaluation = BodyEvaluationStore.getLastByUserId(student.userId);
+    final bodyScore = evaluation?.bodyScore ?? student.bodyScore;
     final isWarning = student.status == 'Por vencer';
     final isExpired = student.status == 'Vencido';
 
@@ -192,7 +170,23 @@ class _StudentListCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 3),
                     Text(
-                      'Vence: ${student.expiresAt}',
+                      student.phone,
+                      style: const TextStyle(
+                        color: Colors.black45,
+                        fontSize: 12,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      'Asistencia: ${attendance.monthlyText} · Evaluación: $bodyScore/100',
+                      style: const TextStyle(
+                        color: Colors.black45,
+                        fontSize: 12,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      'Vence: ${student.endDate}',
                       style: const TextStyle(
                         color: Colors.black45,
                         fontSize: 12,

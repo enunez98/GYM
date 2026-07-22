@@ -1,7 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gym_app/services/demo_student_profile_service.dart';
+import 'package:gym_app/services/student_profile_store.dart';
 
 void main() {
+  setUp(StudentProfileStore.resetToDemo);
+  tearDown(StudentProfileStore.resetToDemo);
+
   test('returns the profile associated with the demo student', () {
     final profile = DemoStudentProfileService.getByUserId('student_001');
 

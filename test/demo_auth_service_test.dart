@@ -3,6 +3,9 @@ import 'package:gym_app/models/app_user.dart';
 import 'package:gym_app/services/demo_auth_service.dart';
 
 void main() {
+  setUp(DemoAuthService.resetToDemo);
+  tearDown(DemoAuthService.resetToDemo);
+
   test('normalizes and validates demo RUT values', () {
     expect(DemoAuthService.normalizeRut('11.111.111-1'), '111111111');
     expect(DemoAuthService.isValidRut('11.111.111-1'), isTrue);

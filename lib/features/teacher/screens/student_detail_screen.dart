@@ -5,15 +5,21 @@ import '../../../core/widgets/form_header.dart';
 import '../../../core/widgets/info_row.dart';
 import '../../../core/widgets/metric_card.dart';
 import '../../../core/widgets/teacher_action_row.dart';
-import '../../../models/demo_student.dart';
+import '../../../models/student_profile.dart';
+import '../../../services/body_evaluation_store.dart';
+import '../../../services/student_attendance_service.dart';
 
 class StudentDetailScreen extends StatelessWidget {
-  final DemoStudent student;
+  final StudentProfile student;
 
   const StudentDetailScreen({super.key, required this.student});
 
   @override
   Widget build(BuildContext context) {
+    final attendance = StudentAttendanceService.getSummary(student);
+    final evaluation = BodyEvaluationStore.getLastByUserId(student.userId);
+    final bodyScore = evaluation?.bodyScore ?? student.bodyScore;
+
     return Scaffold(
       backgroundColor: const Color(0xFF06111F),
       body: SafeArea(
@@ -40,7 +46,7 @@ class StudentDetailScreen extends StatelessWidget {
                         Expanded(
                           child: MetricCard(
                             title: 'Asistencia',
-                            value: student.attendance,
+                            value: attendance.monthlyText,
                             subtitle: 'mensual',
                           ),
                         ),
@@ -48,7 +54,7 @@ class StudentDetailScreen extends StatelessWidget {
                         Expanded(
                           child: MetricCard(
                             title: 'Evaluación',
-                            value: student.bodyScore,
+                            value: '$bodyScore/100',
                             subtitle: 'corporal',
                           ),
                         ),
@@ -81,14 +87,29 @@ class StudentDetailScreen extends StatelessWidget {
                             value: student.phone,
                           ),
                           InfoRow(
+                            icon: Icons.badge_outlined,
+                            label: 'RUT',
+                            value: student.rut,
+                          ),
+                          InfoRow(
                             icon: Icons.fitness_center,
                             label: 'Plan',
                             value: student.plan,
                           ),
                           InfoRow(
+                            icon: Icons.calendar_today_outlined,
+                            label: 'Fecha de inicio',
+                            value: student.startDate,
+                          ),
+                          InfoRow(
                             icon: Icons.event_available,
                             label: 'Vencimiento',
-                            value: student.expiresAt,
+                            value: student.endDate,
+                          ),
+                          InfoRow(
+                            icon: Icons.hourglass_bottom,
+                            label: 'Días restantes',
+                            value: '${student.daysRemaining}',
                           ),
                           InfoRow(
                             icon: Icons.verified_user_outlined,
@@ -102,21 +123,21 @@ class StudentDetailScreen extends StatelessWidget {
                     AppCard(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
+                        children: [
+                          const Text(
                             'Acciones del profesor',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(height: 14),
-                          TeacherActionRow(
+                          const SizedBox(height: 14),
+                          const TeacherActionRow(
                             icon: Icons.fitness_center,
                             title: 'Ver rutina actual',
                             subtitle: 'Semana y sesión pendiente',
                           ),
-                          TeacherActionRow(
+                          const TeacherActionRow(
                             icon: Icons.monitor_weight,
                             title: 'Registrar nueva evaluación',
                             subtitle: 'Body Go Pro / Fitdays',
@@ -124,9 +145,10 @@ class StudentDetailScreen extends StatelessWidget {
                           TeacherActionRow(
                             icon: Icons.calendar_month,
                             title: 'Ver asistencia',
-                            subtitle: 'Cumplimiento mensual',
+                            subtitle:
+                                '${attendance.weeklyText} semanal · ${attendance.monthlyText} mensual',
                           ),
-                          TeacherActionRow(
+                          const TeacherActionRow(
                             icon: Icons.edit_outlined,
                             title: 'Editar datos del alumno',
                             subtitle: 'Plan, teléfono o vencimiento',
@@ -138,35 +160,37 @@ class StudentDetailScreen extends StatelessWidget {
                     AppCard(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
-                            'Resumen rápido',
+                        children: [
+                          const Text(
+                            'Evaluación corporal',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(height: 14),
-                          InfoRow(
-                            icon: Icons.monitor_weight,
-                            label: 'Peso actual',
-                            value: '70.0 kg',
-                          ),
-                          InfoRow(
-                            icon: Icons.percent,
-                            label: 'Grasa corporal',
-                            value: '21.7%',
-                          ),
-                          InfoRow(
-                            icon: Icons.accessibility_new,
-                            label: 'Masa muscular',
-                            value: '51.2 kg',
-                          ),
-                          InfoRow(
-                            icon: Icons.bar_chart,
-                            label: 'Mejor progreso',
-                            value: 'Press banca +12.5 kg',
-                          ),
+                          const SizedBox(height: 14),
+                          if (evaluation == null)
+                            const Text(
+                              'Sin evaluación corporal registrada.',
+                              style: TextStyle(color: Colors.black54),
+                            )
+                          else ...[
+                            InfoRow(
+                              icon: Icons.monitor_weight,
+                              label: 'Peso actual',
+                              value: '${evaluation.weightKg} kg',
+                            ),
+                            InfoRow(
+                              icon: Icons.percent,
+                              label: 'Grasa corporal',
+                              value: '${evaluation.bodyFatPercent}%',
+                            ),
+                            InfoRow(
+                              icon: Icons.accessibility_new,
+                              label: 'Masa muscular',
+                              value: '${evaluation.muscleMassKg} kg',
+                            ),
+                          ],
                         ],
                       ),
                     ),

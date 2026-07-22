@@ -10,7 +10,9 @@ class AuthException implements Exception {
 }
 
 class DemoAuthService {
-  static final List<_DemoCredential> _users = [
+  static final List<_DemoCredential> _users = _demoUsers();
+
+  static List<_DemoCredential> _demoUsers() => [
     _DemoCredential(
       user: const AppUser(
         id: 'student_001',
@@ -30,6 +32,36 @@ class DemoAuthService {
       password: '1234',
     ),
   ];
+
+  static void registerUser({required AppUser user, required String password}) {
+    final normalizedRut = normalizeRut(user.rut);
+    final exists = _users.any(
+      (credential) => credential.user.rut == normalizedRut,
+    );
+
+    if (exists) {
+      throw const AuthException('Ya existe un usuario con ese RUT');
+    }
+
+    _users.add(
+      _DemoCredential(
+        user: AppUser(
+          id: user.id,
+          rut: normalizedRut,
+          name: user.name,
+          role: user.role,
+          isActive: user.isActive,
+        ),
+        password: password,
+      ),
+    );
+  }
+
+  static void resetToDemo() {
+    _users
+      ..clear()
+      ..addAll(_demoUsers());
+  }
 
   static Future<AppUser> login({
     required String rut,

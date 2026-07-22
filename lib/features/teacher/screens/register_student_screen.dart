@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/app_text_field.dart';
 import '../../../core/widgets/form_header.dart';
+import '../../../models/app_user.dart';
+import '../../../models/student_profile.dart';
+import '../../../services/demo_auth_service.dart';
+import '../../../services/student_profile_store.dart';
 
 class RegisterStudentScreen extends StatefulWidget {
   const RegisterStudentScreen({super.key});
@@ -14,6 +18,7 @@ class RegisterStudentScreen extends StatefulWidget {
 class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
   final nameController = TextEditingController();
   final lastNameController = TextEditingController();
+  final rutController = TextEditingController();
   final phoneController = TextEditingController(text: '+569');
   final startDateController = TextEditingController(text: '04-07-2026');
   final endDateController = TextEditingController(text: '04-08-2026');
@@ -24,32 +29,116 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
   void dispose() {
     nameController.dispose();
     lastNameController.dispose();
+    rutController.dispose();
     phoneController.dispose();
     startDateController.dispose();
     endDateController.dispose();
     super.dispose();
   }
 
+  int weeklyTargetFromPlan(String plan) {
+    if (plan.contains('2')) return 2;
+    if (plan.contains('4')) return 4;
+    return 3;
+  }
+
+  int calculateDaysRemaining(String endDate) {
+    try {
+      final parts = endDate.trim().split('-');
+      if (parts.length != 3) return 0;
+
+      final parsed = DateTime(
+        int.parse(parts[2]),
+        int.parse(parts[1]),
+        int.parse(parts[0]),
+      );
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+      final difference = parsed.difference(today).inDays;
+      return difference < 0 ? 0 : difference;
+    } catch (_) {
+      return 0;
+    }
+  }
+
+  void showMessage(String message) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
   void saveStudent() {
     final name = nameController.text.trim();
     final lastName = lastNameController.text.trim();
     final phone = phoneController.text.trim();
+    final startDate = startDateController.text.trim();
+    final endDate = endDateController.text.trim();
 
-    if (name.isEmpty || lastName.isEmpty || phone.length < 12) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Completa nombre, apellido y teléfono válido'),
-        ),
-      );
+    if (name.isEmpty || lastName.isEmpty) {
+      showMessage('Completa nombre y apellido');
+      return;
+    }
+    if (phone.length < 9) {
+      showMessage('Ingresa un teléfono válido');
+      return;
+    }
+    if (selectedPlan.isEmpty || startDate.isEmpty || endDate.isEmpty) {
+      showMessage('Completa el plan y sus fechas');
       return;
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Alumno $name $lastName registrado con $selectedPlan'),
+    final normalizedRut = DemoAuthService.normalizeRut(rutController.text);
+    if (!DemoAuthService.isValidRut(normalizedRut)) {
+      showMessage('El RUT ingresado no es válido');
+      return;
+    }
+    if (StudentProfileStore.existsByRut(normalizedRut)) {
+      showMessage('Ya existe un alumno con ese RUT');
+      return;
+    }
+
+    final timestamp = DateTime.now().microsecondsSinceEpoch;
+    final userId = 'student_$timestamp';
+    final profileId = 'student_profile_$timestamp';
+    final fullName = '$name $lastName'.trim();
+    final user = AppUser(
+      id: userId,
+      rut: normalizedRut,
+      name: fullName,
+      role: UserRole.student,
+    );
+
+    try {
+      DemoAuthService.registerUser(user: user, password: '1234');
+    } on AuthException catch (error) {
+      showMessage(error.message);
+      return;
+    }
+
+    final weeklyTarget = weeklyTargetFromPlan(selectedPlan);
+    StudentProfileStore.add(
+      StudentProfile(
+        id: profileId,
+        userId: userId,
+        name: fullName,
+        rut: normalizedRut,
+        phone: phone,
+        plan: selectedPlan,
+        status: 'Activo',
+        startDate: startDate,
+        endDate: endDate,
+        daysRemaining: calculateDaysRemaining(endDate),
+        weeklyAttendanceCompleted: 0,
+        weeklyAttendanceTarget: weeklyTarget,
+        monthlyAttendanceCompleted: 0,
+        monthlyAttendanceTarget: weeklyTarget * 4,
+        bodyScore: 0,
+        currentWeekLabel: 'Semana 1 - Ordinario',
+        currentWeekDates: '-',
       ),
     );
 
+    showMessage('Alumno registrado. Contraseña temporal: 1234');
     Navigator.pop(context);
   }
 
@@ -100,6 +189,13 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
                             label: 'Apellido',
                             icon: Icons.person_outline,
                             hint: 'Ej: Durán',
+                          ),
+                          const SizedBox(height: 12),
+                          AppTextField(
+                            controller: rutController,
+                            label: 'RUT',
+                            icon: Icons.badge_outlined,
+                            hint: 'Ej: 12.345.678-5',
                           ),
                           const SizedBox(height: 12),
                           AppTextField(
