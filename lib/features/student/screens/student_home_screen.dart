@@ -6,6 +6,7 @@ import '../../../core/widgets/metric_card.dart';
 import '../../../core/widgets/status_chip.dart';
 import '../../../services/demo_student_profile_service.dart';
 import '../../../services/session_store.dart';
+import '../../../services/student_attendance_service.dart';
 import '../../../services/student_routine_service.dart';
 
 class StudentHomeScreen extends StatelessWidget {
@@ -156,36 +157,96 @@ class _AttendanceCards extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = SessionStore.currentUser;
     final profile = DemoStudentProfileService.getByUserId(user?.id);
-    final weeklyText = profile?.weeklyAttendanceText ?? '0/0';
-    final weeklyPercent = profile?.weeklyAttendancePercent ?? 0;
-    final monthlyText = profile?.monthlyAttendanceText ?? '0/0';
-    final monthlyPercent = profile?.monthlyAttendancePercent ?? 0;
-    final daysRemaining = profile?.daysRemaining ?? 0;
+    final attendance = StudentAttendanceService.getSummary(profile);
 
-    return Row(
+    return Column(
       children: [
-        Expanded(
-          child: MetricCard(
-            title: 'Asistencia semanal',
-            value: weeklyText,
-            subtitle: '$weeklyPercent%',
+        Row(
+          children: [
+            Expanded(
+              child: MetricCard(
+                title: 'Asistencia semanal',
+                value: attendance.weeklyText,
+                subtitle: '${attendance.weeklyPercent}%',
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: MetricCard(
+                title: 'Asistencia mensual',
+                value: attendance.monthlyText,
+                subtitle: '${attendance.monthlyPercent}%',
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: MetricCard(
+                title: 'Días restantes',
+                value: '${attendance.daysRemaining}',
+                subtitle: 'días',
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        AppCard(
+          child: Row(
+            children: [
+              Expanded(
+                child: _AttendanceMiniItem(
+                  icon: Icons.check_circle_outline,
+                  label: 'Completadas',
+                  value: '${attendance.weeklyCompleted}',
+                ),
+              ),
+              Expanded(
+                child: _AttendanceMiniItem(
+                  icon: Icons.skip_next_outlined,
+                  label: 'Omitidas',
+                  value: '${attendance.weeklySkipped}',
+                ),
+              ),
+              Expanded(
+                child: _AttendanceMiniItem(
+                  icon: Icons.pending_actions_outlined,
+                  label: 'Pendientes',
+                  value: '${attendance.pendingSessions}',
+                ),
+              ),
+            ],
           ),
         ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: MetricCard(
-            title: 'Asistencia mensual',
-            value: monthlyText,
-            subtitle: '$monthlyPercent%',
-          ),
+      ],
+    );
+  }
+}
+
+class _AttendanceMiniItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+
+  const _AttendanceMiniItem({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Icon(icon, color: const Color(0xFF20B2AA), size: 22),
+        const SizedBox(height: 6),
+        Text(
+          value,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: MetricCard(
-            title: 'Días restantes',
-            value: '$daysRemaining',
-            subtitle: 'días',
-          ),
+        const SizedBox(height: 2),
+        Text(
+          label,
+          textAlign: TextAlign.center,
+          style: const TextStyle(color: Colors.black54, fontSize: 12),
         ),
       ],
     );

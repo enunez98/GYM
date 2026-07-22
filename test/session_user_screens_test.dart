@@ -30,9 +30,12 @@ void main() {
 
     expect(find.text('Hola, Felipe Durán 👋'), findsOneWidget);
     expect(find.text('Plan: Plan 4 sesiones'), findsOneWidget);
-    expect(find.text('1/4'), findsOneWidget);
-    expect(find.text('5/16'), findsOneWidget);
+    expect(find.text('0/4'), findsOneWidget);
+    expect(find.text('0/16'), findsOneWidget);
     expect(find.text('18'), findsOneWidget);
+    expect(find.text('Completadas'), findsOneWidget);
+    expect(find.text('Omitidas'), findsOneWidget);
+    expect(find.text('Pendientes'), findsOneWidget);
   });
 
   testWidgets('student profile uses the logged-in name and RUT', (
