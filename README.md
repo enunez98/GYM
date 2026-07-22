@@ -124,16 +124,56 @@ flutter clean
 flutter pub get
 ```
 
-## Setup automático opcional
+## Instalación automática en Mac
 
-El script comprueba macOS, Xcode Command Line Tools y Homebrew; instala con
-Homebrew las aplicaciones que falten y prepara las dependencias del proyecto.
-No acepta licencias ni ejecuta comandos con `sudo` automáticamente.
+Después de clonar el proyecto y seleccionar la rama de desarrollo:
 
 ```bash
-chmod +x scripts/setup_mac.sh
-./scripts/setup_mac.sh
+git clone https://github.com/enunez98/GYM.git
+cd GYM
+git checkout refactor/ordenar-estructura
+./scripts/setup_mac.command
 ```
+
+También se puede abrir `scripts/setup_mac.command` desde Finder. macOS puede
+pedir confirmación antes de abrir un archivo descargado; revisa siempre el
+contenido del script antes de ejecutarlo.
+
+El instalador prepara:
+
+- Homebrew.
+- Flutter.
+- Google Chrome.
+- Visual Studio Code.
+- Android Studio.
+- CocoaPods.
+- Dependencias Flutter del proyecto.
+
+También ejecuta `flutter doctor -v` y muestra los dispositivos disponibles. Si
+encuentra Xcode completo, puede solicitar la contraseña de administrador para
+terminar su configuración. No acepta licencias automáticamente.
+
+Para ejecutar la app después de la instalación:
+
+```bash
+flutter run -d chrome
+```
+
+También puedes abrir desde Finder o ejecutar:
+
+```bash
+./scripts/run_chrome.command
+```
+
+Notas:
+
+- Xcode completo no es obligatorio para ejecutar en Chrome.
+- Para compilar en iPhone/iOS, instala Xcode desde App Store.
+- Abre Android Studio al menos una vez y completa el asistente del SDK.
+- Si Flutter informa licencias pendientes, ejecuta
+  `flutter doctor --android-licenses`.
+- `scripts/setup_mac.sh` sigue disponible como alternativa conservadora: exige
+  que Homebrew ya esté instalado y no configura Xcode con `sudo`.
 
 ## Ejecutar la app
 
