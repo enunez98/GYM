@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../../../core/widgets/app_card.dart';
@@ -5,13 +7,18 @@ import '../../../core/widgets/info_row.dart';
 import '../../../core/widgets/metric_card.dart';
 import '../../../core/widgets/screen_header.dart';
 import '../../../core/widgets/status_chip.dart';
+import '../../../services/session_store.dart';
+import '../../../services/workout_progress_service.dart';
 
 class ProgressScreen extends StatelessWidget {
   const ProgressScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final chartValues = [70.0, 72.5, 75.0, 80.0, 82.5];
+    final user = SessionStore.currentUser;
+    final summary = WorkoutProgressService.getSummaryByUserId(user?.id);
+    final hasProgress = summary.hasData;
+    final chartValues = summary.oneRmTrend;
 
     return Container(
       color: const Color(0xFF06111F),
@@ -44,57 +51,159 @@ class ProgressScreen extends StatelessWidget {
                           const SizedBox(height: 6),
                           Row(
                             children: [
-                              const Expanded(
+                              Expanded(
                                 child: Text(
-                                  'Press Banca Plano',
-                                  style: TextStyle(
+                                  hasProgress
+                                      ? summary.bestExerciseName
+                                      : 'Sin entrenamientos guardados',
+                                  style: const TextStyle(
                                     fontSize: 22,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
                               StatusChip(
-                                text: '+12.5 kg',
-                                background: const Color(0xFFDFF9EA),
-                                textColor: const Color(0xFF12985C),
+                                text: hasProgress ? 'Real' : 'Pendiente',
+                                background: hasProgress
+                                    ? const Color(0xFFDFF9EA)
+                                    : const Color(0xFFFFF2D9),
+                                textColor: hasProgress
+                                    ? const Color(0xFF12985C)
+                                    : const Color(0xFFD98200),
                               ),
                             ],
                           ),
                           const SizedBox(height: 6),
-                          const Text(
-                            'Evolución de 1RM estimado últimos 3 meses',
-                            style: TextStyle(color: Colors.black54),
+                          Text(
+                            hasProgress
+                                ? 'Calculado desde tus entrenamientos guardados'
+                                : 'Guarda un entrenamiento para generar progreso',
+                            style: const TextStyle(color: Colors.black54),
                           ),
                         ],
                       ),
                     ),
                     const SizedBox(height: 14),
                     Row(
-                      children: const [
+                      children: [
                         Expanded(
                           child: MetricCard(
                             title: '1RM estimado',
-                            value: '82.5',
+                            value: hasProgress
+                                ? WorkoutProgressService.formatKg(
+                                    summary.bestEstimatedOneRm,
+                                  )
+                                : '-',
                             subtitle: 'kg',
                           ),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: MetricCard(
                             title: 'Volumen total',
-                            value: '10.2K',
+                            value: WorkoutProgressService.formatVolume(
+                              summary.totalVolume,
+                            ),
                             subtitle: 'kg',
                           ),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: MetricCard(
                             title: 'Mejor serie',
-                            value: '80x5',
+                            value: summary.bestSetText,
                             subtitle: 'kg x reps',
                           ),
                         ),
                       ],
+                    ),
+                    const SizedBox(height: 14),
+                    if (chartValues.isNotEmpty)
+                      AppCard(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Evolución 1RM estimado',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 14),
+                            SizedBox(
+                              height: 210,
+                              child: CustomPaint(
+                                painter: ProgressChartPainter(chartValues),
+                                child: Container(),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            const Text(
+                              'Cada punto representa el mejor 1RM estimado de un entrenamiento guardado.',
+                              style: TextStyle(
+                                color: Colors.black54,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    else
+                      AppCard(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const [
+                            Text(
+                              'Evolución 1RM estimado',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 12),
+                            Text(
+                              'Aún no hay datos suficientes para mostrar el gráfico.',
+                              style: TextStyle(color: Colors.black54),
+                            ),
+                          ],
+                        ),
+                      ),
+                    const SizedBox(height: 14),
+                    AppCard(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Mejores series',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 14),
+                          if (summary.bestSets.isEmpty)
+                            const Text(
+                              'Todavía no hay series registradas.',
+                              style: TextStyle(color: Colors.black54),
+                            )
+                          else
+                            for (
+                              int i = 0;
+                              i < summary.bestSets.take(5).length;
+                              i++
+                            )
+                              _BestSetRow(
+                                position: i + 1,
+                                exercise: summary.bestSets[i].exerciseName,
+                                result:
+                                    '${summary.bestSets[i].resultText} · 1RM ${WorkoutProgressService.formatKg(summary.bestSets[i].estimatedOneRm)} kg',
+                                date: WorkoutProgressService.formatDate(
+                                  summary.bestSets[i].date,
+                                ),
+                              ),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 14),
                     AppCard(
@@ -102,95 +211,35 @@ class ProgressScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            'Evolución 1RM estimado',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 14),
-                          SizedBox(
-                            height: 210,
-                            child: CustomPaint(
-                              painter: ProgressChartPainter(chartValues),
-                              child: Container(),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('15 Abr', style: TextStyle(fontSize: 12)),
-                              Text('30 Abr', style: TextStyle(fontSize: 12)),
-                              Text('15 May', style: TextStyle(fontSize: 12)),
-                              Text('30 May', style: TextStyle(fontSize: 12)),
-                              Text('15 Jun', style: TextStyle(fontSize: 12)),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 14),
-                    AppCard(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
-                            'Mejores series',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 14),
-                          _BestSetRow(
-                            position: 1,
-                            exercise: 'Press Banca Plano',
-                            result: '82.5 kg x 5 reps',
-                            date: '15 Jun 2026',
-                          ),
-                          _BestSetRow(
-                            position: 2,
-                            exercise: 'Press Banca Plano',
-                            result: '80 kg x 5 reps',
-                            date: '30 May 2026',
-                          ),
-                          _BestSetRow(
-                            position: 3,
-                            exercise: 'Press Banca Plano',
-                            result: '75 kg x 6 reps',
-                            date: '15 May 2026',
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 14),
-                    AppCard(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
                             'Resumen de progreso',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(height: 14),
-                          InfoRow(
-                            icon: Icons.trending_up,
-                            label: 'Subida de carga',
-                            value: '+17.8%',
-                          ),
+                          const SizedBox(height: 14),
                           InfoRow(
                             icon: Icons.calendar_month,
-                            label: 'Sesiones registradas',
-                            value: '15',
+                            label: 'Sesiones completadas',
+                            value: '${summary.completedSessions}',
+                          ),
+                          InfoRow(
+                            icon: Icons.fitness_center,
+                            label: 'Series registradas',
+                            value: '${summary.totalSets}',
                           ),
                           InfoRow(
                             icon: Icons.bolt,
-                            label: 'Consistencia',
-                            value: 'Buena',
+                            label: 'Volumen acumulado',
+                            value:
+                                '${WorkoutProgressService.formatVolume(summary.totalVolume)} kg',
+                          ),
+                          InfoRow(
+                            icon: Icons.history,
+                            label: 'Último entrenamiento',
+                            value: summary.lastCompletedWorkout == null
+                                ? '-'
+                                : summary.lastCompletedWorkout!.sessionTitle,
                           ),
                         ],
                       ),
@@ -272,29 +321,28 @@ class ProgressChartPainter extends CustomPainter {
     final axisPaint = Paint()
       ..color = const Color(0xFFE5E7EB)
       ..strokeWidth = 1;
-
     final linePaint = Paint()
       ..color = const Color(0xFF20B2AA)
       ..strokeWidth = 3
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
-
     final pointPaint = Paint()
       ..color = const Color(0xFF20B2AA)
       ..style = PaintingStyle.fill;
-
     final gridTextPainter = TextPainter(textDirection: TextDirection.ltr);
 
-    const leftPadding = 36.0;
-    const topPadding = 10.0;
+    const leftPadding = 42.0;
+    const topPadding = 18.0;
     const bottomPadding = 28.0;
-    const rightPadding = 10.0;
-
+    const rightPadding = 14.0;
     final chartWidth = size.width - leftPadding - rightPadding;
     final chartHeight = size.height - topPadding - bottomPadding;
-
-    final minValue = 60.0;
-    final maxValue = 90.0;
+    final minRaw = values.reduce(math.min);
+    final maxRaw = values.reduce(math.max);
+    final rawRange = (maxRaw - minRaw).abs();
+    final range = rawRange < 1 ? 10.0 : rawRange;
+    final minValue = math.max(0, minRaw - range * 0.20);
+    final maxValue = maxRaw + range * 0.20;
 
     for (int i = 0; i <= 3; i++) {
       final y = topPadding + chartHeight * i / 3;
@@ -303,10 +351,9 @@ class ProgressChartPainter extends CustomPainter {
         Offset(size.width - rightPadding, y),
         axisPaint,
       );
-
-      final labelValue = (maxValue - ((maxValue - minValue) * i / 3)).round();
+      final labelValue = maxValue - ((maxValue - minValue) * i / 3);
       gridTextPainter.text = TextSpan(
-        text: '$labelValue',
+        text: WorkoutProgressService.formatKg(labelValue),
         style: const TextStyle(color: Colors.black45, fontSize: 11),
       );
       gridTextPainter.layout();
@@ -314,28 +361,28 @@ class ProgressChartPainter extends CustomPainter {
     }
 
     final points = <Offset>[];
-
     for (int i = 0; i < values.length; i++) {
-      final x = leftPadding + chartWidth * i / (values.length - 1);
+      final x = values.length == 1
+          ? leftPadding + chartWidth / 2
+          : leftPadding + chartWidth * i / (values.length - 1);
       final normalized = (values[i] - minValue) / (maxValue - minValue);
       final y = topPadding + chartHeight * (1 - normalized);
       points.add(Offset(x, y));
     }
 
-    final path = Path()..moveTo(points.first.dx, points.first.dy);
-
-    for (int i = 1; i < points.length; i++) {
-      path.lineTo(points[i].dx, points[i].dy);
+    if (points.length > 1) {
+      final path = Path()..moveTo(points.first.dx, points.first.dy);
+      for (int i = 1; i < points.length; i++) {
+        path.lineTo(points[i].dx, points[i].dy);
+      }
+      canvas.drawPath(path, linePaint);
     }
-
-    canvas.drawPath(path, linePaint);
 
     for (int i = 0; i < points.length; i++) {
       canvas.drawCircle(points[i], 5, pointPaint);
-
       final valueText = TextPainter(
         text: TextSpan(
-          text: values[i].toStringAsFixed(values[i] % 1 == 0 ? 0 : 1),
+          text: WorkoutProgressService.formatKg(values[i]),
           style: const TextStyle(
             color: Colors.black87,
             fontSize: 11,
@@ -344,9 +391,8 @@ class ProgressChartPainter extends CustomPainter {
         ),
         textDirection: TextDirection.ltr,
       );
-
       valueText.layout();
-      valueText.paint(canvas, Offset(points[i].dx - 12, points[i].dy - 24));
+      valueText.paint(canvas, Offset(points[i].dx - 14, points[i].dy - 24));
     }
   }
 
