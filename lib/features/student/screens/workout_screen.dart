@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/screen_header.dart';
 import '../../../core/widgets/status_chip.dart';
-import '../../../models/demo_exercise.dart';
 import '../../../models/app_user.dart';
 import '../../../models/routine_models.dart';
 import '../../../models/student_profile.dart';
@@ -224,38 +223,6 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
     final hasAssignedWorkout = assignedSession != null;
     final weekFinished = weekSessions.isNotEmpty && assignedSession == null;
 
-    final exercises = [
-      DemoExercise(
-        name: 'Press Banca Plano',
-        muscleGroup: 'Pecho',
-        series: [
-          DemoSet(serie: 1, kg: 60, reps: 10),
-          DemoSet(serie: 2, kg: 65, reps: 10),
-          DemoSet(serie: 3, kg: 65, reps: 8),
-          DemoSet(serie: 4, kg: 60, reps: 10),
-        ],
-      ),
-      DemoExercise(
-        name: 'Press Inclinado Mancuernas',
-        muscleGroup: 'Pecho',
-        series: [
-          DemoSet(serie: 1, kg: 28, reps: 12),
-          DemoSet(serie: 2, kg: 30, reps: 10),
-          DemoSet(serie: 3, kg: 30, reps: 10),
-          DemoSet(serie: 4, kg: 28, reps: 12),
-        ],
-      ),
-      DemoExercise(
-        name: 'Extensión de Tríceps',
-        muscleGroup: 'Tríceps',
-        series: [
-          DemoSet(serie: 1, kg: 25, reps: 12),
-          DemoSet(serie: 2, kg: 30, reps: 10),
-          DemoSet(serie: 3, kg: 30, reps: 10),
-        ],
-      ),
-    ];
-
     return Container(
       color: const Color(0xFF06111F),
       child: SafeArea(
@@ -285,7 +252,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                                 ? 'Semana completada'
                                 : hasAssignedWorkout
                                 ? assignedSession.session
-                                : 'Semana 2 - Ordinario',
+                                : profile?.currentWeekLabel ?? 'Semana actual',
                             style: TextStyle(color: Colors.black54),
                           ),
                           const SizedBox(height: 6),
@@ -297,7 +264,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                                       ? 'Sin sesiones pendientes'
                                       : hasAssignedWorkout
                                       ? assignedSession.title
-                                      : 'Sesión 1',
+                                      : 'Sin rutina asignada',
                                   style: const TextStyle(
                                     fontSize: 26,
                                     fontWeight: FontWeight.bold,
@@ -323,7 +290,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                                 ? 'Todas las sesiones de esta semana ya fueron avanzadas'
                                 : hasAssignedWorkout
                                 ? '${assignedSession.exercises.length} ejercicios importados'
-                                : 'Pecho - Tríceps',
+                                : 'El administrador debe asignar una rutina a este alumno',
                             style: TextStyle(color: Colors.black54),
                           ),
                         ],
@@ -347,7 +314,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                             child: Text(
                               hasAssignedWorkout
                                   ? 'Esta clase corresponde al plan del alumno y viene desde la planificación cargada por el admin.'
-                                  : 'Debes completar esta sesión para avanzar a la siguiente clase.',
+                                  : 'Sin rutina asignada. Guardar y omitir permanecerán deshabilitados.',
                               style: const TextStyle(
                                 color: Color(0xFF1E3A8A),
                                 fontWeight: FontWeight.w500,
@@ -382,10 +349,12 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                         const SizedBox(height: 14),
                       ]
                     else
-                      for (int i = 0; i < exercises.length; i++) ...[
-                        _ExerciseCard(number: i + 1, exercise: exercises[i]),
-                        const SizedBox(height: 14),
-                      ],
+                      const AppCard(
+                        child: Text(
+                          'Aún no tienes ejercicios asignados para esta semana.',
+                          style: TextStyle(color: Colors.black54),
+                        ),
+                      ),
                     SizedBox(
                       height: 54,
                       child: ElevatedButton(
@@ -452,138 +421,6 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _ExerciseCard extends StatelessWidget {
-  final int number;
-  final DemoExercise exercise;
-
-  const _ExerciseCard({required this.number, required this.exercise});
-
-  @override
-  Widget build(BuildContext context) {
-    return AppCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 16,
-                backgroundColor: const Color(0xFFE9F8F7),
-                child: Text(
-                  '$number',
-                  style: const TextStyle(
-                    color: Color(0xFF20B2AA),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  exercise.name,
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Text(
-                '${exercise.series.length} series',
-                style: const TextStyle(color: Colors.black54, fontSize: 12),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Text(
-            exercise.muscleGroup,
-            style: const TextStyle(color: Colors.black54, fontSize: 13),
-          ),
-          const SizedBox(height: 12),
-          const Row(
-            children: [
-              Expanded(
-                child: Text(
-                  'Serie',
-                  style: TextStyle(
-                    color: Colors.black54,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              SizedBox(
-                width: 76,
-                child: Text(
-                  'kg',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.black54,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              SizedBox(width: 8),
-              SizedBox(
-                width: 76,
-                child: Text(
-                  'reps',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.black54,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          for (final item in exercise.series)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 6),
-              child: Row(
-                children: [
-                  Expanded(child: Text('Serie ${item.serie}')),
-                  SizedBox(
-                    width: 76,
-                    child: TextField(
-                      textAlign: TextAlign.center,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        hintText: '${item.kg}',
-                        isDense: true,
-                        filled: true,
-                        fillColor: const Color(0xFFF6F8FA),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  SizedBox(
-                    width: 76,
-                    child: TextField(
-                      textAlign: TextAlign.center,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        hintText: '${item.reps}',
-                        isDense: true,
-                        filled: true,
-                        fillColor: const Color(0xFFF6F8FA),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-        ],
       ),
     );
   }

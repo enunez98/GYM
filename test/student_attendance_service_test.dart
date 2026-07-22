@@ -1,8 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gym_app/models/routine_assignment.dart';
 import 'package:gym_app/models/routine_models.dart';
 import 'package:gym_app/models/workout_log.dart';
 import 'package:gym_app/services/demo_student_profile_service.dart';
-import 'package:gym_app/services/imported_routine_store.dart';
+import 'package:gym_app/services/routine_assignment_store.dart';
 import 'package:gym_app/services/student_attendance_service.dart';
 import 'package:gym_app/services/student_workout_progress_store.dart';
 import 'package:gym_app/services/workout_history_store.dart';
@@ -11,16 +12,25 @@ void main() {
   final profile = DemoStudentProfileService.getByUserId('student_001');
 
   setUp(() {
-    ImportedRoutineStore.save(
-      selectedPlan: 'Plan 4 sesiones',
-      importedSessions: List.generate(
-        4,
-        (index) => DemoRoutineSession(
-          session: 'Semana 2',
-          title: 'Sesión ${index + 1}',
-          exercises: [
-            DemoRoutineExercise(name: 'Ejercicio', series: 1, reps: '10'),
-          ],
+    RoutineAssignmentStore.assign(
+      RoutineAssignment(
+        id: 'assignment_1',
+        userId: 'student_001',
+        studentProfileId: 'student_profile_001',
+        studentName: 'Felipe Durán',
+        plan: 'Plan 4 sesiones',
+        routineName: 'Rutina importada',
+        sourceFileName: 'plan4.xlsx',
+        assignedAt: DateTime(2026, 7, 22),
+        sessions: List.generate(
+          4,
+          (index) => DemoRoutineSession(
+            session: 'Semana 2',
+            title: 'Sesión ${index + 1}',
+            exercises: [
+              DemoRoutineExercise(name: 'Ejercicio', series: 1, reps: '10'),
+            ],
+          ),
         ),
       ),
     );
@@ -29,7 +39,7 @@ void main() {
   });
 
   tearDown(() {
-    ImportedRoutineStore.clear();
+    RoutineAssignmentStore.clearAll();
     StudentWorkoutProgressStore.resetProgress(profile);
     WorkoutHistoryStore.clearAll();
   });

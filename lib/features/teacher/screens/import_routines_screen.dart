@@ -365,6 +365,7 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
     ImportedRoutineStore.save(
       selectedPlan: selectedPlan,
       importedSessions: extractedRoutinePreview,
+      sourceFileName: selectedFileName,
     );
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

@@ -1,7 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gym_app/models/routine_assignment.dart';
 import 'package:gym_app/models/routine_models.dart';
 import 'package:gym_app/services/demo_student_profile_service.dart';
-import 'package:gym_app/services/imported_routine_store.dart';
+import 'package:gym_app/services/routine_assignment_store.dart';
 import 'package:gym_app/services/student_routine_service.dart';
 import 'package:gym_app/services/student_workout_progress_store.dart';
 
@@ -24,14 +25,23 @@ void main() {
   );
 
   tearDown(() {
-    ImportedRoutineStore.clear();
+    RoutineAssignmentStore.clearAll();
     StudentWorkoutProgressStore.resetProgress(profile);
   });
 
   test('assigns sessions matching the student plan and current week', () {
-    ImportedRoutineStore.save(
-      selectedPlan: 'Plan 4 sesiones',
-      importedSessions: [weekOne, weekTwoFirst, weekTwoSecond],
+    RoutineAssignmentStore.assign(
+      RoutineAssignment(
+        id: 'assignment_1',
+        userId: 'student_001',
+        studentProfileId: 'student_profile_001',
+        studentName: 'Felipe Durán',
+        plan: 'Plan 4 sesiones',
+        routineName: 'Rutina importada',
+        sourceFileName: 'plan4.xlsx',
+        assignedAt: DateTime(2026, 7, 22),
+        sessions: [weekOne, weekTwoFirst, weekTwoSecond],
+      ),
     );
 
     final sessions = StudentRoutineService.getCurrentWeekSessions(profile);
@@ -45,16 +55,25 @@ void main() {
   });
 
   test('does not assign a routine from a different plan', () {
-    ImportedRoutineStore.save(
-      selectedPlan: 'Plan 3 sesiones',
-      importedSessions: [weekTwoFirst],
+    RoutineAssignmentStore.assign(
+      RoutineAssignment(
+        id: 'assignment_2',
+        userId: 'student_001',
+        studentProfileId: 'student_profile_001',
+        studentName: 'Felipe Durán',
+        plan: 'Plan 3 sesiones',
+        routineName: 'Rutina importada',
+        sourceFileName: 'plan3.xlsx',
+        assignedAt: DateTime(2026, 7, 22),
+        sessions: [weekTwoFirst],
+      ),
     );
 
     expect(StudentRoutineService.getCurrentWeekSessions(profile), isEmpty);
     expect(StudentRoutineService.hasRoutineAssigned(profile), isFalse);
   });
 
-  test('does not assign a routine when none was imported', () {
+  test('does not return a global routine without an assignment', () {
     expect(StudentRoutineService.getCurrentSession(profile), isNull);
   });
 }

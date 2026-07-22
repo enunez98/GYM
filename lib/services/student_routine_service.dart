@@ -1,6 +1,6 @@
 import '../models/routine_models.dart';
 import '../models/student_profile.dart';
-import 'imported_routine_store.dart';
+import 'routine_assignment_store.dart';
 import 'student_workout_progress_store.dart';
 
 class StudentRoutineService {
@@ -47,19 +47,20 @@ class StudentRoutineService {
     StudentProfile? profile,
   ) {
     if (profile == null) return [];
-    if (!ImportedRoutineStore.hasData) return [];
-    if (!_samePlan(profile.plan, ImportedRoutineStore.plan)) return [];
+    final assignment = RoutineAssignmentStore.getByUserId(profile.userId);
+    if (assignment == null) return [];
+    if (!_samePlan(profile.plan, assignment.plan)) return [];
 
     final currentWeekNumber = _extractWeekNumber(profile.currentWeekLabel);
 
-    if (currentWeekNumber == 0) return ImportedRoutineStore.sessions;
+    if (currentWeekNumber == 0) return assignment.sessions;
 
-    final sessions = ImportedRoutineStore.sessions.where((session) {
+    final sessions = assignment.sessions.where((session) {
       final sessionWeekNumber = _extractWeekNumber(session.session);
       return sessionWeekNumber == currentWeekNumber;
     }).toList();
 
-    if (sessions.isEmpty) return ImportedRoutineStore.sessions;
+    if (sessions.isEmpty) return assignment.sessions;
 
     return sessions;
   }

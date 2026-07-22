@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gym_app/features/student/screens/workout_screen.dart';
 import 'package:gym_app/models/app_user.dart';
+import 'package:gym_app/models/routine_assignment.dart';
 import 'package:gym_app/models/routine_models.dart';
 import 'package:gym_app/services/demo_student_profile_service.dart';
-import 'package:gym_app/services/imported_routine_store.dart';
+import 'package:gym_app/services/routine_assignment_store.dart';
 import 'package:gym_app/services/session_store.dart';
 import 'package:gym_app/services/student_workout_progress_store.dart';
 import 'package:gym_app/services/workout_history_store.dart';
@@ -21,22 +22,33 @@ void main() {
         role: UserRole.student,
       ),
     );
-    ImportedRoutineStore.save(
-      selectedPlan: 'Plan 4 sesiones',
-      importedSessions: [
-        DemoRoutineSession(
-          session: 'Semana 2',
-          title: 'Sesión 1 importada',
-          exercises: [
-            DemoRoutineExercise(name: 'Sentadilla', series: 1, reps: '10'),
-          ],
-        ),
-        DemoRoutineSession(
-          session: 'Semana 2',
-          title: 'Sesión 2 importada',
-          exercises: [DemoRoutineExercise(name: 'Remo', series: 1, reps: '12')],
-        ),
-      ],
+    RoutineAssignmentStore.assign(
+      RoutineAssignment(
+        id: 'assignment_1',
+        userId: 'student_001',
+        studentProfileId: 'student_profile_001',
+        studentName: 'Felipe Durán',
+        plan: 'Plan 4 sesiones',
+        routineName: 'Rutina importada',
+        sourceFileName: 'plan4.xlsx',
+        assignedAt: DateTime(2026, 7, 22),
+        sessions: [
+          DemoRoutineSession(
+            session: 'Semana 2',
+            title: 'Sesión 1 importada',
+            exercises: [
+              DemoRoutineExercise(name: 'Sentadilla', series: 1, reps: '10'),
+            ],
+          ),
+          DemoRoutineSession(
+            session: 'Semana 2',
+            title: 'Sesión 2 importada',
+            exercises: [
+              DemoRoutineExercise(name: 'Remo', series: 1, reps: '12'),
+            ],
+          ),
+        ],
+      ),
     );
     StudentWorkoutProgressStore.resetProgress(profile);
     WorkoutHistoryStore.clearAll();
@@ -44,7 +56,7 @@ void main() {
 
   tearDown(() {
     SessionStore.signOut();
-    ImportedRoutineStore.clear();
+    RoutineAssignmentStore.clearAll();
     StudentWorkoutProgressStore.resetProgress(profile);
     WorkoutHistoryStore.clearAll();
   });

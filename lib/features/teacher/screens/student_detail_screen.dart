@@ -5,20 +5,105 @@ import '../../../core/widgets/form_header.dart';
 import '../../../core/widgets/info_row.dart';
 import '../../../core/widgets/metric_card.dart';
 import '../../../core/widgets/teacher_action_row.dart';
+import '../../../models/routine_assignment.dart';
 import '../../../models/student_profile.dart';
 import '../../../services/body_evaluation_store.dart';
+import '../../../services/imported_routine_store.dart';
+import '../../../services/routine_assignment_store.dart';
 import '../../../services/student_attendance_service.dart';
+import '../../../services/student_workout_progress_store.dart';
 
-class StudentDetailScreen extends StatelessWidget {
+class StudentDetailScreen extends StatefulWidget {
   final StudentProfile student;
 
   const StudentDetailScreen({super.key, required this.student});
+
+  @override
+  State<StudentDetailScreen> createState() => _StudentDetailScreenState();
+}
+
+class _StudentDetailScreenState extends State<StudentDetailScreen> {
+  StudentProfile get student => widget.student;
+
+  bool samePlan(String first, String second) {
+    String normalize(String value) {
+      return value
+          .toLowerCase()
+          .replaceAll('á', 'a')
+          .replaceAll('é', 'e')
+          .replaceAll('í', 'i')
+          .replaceAll('ó', 'o')
+          .replaceAll('ú', 'u')
+          .replaceAll(' ', '')
+          .trim();
+    }
+
+    return normalize(first) == normalize(second);
+  }
+
+  String formatDate(DateTime date) {
+    final day = date.day.toString().padLeft(2, '0');
+    final month = date.month.toString().padLeft(2, '0');
+    return '$day-$month-${date.year}';
+  }
+
+  void assignImportedRoutine() {
+    if (!ImportedRoutineStore.hasData) {
+      showMessage('Primero carga una rutina desde Excel');
+      return;
+    }
+    if (!samePlan(student.plan, ImportedRoutineStore.plan)) {
+      showMessage('La rutina importada no corresponde al plan del alumno');
+      return;
+    }
+
+    final timestamp = DateTime.now().microsecondsSinceEpoch;
+    RoutineAssignmentStore.assign(
+      RoutineAssignment(
+        id: 'assignment_$timestamp',
+        userId: student.userId,
+        studentProfileId: student.id,
+        studentName: student.name,
+        plan: student.plan,
+        routineName: 'Rutina importada',
+        sourceFileName: ImportedRoutineStore.fileName,
+        assignedAt: DateTime.now(),
+        sessions: List.from(ImportedRoutineStore.sessions),
+      ),
+    );
+    StudentWorkoutProgressStore.resetProgress(student);
+    setState(() {});
+    showMessage('Rutina asignada a ${student.name}');
+  }
+
+  void removeAssignedRoutine() {
+    RoutineAssignmentStore.removeByUserId(student.userId);
+    StudentWorkoutProgressStore.resetProgress(student);
+    setState(() {});
+    showMessage('Rutina asignada eliminada');
+  }
+
+  void showMessage(String message) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
 
   @override
   Widget build(BuildContext context) {
     final attendance = StudentAttendanceService.getSummary(student);
     final evaluation = BodyEvaluationStore.getLastByUserId(student.userId);
     final bodyScore = evaluation?.bodyScore ?? student.bodyScore;
+    final assignment = RoutineAssignmentStore.getByUserId(student.userId);
+    final importedRoutineAvailable = ImportedRoutineStore.hasData;
+    final importedPlanMatches =
+        importedRoutineAvailable &&
+        samePlan(student.plan, ImportedRoutineStore.plan);
+    final assignmentHelpText = !importedRoutineAvailable
+        ? 'Primero carga una rutina desde Excel'
+        : !importedPlanMatches
+        ? 'La rutina importada no corresponde al plan del alumno'
+        : 'La rutina importada está disponible para este alumno';
 
     return Scaffold(
       backgroundColor: const Color(0xFF06111F),
@@ -67,6 +152,93 @@ class StudentDetailScreen extends StatelessWidget {
                           ),
                         ),
                       ],
+                    ),
+                    const SizedBox(height: 14),
+                    AppCard(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Rutina asignada',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 14),
+                          if (assignment == null)
+                            const Text(
+                              'Este alumno aún no tiene rutina asignada.',
+                              style: TextStyle(color: Colors.black54),
+                            )
+                          else ...[
+                            InfoRow(
+                              icon: Icons.description_outlined,
+                              label: 'Rutina',
+                              value: assignment.routineName,
+                            ),
+                            InfoRow(
+                              icon: Icons.file_present_outlined,
+                              label: 'Archivo',
+                              value: assignment.sourceFileName.isEmpty
+                                  ? 'Rutina importada'
+                                  : assignment.sourceFileName,
+                            ),
+                            InfoRow(
+                              icon: Icons.fitness_center,
+                              label: 'Plan',
+                              value: assignment.plan,
+                            ),
+                            InfoRow(
+                              icon: Icons.calendar_view_week_outlined,
+                              label: 'Contenido',
+                              value:
+                                  '${assignment.totalWeeks} semanas · ${assignment.totalSessions} sesiones · ${assignment.totalExercises} ejercicios',
+                            ),
+                            InfoRow(
+                              icon: Icons.schedule,
+                              label: 'Asignada',
+                              value: formatDate(assignment.assignedAt),
+                            ),
+                          ],
+                          const SizedBox(height: 14),
+                          Text(
+                            assignmentHelpText,
+                            style: TextStyle(
+                              color: importedPlanMatches
+                                  ? const Color(0xFF12985C)
+                                  : const Color(0xFFD98200),
+                              fontSize: 13,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton.icon(
+                              onPressed: importedPlanMatches
+                                  ? assignImportedRoutine
+                                  : null,
+                              icon: const Icon(Icons.assignment_add),
+                              label: Text(
+                                assignment == null
+                                    ? 'Asignar rutina importada'
+                                    : 'Reasignar rutina importada',
+                              ),
+                            ),
+                          ),
+                          if (assignment != null) ...[
+                            const SizedBox(height: 8),
+                            SizedBox(
+                              width: double.infinity,
+                              child: OutlinedButton.icon(
+                                onPressed: removeAssignedRoutine,
+                                icon: const Icon(Icons.link_off),
+                                label: const Text('Quitar rutina asignada'),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 14),
                     AppCard(
