@@ -11,8 +11,10 @@ import '../../../services/body_evaluation_store.dart';
 import '../../../services/imported_routine_store.dart';
 import '../../../services/routine_assignment_store.dart';
 import '../../../services/student_attendance_service.dart';
+import '../../../services/student_profile_store.dart';
 import '../../../services/student_workout_progress_store.dart';
 
+import 'edit_student_screen.dart';
 import 'student_workout_history_screen.dart';
 
 class StudentDetailScreen extends StatefulWidget {
@@ -25,7 +27,9 @@ class StudentDetailScreen extends StatefulWidget {
 }
 
 class _StudentDetailScreenState extends State<StudentDetailScreen> {
-  StudentProfile get student => widget.student;
+  StudentProfile get student {
+    return StudentProfileStore.getById(widget.student.id) ?? widget.student;
+  }
 
   bool samePlan(String first, String second) {
     String normalize(String value) {
@@ -338,10 +342,22 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                               );
                             },
                           ),
-                          const TeacherActionRow(
+                          TeacherActionRow(
                             icon: Icons.edit_outlined,
                             title: 'Editar datos del alumno',
-                            subtitle: 'Plan, teléfono o vencimiento',
+                            subtitle: 'Nombre, RUT, teléfono, plan y estado',
+                            onTap: () async {
+                              final updated = await Navigator.push<bool>(
+                                context,
+                                MaterialPageRoute<bool>(
+                                  builder: (_) =>
+                                      EditStudentScreen(profile: student),
+                                ),
+                              );
+                              if (updated == true && mounted) {
+                                setState(() {});
+                              }
+                            },
                           ),
                         ],
                       ),

@@ -22,4 +22,29 @@ void main() {
     expect(DemoStudentProfileService.getByUserId('admin_001'), isNull);
     expect(DemoStudentProfileService.getByUserId(null), isNull);
   });
+
+  test('copyWith and store update preserve the profile identity', () {
+    final profile = StudentProfileStore.getById('student_profile_001')!;
+    final updated = profile.copyWith(
+      name: 'Felipe Actualizado',
+      rut: '123456785',
+      plan: 'Plan 3 sesiones',
+      weeklyAttendanceTarget: 3,
+      monthlyAttendanceTarget: 12,
+    );
+
+    StudentProfileStore.update(updated);
+
+    expect(updated.id, profile.id);
+    expect(updated.userId, profile.userId);
+    expect(StudentProfileStore.getByUserId(profile.userId), same(updated));
+    expect(StudentProfileStore.getByRut('12.345.678-5'), same(updated));
+    expect(
+      StudentProfileStore.existsByRutExcludingProfile(
+        rut: updated.rut,
+        profileId: updated.id,
+      ),
+      isFalse,
+    );
+  });
 }

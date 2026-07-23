@@ -44,4 +44,40 @@ void main() {
       ),
     );
   });
+
+  test('updates student name and RUT while preserving the password', () async {
+    DemoAuthService.updateUser(
+      userId: 'student_001',
+      rut: '12.345.678-5',
+      name: 'Felipe Actualizado',
+    );
+
+    final updated = await DemoAuthService.login(
+      rut: '12.345.678-5',
+      password: '1234',
+    );
+    expect(updated.name, 'Felipe Actualizado');
+    expect(updated.id, 'student_001');
+    expect(
+      () => DemoAuthService.login(rut: '11.111.111-1', password: '1234'),
+      throwsA(isA<AuthException>()),
+    );
+  });
+
+  test('does not allow changing a student to another credential RUT', () {
+    expect(
+      () => DemoAuthService.updateUser(
+        userId: 'student_001',
+        rut: '22.222.222-2',
+        name: 'Felipe Durán',
+      ),
+      throwsA(
+        isA<AuthException>().having(
+          (error) => error.message,
+          'message',
+          'Ya existe un usuario con ese RUT',
+        ),
+      ),
+    );
+  });
 }

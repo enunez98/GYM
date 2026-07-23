@@ -57,6 +57,46 @@ class DemoAuthService {
     );
   }
 
+  static bool existsByRutExcludingUser({
+    required String rut,
+    required String userId,
+  }) {
+    final normalizedRut = normalizeRut(rut);
+    return _users.any(
+      (credential) =>
+          credential.user.id != userId && credential.user.rut == normalizedRut,
+    );
+  }
+
+  static void updateUser({
+    required String userId,
+    required String rut,
+    required String name,
+    bool isActive = true,
+  }) {
+    final normalizedRut = normalizeRut(rut);
+    if (existsByRutExcludingUser(rut: normalizedRut, userId: userId)) {
+      throw const AuthException('Ya existe un usuario con ese RUT');
+    }
+
+    final index = _users.indexWhere(
+      (credential) => credential.user.id == userId,
+    );
+    if (index == -1) return;
+
+    final oldCredential = _users[index];
+    _users[index] = _DemoCredential(
+      user: AppUser(
+        id: oldCredential.user.id,
+        rut: normalizedRut,
+        name: name,
+        role: oldCredential.user.role,
+        isActive: isActive,
+      ),
+      password: oldCredential.password,
+    );
+  }
+
   static void resetToDemo() {
     _users
       ..clear()

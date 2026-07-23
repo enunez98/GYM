@@ -11,9 +11,14 @@ import '../../../services/student_profile_store.dart';
 
 import 'student_detail_screen.dart';
 
-class StudentsListScreen extends StatelessWidget {
+class StudentsListScreen extends StatefulWidget {
   const StudentsListScreen({super.key});
 
+  @override
+  State<StudentsListScreen> createState() => _StudentsListScreenState();
+}
+
+class _StudentsListScreenState extends State<StudentsListScreen> {
   @override
   Widget build(BuildContext context) {
     final students = StudentProfileStore.all;
@@ -91,7 +96,19 @@ class StudentsListScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 14),
                     for (final student in students) ...[
-                      _StudentListCard(student: student),
+                      _StudentListCard(
+                        student: student,
+                        onTap: () async {
+                          await Navigator.push<void>(
+                            context,
+                            MaterialPageRoute<void>(
+                              builder: (_) =>
+                                  StudentDetailScreen(student: student),
+                            ),
+                          );
+                          if (mounted) setState(() {});
+                        },
+                      ),
                       const SizedBox(height: 12),
                     ],
                     const SizedBox(height: 24),
@@ -108,8 +125,9 @@ class StudentsListScreen extends StatelessWidget {
 
 class _StudentListCard extends StatelessWidget {
   final StudentProfile student;
+  final VoidCallback onTap;
 
-  const _StudentListCard({required this.student});
+  const _StudentListCard({required this.student, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -133,14 +151,7 @@ class _StudentListCard extends StatelessWidget {
 
     return AppCard(
       child: InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => StudentDetailScreen(student: student),
-            ),
-          );
-        },
+        onTap: onTap,
         borderRadius: BorderRadius.circular(18),
         child: Padding(
           padding: EdgeInsets.zero,

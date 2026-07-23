@@ -37,6 +37,50 @@ class StudentProfile {
     required this.currentWeekDates,
   });
 
+  StudentProfile copyWith({
+    String? id,
+    String? userId,
+    String? name,
+    String? rut,
+    String? phone,
+    String? plan,
+    String? status,
+    String? startDate,
+    String? endDate,
+    int? daysRemaining,
+    int? weeklyAttendanceCompleted,
+    int? weeklyAttendanceTarget,
+    int? monthlyAttendanceCompleted,
+    int? monthlyAttendanceTarget,
+    int? bodyScore,
+    String? currentWeekLabel,
+    String? currentWeekDates,
+  }) {
+    return StudentProfile(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      name: name ?? this.name,
+      rut: rut ?? this.rut,
+      phone: phone ?? this.phone,
+      plan: plan ?? this.plan,
+      status: status ?? this.status,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      daysRemaining: daysRemaining ?? this.daysRemaining,
+      weeklyAttendanceCompleted:
+          weeklyAttendanceCompleted ?? this.weeklyAttendanceCompleted,
+      weeklyAttendanceTarget:
+          weeklyAttendanceTarget ?? this.weeklyAttendanceTarget,
+      monthlyAttendanceCompleted:
+          monthlyAttendanceCompleted ?? this.monthlyAttendanceCompleted,
+      monthlyAttendanceTarget:
+          monthlyAttendanceTarget ?? this.monthlyAttendanceTarget,
+      bodyScore: bodyScore ?? this.bodyScore,
+      currentWeekLabel: currentWeekLabel ?? this.currentWeekLabel,
+      currentWeekDates: currentWeekDates ?? this.currentWeekDates,
+    );
+  }
+
   String get weeklyAttendanceText =>
       '$weeklyAttendanceCompleted/$weeklyAttendanceTarget';
 

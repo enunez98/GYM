@@ -43,6 +43,14 @@ class StudentProfileStore {
     return null;
   }
 
+  static StudentProfile? getByRut(String rut) {
+    final normalizedRut = _normalizeRut(rut);
+    for (final profile in _profiles) {
+      if (_normalizeRut(profile.rut) == normalizedRut) return profile;
+    }
+    return null;
+  }
+
   static bool existsByRut(String rut) {
     final normalizedRut = _normalizeRut(rut);
     return _profiles.any(
@@ -50,8 +58,28 @@ class StudentProfileStore {
     );
   }
 
+  static bool existsByRutExcludingProfile({
+    required String rut,
+    required String profileId,
+  }) {
+    final normalizedRut = _normalizeRut(rut);
+    return _profiles.any(
+      (profile) =>
+          profile.id != profileId &&
+          _normalizeRut(profile.rut) == normalizedRut,
+    );
+  }
+
   static void add(StudentProfile profile) {
     _profiles.add(profile);
+  }
+
+  static void update(StudentProfile updatedProfile) {
+    final index = _profiles.indexWhere(
+      (profile) => profile.id == updatedProfile.id,
+    );
+    if (index == -1) return;
+    _profiles[index] = updatedProfile;
   }
 
   static void clearAll() {
