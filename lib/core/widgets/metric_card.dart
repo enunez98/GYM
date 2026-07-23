@@ -23,7 +23,7 @@ class MetricCard extends StatelessWidget {
           Text(
             title,
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 11, color: Colors.black54),
+            style: const TextStyle(fontSize: 11, color: Color(0xFF616B76)),
           ),
           const SizedBox(height: 8),
           Text(
@@ -34,7 +34,7 @@ class MetricCard extends StatelessWidget {
             subtitle,
             style: const TextStyle(
               fontSize: 12,
-              color: Color(0xFF20B2AA),
+              color: Color(0xFF59D52D),
               fontWeight: FontWeight.w700,
             ),
           ),

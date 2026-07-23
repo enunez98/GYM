@@ -28,7 +28,7 @@ class StudentsListScreen extends StatelessWidget {
         .length;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF06111F),
+      backgroundColor: const Color(0xFF00111F),
       body: SafeArea(
         child: Column(
           children: [
@@ -43,7 +43,7 @@ class StudentsListScreen extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: const BoxDecoration(
-                  color: Color(0xFFF6F8FA),
+                  color: Color(0xFFF6F7F7),
                   borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                 ),
                 child: ListView(
@@ -54,7 +54,7 @@ class StudentsListScreen extends StatelessWidget {
                           hintText: 'Buscar alumno...',
                           prefixIcon: const Icon(Icons.search),
                           filled: true,
-                          fillColor: const Color(0xFFF6F8FA),
+                          fillColor: const Color(0xFFF6F7F7),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(14),
                           ),
@@ -119,8 +119,8 @@ class _StudentListCard extends StatelessWidget {
     final isWarning = student.status == 'Por vencer';
     final isExpired = student.status == 'Vencido';
 
-    Color background = const Color(0xFFDFF9EA);
-    Color textColor = const Color(0xFF12985C);
+    Color background = const Color(0xFFEDF9E8);
+    Color textColor = const Color(0xFF59D52D);
 
     if (isWarning) {
       background = const Color(0xFFFFF2D9);
@@ -148,8 +148,8 @@ class _StudentListCard extends StatelessWidget {
             children: [
               const CircleAvatar(
                 radius: 25,
-                backgroundColor: Color(0xFF20B2AA),
-                child: Icon(Icons.person, color: Colors.white),
+                backgroundColor: Color(0xFF59D52D),
+                child: Icon(Icons.person, color: Color(0xFF111214)),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -166,13 +166,13 @@ class _StudentListCard extends StatelessWidget {
                     const SizedBox(height: 3),
                     Text(
                       student.plan,
-                      style: const TextStyle(color: Colors.black54),
+                      style: const TextStyle(color: Color(0xFF616B76)),
                     ),
                     const SizedBox(height: 3),
                     Text(
                       student.phone,
                       style: const TextStyle(
-                        color: Colors.black45,
+                        color: Color(0xFF616B76),
                         fontSize: 12,
                       ),
                     ),
@@ -180,7 +180,7 @@ class _StudentListCard extends StatelessWidget {
                     Text(
                       'Asistencia: ${attendance.monthlyText} · Evaluación: $bodyScore/100',
                       style: const TextStyle(
-                        color: Colors.black45,
+                        color: Color(0xFF616B76),
                         fontSize: 12,
                       ),
                     ),
@@ -188,7 +188,7 @@ class _StudentListCard extends StatelessWidget {
                     Text(
                       'Vence: ${student.endDate}',
                       style: const TextStyle(
-                        color: Colors.black45,
+                        color: Color(0xFF616B76),
                         fontSize: 12,
                       ),
                     ),
@@ -201,7 +201,7 @@ class _StudentListCard extends StatelessWidget {
                 textColor: textColor,
               ),
               const SizedBox(width: 6),
-              const Icon(Icons.chevron_right, color: Colors.black38),
+              const Icon(Icons.chevron_right, color: Color(0xFF7A838C)),
             ],
           ),
         ),

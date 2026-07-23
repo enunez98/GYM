@@ -26,7 +26,7 @@ class AppTextField extends StatelessWidget {
         hintText: hint,
         prefixIcon: Icon(icon),
         filled: true,
-        fillColor: const Color(0xFFF6F8FA),
+        fillColor: const Color(0xFFFFFFFF),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
       ),
     );

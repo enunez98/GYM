@@ -20,8 +20,8 @@ class TeacherActionRow extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 22,
-          backgroundColor: const Color(0xFFE9F8F7),
-          child: Icon(icon, color: const Color(0xFF20B2AA), size: 22),
+          backgroundColor: const Color(0xFFEDF9E8),
+          child: Icon(icon, color: const Color(0xFF59D52D), size: 22),
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -31,12 +31,12 @@ class TeacherActionRow extends StatelessWidget {
               Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
               Text(
                 subtitle,
-                style: const TextStyle(color: Colors.black54, fontSize: 12),
+                style: const TextStyle(color: Color(0xFF616B76), fontSize: 12),
               ),
             ],
           ),
         ),
-        const Icon(Icons.chevron_right, color: Colors.black38),
+        const Icon(Icons.chevron_right, color: Color(0xFF7A838C)),
       ],
     );
 

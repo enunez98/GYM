@@ -380,7 +380,7 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF06111F),
+      backgroundColor: const Color(0xFF00111F),
       body: SafeArea(
         child: Column(
           children: [
@@ -395,7 +395,7 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: const BoxDecoration(
-                  color: Color(0xFFF6F8FA),
+                  color: Color(0xFFF6F7F7),
                   borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                 ),
                 child: ListView(
@@ -418,7 +418,7 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
                               labelText: 'Plan',
                               prefixIcon: const Icon(Icons.assignment),
                               filled: true,
-                              fillColor: const Color(0xFFF6F8FA),
+                              fillColor: const Color(0xFFF6F7F7),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(14),
                               ),
@@ -463,11 +463,11 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
                             width: double.infinity,
                             padding: const EdgeInsets.all(18),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFF6F8FA),
+                              color: const Color(0xFFF6F7F7),
                               borderRadius: BorderRadius.circular(18),
                               border: Border.all(
                                 color: fileSelected
-                                    ? const Color(0xFF20B2AA)
+                                    ? const Color(0xFF59D52D)
                                     : const Color(0xFFE5E7EB),
                               ),
                             ),
@@ -478,8 +478,8 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
                                       ? Icons.check_circle
                                       : Icons.upload_file,
                                   color: fileSelected
-                                      ? const Color(0xFF20B2AA)
-                                      : Colors.black45,
+                                      ? const Color(0xFF59D52D)
+                                      : Color(0xFF616B76),
                                   size: 42,
                                 ),
                                 const SizedBox(height: 10),
@@ -489,15 +489,15 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: fileSelected
-                                        ? Colors.black87
-                                        : Colors.black45,
+                                        ? const Color(0xFFF6F7F7)
+                                        : Color(0xFF616B76),
                                   ),
                                 ),
                                 const SizedBox(height: 6),
                                 const Text(
                                   'Formato esperado: .xlsx',
                                   style: TextStyle(
-                                    color: Colors.black54,
+                                    color: Color(0xFF616B76),
                                     fontSize: 12,
                                   ),
                                 ),
@@ -510,9 +510,9 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
                             width: double.infinity,
                             child: OutlinedButton.icon(
                               style: OutlinedButton.styleFrom(
-                                foregroundColor: const Color(0xFF20B2AA),
+                                foregroundColor: const Color(0xFF59D52D),
                                 side: const BorderSide(
-                                  color: Color(0xFF20B2AA),
+                                  color: Color(0xFF59D52D),
                                 ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(14),
@@ -635,7 +635,7 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
                                   .map(
                                     (column) => Chip(
                                       label: Text(column),
-                                      backgroundColor: const Color(0xFFE9F8F7),
+                                      backgroundColor: const Color(0xFFEDF9E8),
                                     ),
                                   )
                                   .toList(),
@@ -690,7 +690,7 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
                                 '${extractedRoutinePreview[i].session} · ${extractedRoutinePreview[i].title}',
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: Color(0xFF20B2AA),
+                                  color: Color(0xFF59D52D),
                                 ),
                               ),
                               const SizedBox(height: 6),
@@ -700,7 +700,7 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
                                     .map((exercise) => exercise.name)
                                     .join(' | '),
                                 style: const TextStyle(
-                                  color: Colors.black54,
+                                  color: Color(0xFF616B76),
                                   fontSize: 12,
                                 ),
                               ),
@@ -748,8 +748,8 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
                       height: 54,
                       child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF20B2AA),
-                          foregroundColor: Colors.white,
+                          backgroundColor: const Color(0xFF59D52D),
+                          foregroundColor: const Color(0xFF111214),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(14),
                           ),
@@ -771,8 +771,8 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
                       child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: fileValidated
-                              ? const Color(0xFF06111F)
-                              : Colors.black26,
+                              ? const Color(0xFF00111F)
+                              : Color(0xFFC9CED2),
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(14),
@@ -794,8 +794,8 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
                       height: 54,
                       child: OutlinedButton(
                         style: OutlinedButton.styleFrom(
-                          foregroundColor: Colors.black87,
-                          side: const BorderSide(color: Colors.black26),
+                          foregroundColor: const Color(0xFF111214),
+                          side: const BorderSide(color: Color(0xFFC9CED2)),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(14),
                           ),
@@ -836,7 +836,7 @@ class _ImportColumnRow extends StatelessWidget {
         children: [
           const Icon(
             Icons.table_chart_outlined,
-            color: Color(0xFF20B2AA),
+            color: Color(0xFF59D52D),
             size: 20,
           ),
           const SizedBox(width: 10),
@@ -848,7 +848,7 @@ class _ImportColumnRow extends StatelessWidget {
           ),
           Text(
             description,
-            style: const TextStyle(color: Colors.black54, fontSize: 12),
+            style: const TextStyle(color: Color(0xFF616B76), fontSize: 12),
           ),
         ],
       ),
@@ -870,7 +870,7 @@ class _ValidationRow extends StatelessWidget {
         children: [
           Icon(
             isOk ? Icons.check_circle : Icons.radio_button_unchecked,
-            color: isOk ? const Color(0xFF20B2AA) : Colors.black38,
+            color: isOk ? const Color(0xFF59D52D) : Color(0xFF7A838C),
             size: 22,
           ),
           const SizedBox(width: 10),
@@ -879,7 +879,7 @@ class _ValidationRow extends StatelessWidget {
               label,
               style: TextStyle(
                 fontWeight: isOk ? FontWeight.bold : FontWeight.normal,
-                color: isOk ? Colors.black87 : Colors.black54,
+                color: isOk ? const Color(0xFFF6F7F7) : Color(0xFF616B76),
               ),
             ),
           ),

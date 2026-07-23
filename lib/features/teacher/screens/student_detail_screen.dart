@@ -106,7 +106,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
         : 'La rutina importada está disponible para este alumno';
 
     return Scaffold(
-      backgroundColor: const Color(0xFF06111F),
+      backgroundColor: const Color(0xFF00111F),
       body: SafeArea(
         child: Column(
           children: [
@@ -121,7 +121,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: const BoxDecoration(
-                  color: Color(0xFFF6F8FA),
+                  color: Color(0xFFF6F7F7),
                   borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                 ),
                 child: ListView(
@@ -169,7 +169,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                           if (assignment == null)
                             const Text(
                               'Este alumno aún no tiene rutina asignada.',
-                              style: TextStyle(color: Colors.black54),
+                              style: TextStyle(color: Color(0xFF616B76)),
                             )
                           else ...[
                             InfoRow(
@@ -206,7 +206,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                             assignmentHelpText,
                             style: TextStyle(
                               color: importedPlanMatches
-                                  ? const Color(0xFF12985C)
+                                  ? const Color(0xFF59D52D)
                                   : const Color(0xFFD98200),
                               fontSize: 13,
                             ),
@@ -344,7 +344,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                           if (evaluation == null)
                             const Text(
                               'Sin evaluación corporal registrada.',
-                              style: TextStyle(color: Colors.black54),
+                              style: TextStyle(color: Color(0xFF616B76)),
                             )
                           else ...[
                             InfoRow(
