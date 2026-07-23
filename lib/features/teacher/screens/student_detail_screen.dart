@@ -13,6 +13,8 @@ import '../../../services/routine_assignment_store.dart';
 import '../../../services/student_attendance_service.dart';
 import '../../../services/student_workout_progress_store.dart';
 
+import 'student_workout_history_screen.dart';
+
 class StudentDetailScreen extends StatefulWidget {
   final StudentProfile student;
 
@@ -319,6 +321,22 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                             title: 'Ver asistencia',
                             subtitle:
                                 '${attendance.weeklyText} semanal · ${attendance.monthlyText} mensual',
+                          ),
+                          TeacherActionRow(
+                            icon: Icons.history,
+                            title: 'Ver historial de entrenamientos',
+                            subtitle:
+                                'Sesiones completadas, omitidas, kg, reps y volumen',
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute<void>(
+                                  builder: (_) => StudentWorkoutHistoryScreen(
+                                    profile: student,
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                           const TeacherActionRow(
                             icon: Icons.edit_outlined,
