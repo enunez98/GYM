@@ -5,6 +5,7 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:gym_app/app.dart';
@@ -13,11 +14,35 @@ void main() {
   testWidgets('shows the login screen', (WidgetTester tester) async {
     await tester.pumpWidget(const GymApp());
 
-    expect(find.text('GYM Pro'), findsOneWidget);
+    expect(
+      find.bySemanticsLabel('NexFit — Tu fuerza. Tu mejor versión.'),
+      findsOneWidget,
+    );
     expect(find.text('Iniciar sesión'), findsOneWidget);
     expect(find.text('RUT'), findsOneWidget);
     expect(find.text('Contraseña'), findsOneWidget);
-    expect(find.text('Demo alumno'), findsOneWidget);
-    expect(find.text('Demo admin'), findsOneWidget);
+    expect(find.text('Alumno'), findsOneWidget);
+    expect(find.text('Admin'), findsOneWidget);
+  });
+
+  testWidgets('desktop login fits without scrolling', (
+    WidgetTester tester,
+  ) async {
+    tester.view.physicalSize = const Size(1200, 700);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(const GymApp());
+    await tester.pump();
+
+    final scrollView = tester.widget<SingleChildScrollView>(
+      find.byType(SingleChildScrollView).first,
+    );
+
+    expect(scrollView.physics, isA<NeverScrollableScrollPhysics>());
+    expect(find.text('Inicial de Nex'), findsNothing);
+    expect(find.text('Movimiento\ny superación'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 }
