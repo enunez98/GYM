@@ -224,7 +224,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
     final weekFinished = weekSessions.isNotEmpty && assignedSession == null;
 
     return Container(
-      color: const Color(0xFF06111F),
+      color: const Color(0xFF00111F),
       child: SafeArea(
         child: Column(
           children: [
@@ -238,7 +238,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: const BoxDecoration(
-                  color: Color(0xFFF6F8FA),
+                  color: Color(0xFFF6F7F7),
                   borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                 ),
                 child: ListView(
@@ -253,7 +253,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                                 : hasAssignedWorkout
                                 ? assignedSession.session
                                 : profile?.currentWeekLabel ?? 'Semana actual',
-                            style: TextStyle(color: Colors.black54),
+                            style: TextStyle(color: Color(0xFF616B76)),
                           ),
                           const SizedBox(height: 6),
                           Row(
@@ -276,10 +276,10 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                                     ? 'Excel'
                                     : 'Pendiente',
                                 background: hasAssignedWorkout
-                                    ? const Color(0xFFDFF9EA)
+                                    ? const Color(0xFFEDF9E8)
                                     : const Color(0xFFFFF2D9),
                                 textColor: hasAssignedWorkout
-                                    ? const Color(0xFF12985C)
+                                    ? const Color(0xFF59D52D)
                                     : const Color(0xFFD98200),
                               ),
                             ],
@@ -291,7 +291,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                                 : hasAssignedWorkout
                                 ? '${assignedSession.exercises.length} ejercicios importados'
                                 : 'El administrador debe asignar una rutina a este alumno',
-                            style: TextStyle(color: Colors.black54),
+                            style: TextStyle(color: Color(0xFF616B76)),
                           ),
                         ],
                       ),
@@ -352,15 +352,15 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                       const AppCard(
                         child: Text(
                           'Aún no tienes ejercicios asignados para esta semana.',
-                          style: TextStyle(color: Colors.black54),
+                          style: TextStyle(color: Color(0xFF616B76)),
                         ),
                       ),
                     SizedBox(
                       height: 54,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF20B2AA),
-                          foregroundColor: Colors.white,
+                          backgroundColor: const Color(0xFF59D52D),
+                          foregroundColor: const Color(0xFF111214),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(14),
                           ),
@@ -389,8 +389,8 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                       height: 54,
                       child: OutlinedButton(
                         style: OutlinedButton.styleFrom(
-                          foregroundColor: Colors.black87,
-                          side: const BorderSide(color: Colors.black26),
+                          foregroundColor: const Color(0xFF111214),
+                          side: const BorderSide(color: Color(0xFFC9CED2)),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(14),
                           ),
@@ -453,11 +453,11 @@ class _ImportedWorkoutExerciseCard extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 16,
-                backgroundColor: const Color(0xFFE9F8F7),
+                backgroundColor: const Color(0xFFEDF9E8),
                 child: Text(
                   '$number',
                   style: const TextStyle(
-                    color: Color(0xFF20B2AA),
+                    color: Color(0xFF59D52D),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -474,7 +474,7 @@ class _ImportedWorkoutExerciseCard extends StatelessWidget {
               ),
               Text(
                 '$totalSeries series',
-                style: const TextStyle(color: Colors.black54, fontSize: 12),
+                style: const TextStyle(color: Color(0xFF616B76), fontSize: 12),
               ),
             ],
           ),
@@ -482,7 +482,7 @@ class _ImportedWorkoutExerciseCard extends StatelessWidget {
           Text(
             'Objetivo: ${exercise.reps}',
             style: const TextStyle(
-              color: Colors.black54,
+              color: Color(0xFF616B76),
               fontSize: 13,
               fontWeight: FontWeight.w600,
             ),
@@ -494,7 +494,7 @@ class _ImportedWorkoutExerciseCard extends StatelessWidget {
                 child: Text(
                   'Serie',
                   style: TextStyle(
-                    color: Colors.black54,
+                    color: Color(0xFF616B76),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -505,7 +505,7 @@ class _ImportedWorkoutExerciseCard extends StatelessWidget {
                   'kg',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Colors.black54,
+                    color: Color(0xFF616B76),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -517,7 +517,7 @@ class _ImportedWorkoutExerciseCard extends StatelessWidget {
                   'reps',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Colors.black54,
+                    color: Color(0xFF616B76),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -547,7 +547,7 @@ class _ImportedWorkoutExerciseCard extends StatelessWidget {
                         hintText: 'kg',
                         isDense: true,
                         filled: true,
-                        fillColor: const Color(0xFFF6F8FA),
+                        fillColor: const Color(0xFFF6F7F7),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -565,7 +565,7 @@ class _ImportedWorkoutExerciseCard extends StatelessWidget {
                         hintText: 'reps',
                         isDense: true,
                         filled: true,
-                        fillColor: const Color(0xFFF6F8FA),
+                        fillColor: const Color(0xFFF6F7F7),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),

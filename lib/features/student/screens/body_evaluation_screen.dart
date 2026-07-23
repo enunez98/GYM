@@ -32,7 +32,7 @@ class BodyEvaluationScreen extends StatelessWidget {
     final evaluation = BodyEvaluationStore.getLastByUserId(user?.id);
 
     return Container(
-      color: const Color(0xFF06111F),
+      color: const Color(0xFF00111F),
       child: SafeArea(
         child: Column(
           children: [
@@ -46,7 +46,7 @@ class BodyEvaluationScreen extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: const BoxDecoration(
-                  color: Color(0xFFF6F8FA),
+                  color: Color(0xFFF6F7F7),
                   borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                 ),
                 child: evaluation == null
@@ -66,7 +66,7 @@ class BodyEvaluationScreen extends StatelessWidget {
                                 SizedBox(height: 8),
                                 Text(
                                   'Aún no tienes una evaluación corporal registrada.',
-                                  style: TextStyle(color: Colors.black54),
+                                  style: TextStyle(color: Color(0xFF616B76)),
                                 ),
                               ],
                             ),
@@ -81,7 +81,7 @@ class BodyEvaluationScreen extends StatelessWidget {
                               children: [
                                 const Text(
                                   'Última evaluación',
-                                  style: TextStyle(color: Colors.black54),
+                                  style: TextStyle(color: Color(0xFF616B76)),
                                 ),
                                 const SizedBox(height: 6),
                                 Row(
@@ -97,8 +97,8 @@ class BodyEvaluationScreen extends StatelessWidget {
                                     ),
                                     StatusChip(
                                       text: 'Registrada',
-                                      background: const Color(0xFFDFF9EA),
-                                      textColor: const Color(0xFF12985C),
+                                      background: const Color(0xFFEDF9E8),
+                                      textColor: const Color(0xFF59D52D),
                                     ),
                                   ],
                                 ),
@@ -111,7 +111,7 @@ class BodyEvaluationScreen extends StatelessWidget {
                                       style: const TextStyle(
                                         fontSize: 54,
                                         fontWeight: FontWeight.bold,
-                                        color: Color(0xFF20B2AA),
+                                        color: Color(0xFF59D52D),
                                       ),
                                     ),
                                     const SizedBox(width: 4),
@@ -121,7 +121,7 @@ class BodyEvaluationScreen extends StatelessWidget {
                                         '/100 puntos',
                                         style: TextStyle(
                                           fontSize: 18,
-                                          color: Colors.black54,
+                                          color: Color(0xFF616B76),
                                         ),
                                       ),
                                     ),
@@ -136,7 +136,7 @@ class BodyEvaluationScreen extends StatelessWidget {
                                         100,
                                     minHeight: 12,
                                     backgroundColor: const Color(0xFFE5E7EB),
-                                    color: const Color(0xFF20B2AA),
+                                    color: const Color(0xFF59D52D),
                                   ),
                                 ),
                               ],
@@ -380,11 +380,11 @@ class _BodyMetricTile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: const Color(0xFF20B2AA), size: 22),
+          Icon(icon, color: const Color(0xFF59D52D), size: 22),
           const SizedBox(height: 10),
           Text(
             title,
-            style: const TextStyle(color: Colors.black54, fontSize: 12),
+            style: const TextStyle(color: Color(0xFF616B76), fontSize: 12),
           ),
           const SizedBox(height: 6),
           Row(
@@ -404,7 +404,7 @@ class _BodyMetricTile extends StatelessWidget {
                   child: Text(
                     unit,
                     style: const TextStyle(
-                      color: Colors.black54,
+                      color: Color(0xFF616B76),
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -429,8 +429,8 @@ class _BodyControlRow extends StatelessWidget {
     final isPositive = value.startsWith('+');
     final isNegative = value.startsWith('-');
 
-    Color color = Colors.black87;
-    if (isPositive) color = const Color(0xFF12985C);
+    Color color = const Color(0xFFF6F7F7);
+    if (isPositive) color = const Color(0xFF59D52D);
     if (isNegative) color = const Color(0xFFD98200);
 
     return Padding(
@@ -486,14 +486,14 @@ class _BodyProgressRow extends StatelessWidget {
               value: progress,
               minHeight: 10,
               backgroundColor: const Color(0xFFE5E7EB),
-              color: const Color(0xFF20B2AA),
+              color: const Color(0xFF59D52D),
             ),
           ),
           const SizedBox(height: 5),
           Text(
             status,
             style: const TextStyle(
-              color: Color(0xFF12985C),
+              color: Color(0xFF59D52D),
               fontSize: 12,
               fontWeight: FontWeight.w700,
             ),

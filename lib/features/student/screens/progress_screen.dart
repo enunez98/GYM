@@ -21,7 +21,7 @@ class ProgressScreen extends StatelessWidget {
     final chartValues = summary.oneRmTrend;
 
     return Container(
-      color: const Color(0xFF06111F),
+      color: const Color(0xFF00111F),
       child: SafeArea(
         child: Column(
           children: [
@@ -35,7 +35,7 @@ class ProgressScreen extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: const BoxDecoration(
-                  color: Color(0xFFF6F8FA),
+                  color: Color(0xFFF6F7F7),
                   borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                 ),
                 child: ListView(
@@ -46,7 +46,7 @@ class ProgressScreen extends StatelessWidget {
                         children: [
                           const Text(
                             'Ejercicio destacado',
-                            style: TextStyle(color: Colors.black54),
+                            style: TextStyle(color: Color(0xFF616B76)),
                           ),
                           const SizedBox(height: 6),
                           Row(
@@ -65,10 +65,10 @@ class ProgressScreen extends StatelessWidget {
                               StatusChip(
                                 text: hasProgress ? 'Real' : 'Pendiente',
                                 background: hasProgress
-                                    ? const Color(0xFFDFF9EA)
+                                    ? const Color(0xFFEDF9E8)
                                     : const Color(0xFFFFF2D9),
                                 textColor: hasProgress
-                                    ? const Color(0xFF12985C)
+                                    ? const Color(0xFF59D52D)
                                     : const Color(0xFFD98200),
                               ),
                             ],
@@ -78,7 +78,7 @@ class ProgressScreen extends StatelessWidget {
                             hasProgress
                                 ? 'Calculado desde tus entrenamientos guardados'
                                 : 'Guarda un entrenamiento para generar progreso',
-                            style: const TextStyle(color: Colors.black54),
+                            style: const TextStyle(color: Color(0xFF616B76)),
                           ),
                         ],
                       ),
@@ -142,7 +142,7 @@ class ProgressScreen extends StatelessWidget {
                             const Text(
                               'Cada punto representa el mejor 1RM estimado de un entrenamiento guardado.',
                               style: TextStyle(
-                                color: Colors.black54,
+                                color: Color(0xFF616B76),
                                 fontSize: 12,
                               ),
                             ),
@@ -164,7 +164,7 @@ class ProgressScreen extends StatelessWidget {
                             SizedBox(height: 12),
                             Text(
                               'Aún no hay datos suficientes para mostrar el gráfico.',
-                              style: TextStyle(color: Colors.black54),
+                              style: TextStyle(color: Color(0xFF616B76)),
                             ),
                           ],
                         ),
@@ -185,7 +185,7 @@ class ProgressScreen extends StatelessWidget {
                           if (summary.bestSets.isEmpty)
                             const Text(
                               'Todavía no hay series registradas.',
-                              style: TextStyle(color: Colors.black54),
+                              style: TextStyle(color: Color(0xFF616B76)),
                             )
                           else
                             for (
@@ -277,11 +277,11 @@ class _BestSetRow extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 15,
-            backgroundColor: const Color(0xFFE9F8F7),
+            backgroundColor: const Color(0xFFEDF9E8),
             child: Text(
               '$position',
               style: const TextStyle(
-                color: Color(0xFF20B2AA),
+                color: Color(0xFF59D52D),
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -295,13 +295,13 @@ class _BestSetRow extends StatelessWidget {
                   exercise,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
-                Text(result, style: const TextStyle(color: Colors.black54)),
+                Text(result, style: const TextStyle(color: Color(0xFF616B76))),
               ],
             ),
           ),
           Text(
             date,
-            style: const TextStyle(color: Colors.black45, fontSize: 12),
+            style: const TextStyle(color: Color(0xFF616B76), fontSize: 12),
           ),
         ],
       ),
@@ -322,12 +322,12 @@ class ProgressChartPainter extends CustomPainter {
       ..color = const Color(0xFFE5E7EB)
       ..strokeWidth = 1;
     final linePaint = Paint()
-      ..color = const Color(0xFF20B2AA)
+      ..color = const Color(0xFF59D52D)
       ..strokeWidth = 3
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
     final pointPaint = Paint()
-      ..color = const Color(0xFF20B2AA)
+      ..color = const Color(0xFF59D52D)
       ..style = PaintingStyle.fill;
     final gridTextPainter = TextPainter(textDirection: TextDirection.ltr);
 
@@ -354,7 +354,7 @@ class ProgressChartPainter extends CustomPainter {
       final labelValue = maxValue - ((maxValue - minValue) * i / 3);
       gridTextPainter.text = TextSpan(
         text: WorkoutProgressService.formatKg(labelValue),
-        style: const TextStyle(color: Colors.black45, fontSize: 11),
+        style: const TextStyle(color: Color(0xFF616B76), fontSize: 11),
       );
       gridTextPainter.layout();
       gridTextPainter.paint(canvas, Offset(0, y - 7));
@@ -384,7 +384,7 @@ class ProgressChartPainter extends CustomPainter {
         text: TextSpan(
           text: WorkoutProgressService.formatKg(values[i]),
           style: const TextStyle(
-            color: Colors.black87,
+            color: Color(0xFFF6F7F7),
             fontSize: 11,
             fontWeight: FontWeight.bold,
           ),

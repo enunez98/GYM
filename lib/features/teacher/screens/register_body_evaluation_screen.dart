@@ -153,7 +153,7 @@ class _RegisterBodyEvaluationScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF06111F),
+      backgroundColor: const Color(0xFF00111F),
       body: SafeArea(
         child: Column(
           children: [
@@ -168,7 +168,7 @@ class _RegisterBodyEvaluationScreenState
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: const BoxDecoration(
-                  color: Color(0xFFF6F8FA),
+                  color: Color(0xFFF6F7F7),
                   borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                 ),
                 child: ListView(
@@ -191,7 +191,7 @@ class _RegisterBodyEvaluationScreenState
                               labelText: 'Alumno',
                               prefixIcon: const Icon(Icons.person),
                               filled: true,
-                              fillColor: const Color(0xFFF6F8FA),
+                              fillColor: const Color(0xFFF6F7F7),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(14),
                               ),
@@ -436,8 +436,8 @@ class _RegisterBodyEvaluationScreenState
                       height: 54,
                       child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF20B2AA),
-                          foregroundColor: Colors.white,
+                          backgroundColor: const Color(0xFF59D52D),
+                          foregroundColor: const Color(0xFF111214),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(14),
                           ),
@@ -458,8 +458,8 @@ class _RegisterBodyEvaluationScreenState
                       height: 54,
                       child: OutlinedButton(
                         style: OutlinedButton.styleFrom(
-                          foregroundColor: Colors.black87,
-                          side: const BorderSide(color: Colors.black26),
+                          foregroundColor: const Color(0xFF111214),
+                          side: const BorderSide(color: Color(0xFFC9CED2)),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(14),
                           ),

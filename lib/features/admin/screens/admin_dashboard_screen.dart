@@ -24,7 +24,7 @@ class AdminDashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF06111F),
+      backgroundColor: const Color(0xFF00111F),
       body: SafeArea(
         child: Column(
           children: [
@@ -38,7 +38,7 @@ class AdminDashboardScreen extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: const BoxDecoration(
-                  color: Color(0xFFF6F8FA),
+                  color: Color(0xFFF6F7F7),
                   borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                 ),
                 child: ListView(
@@ -184,7 +184,10 @@ class _AdminAlertRow extends StatelessWidget {
                 ),
                 Text(
                   subtitle,
-                  style: const TextStyle(color: Colors.black54, fontSize: 12),
+                  style: const TextStyle(
+                    color: Color(0xFF616B76),
+                    fontSize: 12,
+                  ),
                 ),
               ],
             ),

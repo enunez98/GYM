@@ -20,13 +20,13 @@ class InfoRow extends StatelessWidget {
         ? Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             decoration: BoxDecoration(
-              color: const Color(0xFFDFF9EA),
+              color: const Color(0xFFEDF9E8),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(
               value,
               style: const TextStyle(
-                color: Color(0xFF12985C),
+                color: Color(0xFF59D52D),
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -37,7 +37,7 @@ class InfoRow extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         children: [
-          Icon(icon, size: 19, color: const Color(0xFF20B2AA)),
+          Icon(icon, size: 19, color: const Color(0xFF59D52D)),
           const SizedBox(width: 10),
           Expanded(child: Text(label)),
           valueWidget,

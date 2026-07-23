@@ -20,8 +20,8 @@ class ScreenHeader extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 24,
-            backgroundColor: const Color(0xFF20B2AA),
-            child: Icon(icon, color: Colors.white),
+            backgroundColor: const Color(0xFF59D52D),
+            child: Icon(icon, color: Color(0xFF111214)),
           ),
           const SizedBox(width: 14),
           Expanded(

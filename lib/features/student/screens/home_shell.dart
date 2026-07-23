@@ -37,8 +37,9 @@ class _HomeShellState extends State<HomeShell> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,
         onTap: changeTab,
-        selectedItemColor: const Color(0xFF20B2AA),
-        unselectedItemColor: Colors.black45,
+        selectedItemColor: const Color(0xFF59D52D),
+        unselectedItemColor: const Color(0xFF616B76),
+        backgroundColor: Colors.white,
         type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(

@@ -187,7 +187,7 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
         : routines[selectedPlan] ?? [];
 
     return Scaffold(
-      backgroundColor: const Color(0xFF06111F),
+      backgroundColor: const Color(0xFF00111F),
       body: SafeArea(
         child: Column(
           children: [
@@ -202,7 +202,7 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: const BoxDecoration(
-                  color: Color(0xFFF6F8FA),
+                  color: Color(0xFFF6F7F7),
                   borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                 ),
                 child: ListView(
@@ -222,7 +222,7 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
                             const SizedBox(height: 6),
                             Text(
                               '${ImportedRoutineStore.plan} · ${ImportedRoutineStore.sessions.length} sesiones',
-                              style: const TextStyle(color: Colors.black54),
+                              style: const TextStyle(color: Color(0xFF616B76)),
                             ),
                           ],
                         ),
@@ -247,7 +247,7 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
                                   labelText: 'Semana',
                                   prefixIcon: const Icon(Icons.calendar_month),
                                   filled: true,
-                                  fillColor: const Color(0xFFF6F8FA),
+                                  fillColor: const Color(0xFFF6F7F7),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(14),
                                   ),
@@ -291,7 +291,7 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
                                 labelText: 'Plan',
                                 prefixIcon: const Icon(Icons.assignment),
                                 filled: true,
-                                fillColor: const Color(0xFFF6F8FA),
+                                fillColor: const Color(0xFFF6F7F7),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(14),
                                 ),
@@ -341,15 +341,17 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
                                   hasImportedRoutine
                                       ? 'Mostrando sesiones importadas para esta semana'
                                       : '06 Jul - 12 Jul 2026',
-                                  style: const TextStyle(color: Colors.black54),
+                                  style: const TextStyle(
+                                    color: Color(0xFF616B76),
+                                  ),
                                 ),
                               ],
                             ),
                           ),
                           StatusChip(
                             text: 'CARGA',
-                            background: const Color(0xFFDFF9EA),
-                            textColor: const Color(0xFF12985C),
+                            background: const Color(0xFFEDF9E8),
+                            textColor: const Color(0xFF59D52D),
                           ),
                         ],
                       ),
@@ -416,7 +418,10 @@ class _RoutineSessionCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(session.session, style: const TextStyle(color: Colors.black54)),
+          Text(
+            session.session,
+            style: const TextStyle(color: Color(0xFF616B76)),
+          ),
           const SizedBox(height: 4),
           Text(
             session.title,
@@ -445,11 +450,11 @@ class _RoutineExerciseRow extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 15,
-          backgroundColor: const Color(0xFFE9F8F7),
+          backgroundColor: const Color(0xFFEDF9E8),
           child: Text(
             '$number',
             style: const TextStyle(
-              color: Color(0xFF20B2AA),
+              color: Color(0xFF59D52D),
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -470,7 +475,7 @@ class _RoutineExerciseRow extends StatelessWidget {
             ),
             Text(
               exercise.reps,
-              style: const TextStyle(color: Colors.black54, fontSize: 12),
+              style: const TextStyle(color: Color(0xFF616B76), fontSize: 12),
             ),
           ],
         ),

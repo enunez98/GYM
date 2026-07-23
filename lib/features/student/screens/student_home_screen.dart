@@ -17,7 +17,7 @@ class StudentHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color(0xFF06111F),
+      color: const Color(0xFF00111F),
       child: SafeArea(
         child: Column(
           children: [
@@ -27,7 +27,7 @@ class StudentHomeScreen extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: const BoxDecoration(
-                  color: Color(0xFFF6F8FA),
+                  color: Color(0xFFF6F7F7),
                   borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                 ),
                 child: ListView(
@@ -67,8 +67,8 @@ class _Header extends StatelessWidget {
         children: [
           const CircleAvatar(
             radius: 24,
-            backgroundColor: Color(0xFF20B2AA),
-            child: Icon(Icons.person, color: Colors.white),
+            backgroundColor: Color(0xFF59D52D),
+            child: Icon(Icons.person, color: Color(0xFF111214)),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -93,8 +93,8 @@ class _Header extends StatelessWidget {
           ),
           StatusChip(
             text: status,
-            background: const Color(0xFF173D35),
-            textColor: const Color(0xFF7CFFC4),
+            background: const Color(0xFF00563F),
+            textColor: const Color(0xFFD8FFE6),
           ),
         ],
       ),
@@ -116,7 +116,10 @@ class _WeekCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Semana actual', style: TextStyle(color: Colors.black54)),
+          const Text(
+            'Semana actual',
+            style: TextStyle(color: Color(0xFF616B76)),
+          ),
           const SizedBox(height: 6),
           Row(
             children: [
@@ -131,17 +134,21 @@ class _WeekCard extends StatelessWidget {
               ),
               StatusChip(
                 text: 'CARGA',
-                background: const Color(0xFFDFF9EA),
-                textColor: const Color(0xFF12985C),
+                background: const Color(0xFFEDF9E8),
+                textColor: const Color(0xFF59D52D),
               ),
             ],
           ),
           const SizedBox(height: 8),
           Row(
             children: [
-              const Icon(Icons.calendar_month, size: 17, color: Colors.black45),
+              const Icon(
+                Icons.calendar_month,
+                size: 17,
+                color: Color(0xFF616B76),
+              ),
               const SizedBox(width: 6),
-              Text(weekDates, style: const TextStyle(color: Colors.black54)),
+              Text(weekDates, style: const TextStyle(color: Color(0xFF616B76))),
             ],
           ),
         ],
@@ -236,7 +243,7 @@ class _AttendanceMiniItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Icon(icon, color: const Color(0xFF20B2AA), size: 22),
+        Icon(icon, color: const Color(0xFF59D52D), size: 22),
         const SizedBox(height: 6),
         Text(
           value,
@@ -246,7 +253,7 @@ class _AttendanceMiniItem extends StatelessWidget {
         Text(
           label,
           textAlign: TextAlign.center,
-          style: const TextStyle(color: Colors.black54, fontSize: 12),
+          style: const TextStyle(color: Color(0xFF616B76), fontSize: 12),
         ),
       ],
     );
@@ -286,7 +293,10 @@ class _NextWorkoutCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Próxima clase', style: TextStyle(color: Colors.black54)),
+          const Text(
+            'Próxima clase',
+            style: TextStyle(color: Color(0xFF616B76)),
+          ),
           const SizedBox(height: 6),
           Text(
             sessionTitle,
@@ -295,12 +305,16 @@ class _NextWorkoutCard extends StatelessWidget {
           const SizedBox(height: 4),
           Row(
             children: [
-              const Icon(Icons.fitness_center, size: 17, color: Colors.black45),
+              const Icon(
+                Icons.fitness_center,
+                size: 17,
+                color: Color(0xFF616B76),
+              ),
               const SizedBox(width: 6),
               Expanded(
                 child: Text(
                   sessionSubtitle,
-                  style: const TextStyle(color: Colors.black54),
+                  style: const TextStyle(color: Color(0xFF616B76)),
                 ),
               ),
             ],
@@ -313,10 +327,10 @@ class _NextWorkoutCard extends StatelessWidget {
                 ? 'Rutina asignada'
                 : 'Sin rutina',
             background: weekFinished || hasAssignedRoutine
-                ? const Color(0xFFDFF9EA)
+                ? const Color(0xFFEDF9E8)
                 : const Color(0xFFFFF2D9),
             textColor: weekFinished || hasAssignedRoutine
-                ? const Color(0xFF12985C)
+                ? const Color(0xFF59D52D)
                 : const Color(0xFFD98200),
           ),
           const SizedBox(height: 18),
@@ -325,8 +339,8 @@ class _NextWorkoutCard extends StatelessWidget {
             height: 52,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF20B2AA),
-                foregroundColor: Colors.white,
+                backgroundColor: const Color(0xFF59D52D),
+                foregroundColor: const Color(0xFF111214),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(14),
                 ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../theme/app_colors.dart';
+
 class AppCard extends StatelessWidget {
   final Widget child;
   final EdgeInsets padding;
@@ -16,12 +18,12 @@ class AppCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 0),
       padding: padding,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.pureWhite,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFFE8ECEF)),
+        border: Border.all(color: AppColors.lightBorder),
         boxShadow: const [
           BoxShadow(
-            color: Color(0x0A000000),
+            color: Color(0x0D000000),
             blurRadius: 12,
             offset: Offset(0, 6),
           ),
