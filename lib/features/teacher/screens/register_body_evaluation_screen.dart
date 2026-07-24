@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/app_text_field.dart';
 import '../../../core/widgets/form_header.dart';
+import '../../../core/widgets/responsive_action_button.dart';
+import '../../../core/widgets/responsive_form_field.dart';
 import '../../../models/body_evaluation.dart';
 import '../../../services/body_evaluation_store.dart';
 
@@ -185,36 +187,38 @@ class _RegisterBodyEvaluationScreenState
                             ),
                           ),
                           const SizedBox(height: 14),
-                          DropdownButtonFormField<String>(
-                            value: selectedStudent,
-                            decoration: InputDecoration(
-                              labelText: 'Alumno',
-                              prefixIcon: const Icon(Icons.person),
-                              filled: true,
-                              fillColor: const Color(0xFFF6F7F7),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(14),
+                          ResponsiveFormField(
+                            child: DropdownButtonFormField<String>(
+                              value: selectedStudent,
+                              decoration: InputDecoration(
+                                labelText: 'Alumno',
+                                prefixIcon: const Icon(Icons.person),
+                                filled: true,
+                                fillColor: const Color(0xFFF6F7F7),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
                               ),
+                              items: const [
+                                DropdownMenuItem(
+                                  value: 'Felipe Durán',
+                                  child: Text('Felipe Durán'),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'Camila Rojas',
+                                  child: Text('Camila Rojas'),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'Matías Soto',
+                                  child: Text('Matías Soto'),
+                                ),
+                              ],
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedStudent = value ?? 'Felipe Durán';
+                                });
+                              },
                             ),
-                            items: const [
-                              DropdownMenuItem(
-                                value: 'Felipe Durán',
-                                child: Text('Felipe Durán'),
-                              ),
-                              DropdownMenuItem(
-                                value: 'Camila Rojas',
-                                child: Text('Camila Rojas'),
-                              ),
-                              DropdownMenuItem(
-                                value: 'Matías Soto',
-                                child: Text('Matías Soto'),
-                              ),
-                            ],
-                            onChanged: (value) {
-                              setState(() {
-                                selectedStudent = value ?? 'Felipe Durán';
-                              });
-                            },
                           ),
                           const SizedBox(height: 12),
                           AppTextField(
@@ -432,44 +436,48 @@ class _RegisterBodyEvaluationScreenState
                       ),
                     ),
                     const SizedBox(height: 18),
-                    SizedBox(
-                      height: 54,
-                      child: ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF59D52D),
-                          foregroundColor: const Color(0xFF111214),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
+                    ResponsiveActionButton(
+                      child: SizedBox(
+                        height: 54,
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF59D52D),
+                            foregroundColor: const Color(0xFF111214),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
                           ),
-                        ),
-                        onPressed: saveEvaluation,
-                        icon: const Icon(Icons.save),
-                        label: const Text(
-                          'Guardar evaluación',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                          onPressed: saveEvaluation,
+                          icon: const Icon(Icons.save),
+                          label: const Text(
+                            'Guardar evaluación',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
                     ),
                     const SizedBox(height: 10),
-                    SizedBox(
-                      height: 54,
-                      child: OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: const Color(0xFF111214),
-                          side: const BorderSide(color: Color(0xFFC9CED2)),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
+                    ResponsiveActionButton(
+                      child: SizedBox(
+                        height: 54,
+                        child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: const Color(0xFF111214),
+                            side: const BorderSide(color: Color(0xFFC9CED2)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
                           ),
-                        ),
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text(
-                          'Cancelar',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text(
+                            'Cancelar',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),

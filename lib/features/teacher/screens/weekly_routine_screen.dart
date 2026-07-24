@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/form_header.dart';
+import '../../../core/widgets/responsive_action_button.dart';
+import '../../../core/widgets/responsive_form_field.dart';
 import '../../../core/widgets/status_chip.dart';
 import '../../../models/routine_models.dart';
 import '../../../services/imported_routine_store.dart';
@@ -241,30 +243,34 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
                                 ),
                               ),
                               const SizedBox(height: 14),
-                              DropdownButtonFormField<String>(
-                                value: selectedWeek,
-                                decoration: InputDecoration(
-                                  labelText: 'Semana',
-                                  prefixIcon: const Icon(Icons.calendar_month),
-                                  filled: true,
-                                  fillColor: const Color(0xFFF6F7F7),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(14),
+                              ResponsiveFormField(
+                                child: DropdownButtonFormField<String>(
+                                  value: selectedWeek,
+                                  decoration: InputDecoration(
+                                    labelText: 'Semana',
+                                    prefixIcon: const Icon(
+                                      Icons.calendar_month,
+                                    ),
+                                    filled: true,
+                                    fillColor: const Color(0xFFF6F7F7),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(14),
+                                    ),
                                   ),
+                                  items: weeks
+                                      .map(
+                                        (week) => DropdownMenuItem(
+                                          value: week,
+                                          child: Text(week),
+                                        ),
+                                      )
+                                      .toList(),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedWeek = value ?? weeks.first;
+                                    });
+                                  },
                                 ),
-                                items: weeks
-                                    .map(
-                                      (week) => DropdownMenuItem(
-                                        value: week,
-                                        child: Text(week),
-                                      ),
-                                    )
-                                    .toList(),
-                                onChanged: (value) {
-                                  setState(() {
-                                    selectedWeek = value ?? weeks.first;
-                                  });
-                                },
                               ),
                             ],
                           ),
@@ -285,36 +291,38 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
                               ),
                             ),
                             const SizedBox(height: 14),
-                            DropdownButtonFormField<String>(
-                              value: selectedPlan,
-                              decoration: InputDecoration(
-                                labelText: 'Plan',
-                                prefixIcon: const Icon(Icons.assignment),
-                                filled: true,
-                                fillColor: const Color(0xFFF6F7F7),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(14),
+                            ResponsiveFormField(
+                              child: DropdownButtonFormField<String>(
+                                value: selectedPlan,
+                                decoration: InputDecoration(
+                                  labelText: 'Plan',
+                                  prefixIcon: const Icon(Icons.assignment),
+                                  filled: true,
+                                  fillColor: const Color(0xFFF6F7F7),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(14),
+                                  ),
                                 ),
+                                items: const [
+                                  DropdownMenuItem(
+                                    value: 'Plan 2 sesiones',
+                                    child: Text('Plan 2 sesiones'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: 'Plan 3 sesiones',
+                                    child: Text('Plan 3 sesiones'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: 'Plan 4 sesiones',
+                                    child: Text('Plan 4 sesiones'),
+                                  ),
+                                ],
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedPlan = value ?? 'Plan 3 sesiones';
+                                  });
+                                },
                               ),
-                              items: const [
-                                DropdownMenuItem(
-                                  value: 'Plan 2 sesiones',
-                                  child: Text('Plan 2 sesiones'),
-                                ),
-                                DropdownMenuItem(
-                                  value: 'Plan 3 sesiones',
-                                  child: Text('Plan 3 sesiones'),
-                                ),
-                                DropdownMenuItem(
-                                  value: 'Plan 4 sesiones',
-                                  child: Text('Plan 4 sesiones'),
-                                ),
-                              ],
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedPlan = value ?? 'Plan 3 sesiones';
-                                });
-                              },
                             ),
                           ],
                         ),
@@ -363,33 +371,35 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
                     ],
                     if (hasImportedRoutine) ...[
                       const SizedBox(height: 4),
-                      SizedBox(
-                        height: 54,
-                        child: OutlinedButton.icon(
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: Colors.red,
-                            side: const BorderSide(color: Colors.red),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              ImportedRoutineStore.clear();
-                              selectedPlan = 'Plan 3 sesiones';
-                              selectedWeek = 'Semana 1';
-                            });
-
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Rutina importada eliminada'),
+                      ResponsiveActionButton(
+                        child: SizedBox(
+                          height: 54,
+                          child: OutlinedButton.icon(
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: Colors.red,
+                              side: const BorderSide(color: Colors.red),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(14),
                               ),
-                            );
-                          },
-                          icon: const Icon(Icons.delete_outline),
-                          label: const Text(
-                            'Limpiar rutina importada',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                ImportedRoutineStore.clear();
+                                selectedPlan = 'Plan 3 sesiones';
+                                selectedWeek = 'Semana 1';
+                              });
+
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Rutina importada eliminada'),
+                                ),
+                              );
+                            },
+                            icon: const Icon(Icons.delete_outline),
+                            label: const Text(
+                              'Limpiar rutina importada',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                           ),
                         ),
                       ),

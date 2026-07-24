@@ -4,6 +4,7 @@ import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/form_header.dart';
 import '../../../core/widgets/info_row.dart';
 import '../../../core/widgets/metric_card.dart';
+import '../../../core/widgets/responsive_action_button.dart';
 import '../../../core/widgets/teacher_action_row.dart';
 import '../../../models/routine_assignment.dart';
 import '../../../models/student_profile.dart';
@@ -212,8 +213,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                             ),
                           ),
                           const SizedBox(height: 12),
-                          SizedBox(
-                            width: double.infinity,
+                          ResponsiveActionButton(
                             child: ElevatedButton.icon(
                               onPressed: importedPlanMatches
                                   ? assignImportedRoutine
@@ -228,8 +228,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                           ),
                           if (assignment != null) ...[
                             const SizedBox(height: 8),
-                            SizedBox(
-                              width: double.infinity,
+                            ResponsiveActionButton(
                               child: OutlinedButton.icon(
                                 onPressed: removeAssignedRoutine,
                                 icon: const Icon(Icons.link_off),

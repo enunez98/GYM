@@ -4,6 +4,7 @@ import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/info_row.dart';
 import '../../../core/widgets/metric_card.dart';
 import '../../../core/widgets/status_chip.dart';
+import '../../../core/widgets/responsive_action_button.dart';
 import '../../../services/demo_student_profile_service.dart';
 import '../../../services/session_store.dart';
 import '../../../services/student_attendance_service.dart';
@@ -334,28 +335,36 @@ class _NextWorkoutCard extends StatelessWidget {
                 : const Color(0xFFD98200),
           ),
           const SizedBox(height: 18),
-          SizedBox(
-            width: double.infinity,
-            height: 52,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF59D52D),
-                foregroundColor: const Color(0xFF111214),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
-                ),
-              ),
-              onPressed: hasAssignedRoutine ? onStartWorkout : null,
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Comenzar entrenamiento',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ResponsiveActionButton(
+            child: SizedBox(
+              height: 52,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF59D52D),
+                  foregroundColor: const Color(0xFF111214),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
                   ),
-                  SizedBox(width: 10),
-                  Icon(Icons.play_arrow),
-                ],
+                ),
+                onPressed: hasAssignedRoutine ? onStartWorkout : null,
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        'Comenzar entrenamiento',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Icon(Icons.play_arrow),
+                  ],
+                ),
               ),
             ),
           ),

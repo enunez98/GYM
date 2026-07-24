@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/form_header.dart';
+import '../../../core/widgets/responsive_action_button.dart';
+import '../../../core/widgets/responsive_form_field.dart';
 import '../../../core/widgets/info_row.dart';
 import '../../../models/routine_models.dart';
 import '../../../services/imported_routine_store.dart';
@@ -412,36 +414,38 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
                             ),
                           ),
                           const SizedBox(height: 14),
-                          DropdownButtonFormField<String>(
-                            value: selectedPlan,
-                            decoration: InputDecoration(
-                              labelText: 'Plan',
-                              prefixIcon: const Icon(Icons.assignment),
-                              filled: true,
-                              fillColor: const Color(0xFFF6F7F7),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(14),
+                          ResponsiveFormField(
+                            child: DropdownButtonFormField<String>(
+                              value: selectedPlan,
+                              decoration: InputDecoration(
+                                labelText: 'Plan',
+                                prefixIcon: const Icon(Icons.assignment),
+                                filled: true,
+                                fillColor: const Color(0xFFF6F7F7),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
                               ),
+                              items: const [
+                                DropdownMenuItem(
+                                  value: 'Plan 2 sesiones',
+                                  child: Text('Plan 2 sesiones'),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'Plan 3 sesiones',
+                                  child: Text('Plan 3 sesiones'),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'Plan 4 sesiones',
+                                  child: Text('Plan 4 sesiones'),
+                                ),
+                              ],
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedPlan = value ?? 'Plan 3 sesiones';
+                                });
+                              },
                             ),
-                            items: const [
-                              DropdownMenuItem(
-                                value: 'Plan 2 sesiones',
-                                child: Text('Plan 2 sesiones'),
-                              ),
-                              DropdownMenuItem(
-                                value: 'Plan 3 sesiones',
-                                child: Text('Plan 3 sesiones'),
-                              ),
-                              DropdownMenuItem(
-                                value: 'Plan 4 sesiones',
-                                child: Text('Plan 4 sesiones'),
-                              ),
-                            ],
-                            onChanged: (value) {
-                              setState(() {
-                                selectedPlan = value ?? 'Plan 3 sesiones';
-                              });
-                            },
                           ),
                         ],
                       ),
@@ -459,70 +463,72 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
                             ),
                           ),
                           const SizedBox(height: 14),
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(18),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFF6F7F7),
-                              borderRadius: BorderRadius.circular(18),
-                              border: Border.all(
-                                color: fileSelected
-                                    ? const Color(0xFF59D52D)
-                                    : const Color(0xFFE5E7EB),
-                              ),
-                            ),
-                            child: Column(
-                              children: [
-                                Icon(
-                                  fileSelected
-                                      ? Icons.check_circle
-                                      : Icons.upload_file,
+                          ResponsiveFormField(
+                            webMaxWidth: 720,
+                            child: Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(18),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFF6F7F7),
+                                borderRadius: BorderRadius.circular(18),
+                                border: Border.all(
                                   color: fileSelected
                                       ? const Color(0xFF59D52D)
-                                      : Color(0xFF616B76),
-                                  size: 42,
+                                      : const Color(0xFFE5E7EB),
                                 ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  selectedFileName,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
+                              ),
+                              child: Column(
+                                children: [
+                                  Icon(
+                                    fileSelected
+                                        ? Icons.check_circle
+                                        : Icons.upload_file,
                                     color: fileSelected
-                                        ? const Color(0xFFF6F7F7)
+                                        ? const Color(0xFF59D52D)
                                         : Color(0xFF616B76),
+                                    size: 42,
                                   ),
-                                ),
-                                const SizedBox(height: 6),
-                                const Text(
-                                  'Formato esperado: .xlsx',
-                                  style: TextStyle(
-                                    color: Color(0xFF616B76),
-                                    fontSize: 12,
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    selectedFileName,
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFF616B76),
+                                    ),
                                   ),
-                                ),
-                              ],
+                                  const SizedBox(height: 6),
+                                  const Text(
+                                    'Formato esperado: .xlsx',
+                                    style: TextStyle(
+                                      color: Color(0xFF616B76),
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                           const SizedBox(height: 14),
-                          SizedBox(
-                            height: 52,
-                            width: double.infinity,
-                            child: OutlinedButton.icon(
-                              style: OutlinedButton.styleFrom(
-                                foregroundColor: const Color(0xFF59D52D),
-                                side: const BorderSide(
-                                  color: Color(0xFF59D52D),
+                          ResponsiveActionButton(
+                            child: SizedBox(
+                              height: 52,
+                              child: OutlinedButton.icon(
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: const Color(0xFF59D52D),
+                                  side: const BorderSide(
+                                    color: Color(0xFF59D52D),
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(14),
+                                  ),
                                 ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(14),
+                                onPressed: selectFile,
+                                icon: const Icon(Icons.attach_file),
+                                label: const Text(
+                                  'Seleccionar Excel',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
-                              ),
-                              onPressed: selectFile,
-                              icon: const Icon(Icons.attach_file),
-                              label: const Text(
-                                'Seleccionar Excel',
-                                style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ),
                           ),
@@ -744,68 +750,74 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
                       ),
                     ),
                     const SizedBox(height: 18),
-                    SizedBox(
-                      height: 54,
-                      child: ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF59D52D),
-                          foregroundColor: const Color(0xFF111214),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
+                    ResponsiveActionButton(
+                      child: SizedBox(
+                        height: 54,
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF59D52D),
+                            foregroundColor: const Color(0xFF111214),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
                           ),
-                        ),
-                        onPressed: validateFile,
-                        icon: const Icon(Icons.fact_check),
-                        label: const Text(
-                          'Validar archivo',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      height: 54,
-                      child: ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: fileValidated
-                              ? const Color(0xFF00111F)
-                              : Color(0xFFC9CED2),
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
-                          ),
-                        ),
-                        onPressed: importRoutine,
-                        icon: const Icon(Icons.cloud_upload),
-                        label: const Text(
-                          'Cargar rutina',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                          onPressed: validateFile,
+                          icon: const Icon(Icons.fact_check),
+                          label: const Text(
+                            'Validar archivo',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
                     ),
                     const SizedBox(height: 10),
-                    SizedBox(
-                      height: 54,
-                      child: OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: const Color(0xFF111214),
-                          side: const BorderSide(color: Color(0xFFC9CED2)),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
+                    ResponsiveActionButton(
+                      child: SizedBox(
+                        height: 54,
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: fileValidated
+                                ? const Color(0xFF00111F)
+                                : Color(0xFFC9CED2),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                          ),
+                          onPressed: importRoutine,
+                          icon: const Icon(Icons.cloud_upload),
+                          label: const Text(
+                            'Cargar rutina',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text(
-                          'Cancelar',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    ResponsiveActionButton(
+                      child: SizedBox(
+                        height: 54,
+                        child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: const Color(0xFF111214),
+                            side: const BorderSide(color: Color(0xFFC9CED2)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                          ),
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text(
+                            'Cancelar',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),

@@ -5,15 +5,19 @@ import '../theme/app_colors.dart';
 class AppCard extends StatelessWidget {
   final Widget child;
   final EdgeInsets padding;
+  final double webContentMaxWidth;
 
   const AppCard({
     super.key,
     required this.child,
     this.padding = const EdgeInsets.all(16),
+    this.webContentMaxWidth = 1120,
   });
 
   @override
   Widget build(BuildContext context) {
+    final isWebLayout = MediaQuery.sizeOf(context).width >= 900;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 0),
       padding: padding,
@@ -29,7 +33,15 @@ class AppCard extends StatelessWidget {
           ),
         ],
       ),
-      child: child,
+      child: isWebLayout
+          ? Align(
+              alignment: Alignment.topLeft,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: webContentMaxWidth),
+                child: SizedBox(width: double.infinity, child: child),
+              ),
+            )
+          : child,
     );
   }
 }

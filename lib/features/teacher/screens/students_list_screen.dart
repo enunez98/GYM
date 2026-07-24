@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/form_header.dart';
 import '../../../core/widgets/metric_card.dart';
+import '../../../core/widgets/responsive_form_field.dart';
 import '../../../core/widgets/status_chip.dart';
 import '../../../models/student_profile.dart';
 import '../../../services/body_evaluation_store.dart';
@@ -49,14 +50,17 @@ class StudentsListScreen extends StatelessWidget {
                 child: ListView(
                   children: [
                     AppCard(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Buscar alumno...',
-                          prefixIcon: const Icon(Icons.search),
-                          filled: true,
-                          fillColor: const Color(0xFFF6F7F7),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(14),
+                      child: ResponsiveFormField(
+                        webMaxWidth: 620,
+                        child: TextField(
+                          decoration: InputDecoration(
+                            hintText: 'Buscar alumno...',
+                            prefixIcon: const Icon(Icons.search),
+                            filled: true,
+                            fillColor: const Color(0xFFF6F7F7),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
                           ),
                         ),
                       ),

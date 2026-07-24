@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'responsive_form_field.dart';
+
 class AppTextField extends StatelessWidget {
   final TextEditingController controller;
   final String label;
@@ -18,16 +20,18 @@ class AppTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      keyboardType: keyboardType,
-      decoration: InputDecoration(
-        labelText: label,
-        hintText: hint,
-        prefixIcon: Icon(icon),
-        filled: true,
-        fillColor: const Color(0xFFFFFFFF),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+    return ResponsiveFormField(
+      child: TextField(
+        controller: controller,
+        keyboardType: keyboardType,
+        decoration: InputDecoration(
+          labelText: label,
+          hintText: hint,
+          prefixIcon: Icon(icon),
+          filled: true,
+          fillColor: const Color(0xFFFFFFFF),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+        ),
       ),
     );
   }

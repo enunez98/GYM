@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/widgets/app_card.dart';
+import '../../../core/widgets/responsive_action_button.dart';
 import '../../../core/widgets/screen_header.dart';
 import '../../../core/widgets/status_chip.dart';
 import '../../../models/app_user.dart';
@@ -355,61 +356,65 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                           style: TextStyle(color: Color(0xFF616B76)),
                         ),
                       ),
-                    SizedBox(
-                      height: 54,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF59D52D),
-                          foregroundColor: const Color(0xFF111214),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
+                    ResponsiveActionButton(
+                      child: SizedBox(
+                        height: 54,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF59D52D),
+                            foregroundColor: const Color(0xFF111214),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
                           ),
-                        ),
-                        onPressed: hasAssignedWorkout
-                            ? () {
-                                _saveWorkout(
-                                  user: user,
-                                  profile: profile,
-                                  assignedSession: assignedSession,
-                                  totalSessions: weekSessions.length,
-                                );
-                              }
-                            : null,
-                        child: const Text(
-                          'Guardar entrenamiento',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                          onPressed: hasAssignedWorkout
+                              ? () {
+                                  _saveWorkout(
+                                    user: user,
+                                    profile: profile,
+                                    assignedSession: assignedSession,
+                                    totalSessions: weekSessions.length,
+                                  );
+                                }
+                              : null,
+                          child: const Text(
+                            'Guardar entrenamiento',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
                     ),
                     const SizedBox(height: 10),
-                    SizedBox(
-                      height: 54,
-                      child: OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: const Color(0xFF111214),
-                          side: const BorderSide(color: Color(0xFFC9CED2)),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
+                    ResponsiveActionButton(
+                      child: SizedBox(
+                        height: 54,
+                        child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: const Color(0xFF111214),
+                            side: const BorderSide(color: Color(0xFFC9CED2)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
                           ),
-                        ),
-                        onPressed: hasAssignedWorkout
-                            ? () {
-                                _skipWorkout(
-                                  user: user,
-                                  profile: profile,
-                                  assignedSession: assignedSession,
-                                  totalSessions: weekSessions.length,
-                                );
-                              }
-                            : null,
-                        child: const Text(
-                          'Omitir sesión',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                          onPressed: hasAssignedWorkout
+                              ? () {
+                                  _skipWorkout(
+                                    user: user,
+                                    profile: profile,
+                                    assignedSession: assignedSession,
+                                    totalSessions: weekSessions.length,
+                                  );
+                                }
+                              : null,
+                          child: const Text(
+                            'Omitir sesión',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
