@@ -16,8 +16,13 @@ import '../../../services/student_workout_progress_store.dart';
 
 class StudentDetailScreen extends StatefulWidget {
   final StudentProfile student;
+  final bool embedded;
 
-  const StudentDetailScreen({super.key, required this.student});
+  const StudentDetailScreen({
+    super.key,
+    required this.student,
+    this.embedded = false,
+  });
 
   @override
   State<StudentDetailScreen> createState() => _StudentDetailScreenState();
@@ -107,23 +112,28 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
         : 'La rutina importada está disponible para este alumno';
 
     return Scaffold(
-      backgroundColor: const Color(0xFF00111F),
+      backgroundColor: widget.embedded
+          ? const Color(0xFFF6F7F7)
+          : const Color(0xFF00111F),
       body: SafeArea(
         child: Column(
           children: [
-            FormHeader(
-              title: student.name,
-              subtitle: student.plan,
-              icon: Icons.person,
-              onBack: () => Navigator.pop(context),
-            ),
+            if (!widget.embedded)
+              FormHeader(
+                title: student.name,
+                subtitle: student.plan,
+                icon: Icons.person,
+                onBack: () => Navigator.pop(context),
+              ),
             Expanded(
               child: Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
-                decoration: const BoxDecoration(
-                  color: Color(0xFFF6F7F7),
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF6F7F7),
+                  borderRadius: widget.embedded
+                      ? BorderRadius.zero
+                      : const BorderRadius.vertical(top: Radius.circular(28)),
                 ),
                 child: ListView(
                   children: [

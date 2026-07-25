@@ -1,4 +1,4 @@
-package com.example.gym_app
+package cl.nexfit.gym
 
 import io.flutter.embedding.android.FlutterActivity
 

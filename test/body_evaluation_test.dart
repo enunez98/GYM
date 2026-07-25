@@ -149,21 +149,79 @@ void main() {
     await tester.tap(find.text('Abrir formulario'));
     await tester.pumpAndSettle();
 
+    final fields = find.byType(TextField);
+    expect(tester.widget<TextField>(fields.at(2)).controller?.text, isEmpty);
+    expect(tester.widget<TextField>(fields.at(8)).controller?.text, isEmpty);
+    expect(
+      tester.getTopLeft(find.byType(DropdownButtonFormField<String>).first).dy,
+      tester.getTopLeft(fields.at(0)).dy,
+    );
+    expect(
+      tester.getTopLeft(fields.at(2)).dy,
+      tester.getTopLeft(fields.at(3)).dy,
+    );
+    expect(
+      tester.getTopLeft(fields.at(6)).dy,
+      tester.getTopLeft(fields.at(7)).dy,
+    );
+    expect(
+      tester.getTopLeft(fields.at(10)).dy,
+      tester.getTopLeft(fields.at(11)).dy,
+    );
+
+    await tester.enterText(fields.at(0), '26-05-2026');
+    await tester.enterText(fields.at(2), '70');
+    await tester.enterText(fields.at(3), '175');
+    await tester.enterText(fields.at(4), '21.7');
+    await tester.enterText(fields.at(6), '51.2');
+    await tester.enterText(fields.at(7), '30.9');
+    await tester.enterText(fields.at(9), '57.4');
+    await tester.enterText(fields.at(10), '5');
+    await tester.enterText(fields.at(11), '1553');
+    await tester.pump();
+
+    expect(tester.widget<TextField>(fields.at(8)).controller?.text, '22.9');
+    expect(find.text('Normal'), findsWidgets);
+    expect(find.text('Excelente'), findsWidgets);
+
+    await tester.scrollUntilVisible(
+      find.text('Guardar evaluación'),
+      500,
+      scrollable: find.byType(Scrollable).first,
+    );
+    final webSaveButton = find.widgetWithText(
+      ElevatedButton,
+      'Guardar evaluación',
+    );
+    final webCancelButton = find.widgetWithText(OutlinedButton, 'Cancelar');
+    expect(
+      tester.getTopLeft(webSaveButton).dy,
+      tester.getTopLeft(webCancelButton).dy,
+    );
+    expect(
+      tester.getTopLeft(webCancelButton).dx,
+      lessThan(tester.getTopLeft(webSaveButton).dx),
+    );
+
     final saveButton = find.text('Guardar evaluación');
     await tester.scrollUntilVisible(
       saveButton,
       500,
       scrollable: find.byType(Scrollable).first,
     );
-    await tester.tap(saveButton);
+    await tester.ensureVisible(webSaveButton);
+    await tester.pumpAndSettle();
+    await tester.tap(webSaveButton);
     await tester.pumpAndSettle();
 
     final saved = BodyEvaluationStore.getLastByUserId('student_001');
     expect(saved, isNotNull);
     expect(saved?.studentName, 'Felipe Durán');
     expect(saved?.createdAt, DateTime(2026, 5, 26));
-    expect(saved?.bodyScore, 72);
+    expect(saved?.bodyScore, 97);
     expect(saved?.weightKg, 70);
+    expect(saved?.heightCm, 175);
+    expect(saved?.bmi, 22.9);
     expect(find.text('Abrir formulario'), findsOneWidget);
   });
 }

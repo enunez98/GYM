@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../models/app_user.dart';
 import '../../services/demo_auth_service.dart';
+import '../../services/body_evaluation_store.dart';
+import '../../services/firebase_auth_service.dart';
 import '../../services/session_store.dart';
+import '../../services/student_profile_store.dart';
 import '../student/screens/home_shell.dart';
 import '../teacher/screens/teacher_dashboard_screen.dart';
 
@@ -21,7 +24,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final rutController = TextEditingController();
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
   bool isLoading = false;
   bool obscurePassword = true;
@@ -29,24 +32,37 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
-    rutController.dispose();
+    emailController.dispose();
     passwordController.dispose();
     super.dispose();
   }
 
   Future<void> login() async {
-    final rut = rutController.text.trim();
+    final email = emailController.text.trim();
     final password = passwordController.text.trim();
 
-    if (rut.isEmpty || password.isEmpty) {
-      _showMessage('Ingresa RUT y contraseña');
+    if (email.isEmpty || password.isEmpty) {
+      _showMessage('Ingresa correo y contraseña');
+      return;
+    }
+    if (!email.contains('@')) {
+      _showMessage('Ingresa un correo válido');
       return;
     }
 
     setState(() => isLoading = true);
 
     try {
-      final user = await DemoAuthService.login(rut: rut, password: password);
+      final user = await FirebaseAuthService.login(
+        email: email,
+        password: password,
+      );
+      if (user.role == UserRole.admin) {
+        await StudentProfileStore.loadFromFirestore();
+      } else {
+        await StudentProfileStore.loadForUser(user.id);
+        await BodyEvaluationStore.loadForUser(user.id);
+      }
       SessionStore.signIn(user);
 
       if (!mounted) return;
@@ -78,20 +94,6 @@ class _LoginScreenState extends State<LoginScreen> {
         behavior: SnackBarBehavior.floating,
       ),
     );
-  }
-
-  void fillStudentDemo() {
-    setState(() {
-      rutController.text = '11.111.111-1';
-      passwordController.text = '1234';
-    });
-  }
-
-  void fillAdminDemo() {
-    setState(() {
-      rutController.text = '22.222.222-2';
-      passwordController.text = '1234';
-    });
   }
 
   @override
@@ -141,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 flex: 10,
                                 child: _LoginPanel(
                                   isDesktop: isDesktop,
-                                  rutController: rutController,
+                                  emailController: emailController,
                                   passwordController: passwordController,
                                   isLoading: isLoading,
                                   obscurePassword: obscurePassword,
@@ -153,8 +155,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                   onRememberChanged: (value) => setState(
                                     () => rememberMe = value ?? false,
                                   ),
-                                  onStudentDemo: fillStudentDemo,
-                                  onAdminDemo: fillAdminDemo,
                                 ),
                               ),
                             ],
@@ -302,7 +302,7 @@ class _VisualPanel extends StatelessWidget {
 class _LoginPanel extends StatelessWidget {
   const _LoginPanel({
     required this.isDesktop,
-    required this.rutController,
+    required this.emailController,
     required this.passwordController,
     required this.isLoading,
     required this.obscurePassword,
@@ -310,12 +310,10 @@ class _LoginPanel extends StatelessWidget {
     required this.onLogin,
     required this.onTogglePassword,
     required this.onRememberChanged,
-    required this.onStudentDemo,
-    required this.onAdminDemo,
   });
 
   final bool isDesktop;
-  final TextEditingController rutController;
+  final TextEditingController emailController;
   final TextEditingController passwordController;
   final bool isLoading;
   final bool obscurePassword;
@@ -323,8 +321,6 @@ class _LoginPanel extends StatelessWidget {
   final VoidCallback onLogin;
   final VoidCallback onTogglePassword;
   final ValueChanged<bool?> onRememberChanged;
-  final VoidCallback onStudentDemo;
-  final VoidCallback onAdminDemo;
 
   @override
   Widget build(BuildContext context) {
@@ -352,13 +348,13 @@ class _LoginPanel extends StatelessWidget {
                 const _LoginTitle(),
                 SizedBox(height: isDesktop ? 24 : 34),
                 _DarkTextField(
-                  controller: rutController,
-                  label: 'RUT',
-                  hint: 'Ej: 11.111.111-1',
-                  icon: Icons.person_outline_rounded,
-                  keyboardType: TextInputType.text,
+                  controller: emailController,
+                  label: 'Correo electrónico',
+                  hint: 'nombre@correo.cl',
+                  icon: Icons.email_outlined,
+                  keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
-                  autofillHints: const [AutofillHints.username],
+                  autofillHints: const [AutofillHints.email],
                 ),
                 const SizedBox(height: 13),
                 _DarkTextField(
@@ -480,8 +476,6 @@ class _LoginPanel extends StatelessWidget {
                   label: 'Continuar con Apple',
                   child: Icon(Icons.apple, color: _boneWhite, size: 24),
                 ),
-                SizedBox(height: isDesktop ? 14 : 22),
-                _DemoAccess(onStudent: onStudentDemo, onAdmin: onAdminDemo),
                 if (!isDesktop) ...[
                   const SizedBox(height: 22),
                   Row(
@@ -681,66 +675,6 @@ class _SocialButton extends StatelessWidget {
             Align(alignment: Alignment.centerLeft, child: child),
             Text(label, style: const TextStyle(fontSize: 13)),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _DemoAccess extends StatelessWidget {
-  const _DemoAccess({required this.onStudent, required this.onAdmin});
-
-  final VoidCallback onStudent;
-  final VoidCallback onAdmin;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: _deepGray.withValues(alpha: .55),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: _steelGray.withValues(alpha: .3)),
-      ),
-      child: Row(
-        children: [
-          Text(
-            'Acceso demo',
-            style: TextStyle(
-              color: _boneWhite.withValues(alpha: .65),
-              fontSize: 11,
-            ),
-          ),
-          const Spacer(),
-          _DemoButton(label: 'Alumno', onPressed: onStudent),
-          const SizedBox(width: 8),
-          _DemoButton(label: 'Admin', onPressed: onAdmin),
-        ],
-      ),
-    );
-  }
-}
-
-class _DemoButton extends StatelessWidget {
-  const _DemoButton({required this.label, required this.onPressed});
-
-  final String label;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onPressed,
-      borderRadius: BorderRadius.circular(5),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-        child: Text(
-          label,
-          style: const TextStyle(
-            color: _energyGreen,
-            fontSize: 11,
-            fontWeight: FontWeight.w700,
-          ),
         ),
       ),
     );

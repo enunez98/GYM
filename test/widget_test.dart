@@ -19,10 +19,8 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Iniciar sesión'), findsOneWidget);
-    expect(find.text('RUT'), findsOneWidget);
+    expect(find.text('Correo electrónico'), findsOneWidget);
     expect(find.text('Contraseña'), findsOneWidget);
-    expect(find.text('Alumno'), findsOneWidget);
-    expect(find.text('Admin'), findsOneWidget);
   });
 
   testWidgets('desktop login fits without scrolling', (

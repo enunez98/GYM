@@ -14,10 +14,12 @@ class DemoRoutineExercise {
   final String name;
   final int series;
   final String reps;
+  final String rest;
 
   DemoRoutineExercise({
     required this.name,
     required this.series,
     required this.reps,
+    this.rest = '',
   });
 }

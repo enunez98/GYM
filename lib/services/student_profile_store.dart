@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../models/student_profile.dart';
 
 class StudentProfileStore {
@@ -7,6 +9,7 @@ class StudentProfileStore {
     name: 'Felipe Durán',
     rut: '111111111',
     phone: '+569 1234 5678',
+    email: 'felipe.duran@email.com',
     plan: 'Plan 4 sesiones',
     status: 'Activo',
     startDate: '04-07-2026',
@@ -52,6 +55,45 @@ class StudentProfileStore {
 
   static void add(StudentProfile profile) {
     _profiles.add(profile);
+  }
+
+  static Future<void> addToFirestore(StudentProfile profile) async {
+    await FirebaseFirestore.instance
+        .collection('students')
+        .doc(profile.id)
+        .set(profile.toFirestore());
+    _profiles.add(profile);
+  }
+
+  static Future<void> loadFromFirestore() async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('students')
+        .orderBy('name')
+        .get();
+    _profiles
+      ..clear()
+      ..addAll(
+        snapshot.docs.map(
+          (document) =>
+              StudentProfile.fromFirestore(document.id, document.data()),
+        ),
+      );
+  }
+
+  static Future<void> loadForUser(String userId) async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('students')
+        .where('userId', isEqualTo: userId)
+        .limit(1)
+        .get();
+    _profiles
+      ..clear()
+      ..addAll(
+        snapshot.docs.map(
+          (document) =>
+              StudentProfile.fromFirestore(document.id, document.data()),
+        ),
+      );
   }
 
   static void clearAll() {

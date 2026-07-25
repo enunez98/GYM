@@ -7,6 +7,7 @@ import '../../../core/widgets/screen_header.dart';
 import '../../../core/widgets/status_chip.dart';
 import '../../../core/widgets/teacher_action_row.dart';
 import '../../../services/session_store.dart';
+import '../../../services/student_profile_store.dart';
 
 import '../../auth/login_screen.dart';
 import 'import_routines_screen.dart';
@@ -24,13 +25,15 @@ class TeacherDashboardScreen extends StatefulWidget {
 
 class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
   int _webSectionIndex = 0;
+  int _mobileSectionIndex = 0;
 
   void _selectWebSection(int index) {
     setState(() => _webSectionIndex = index);
   }
 
-  void _logout(BuildContext context) {
-    SessionStore.signOut();
+  Future<void> _logout(BuildContext context) async {
+    await SessionStore.signOut();
+    if (!context.mounted) return;
 
     Navigator.pushReplacement(
       context,
@@ -42,34 +45,6 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const RegisterStudentScreen()),
-    );
-  }
-
-  void _openRegisterBodyEvaluation(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const RegisterBodyEvaluationScreen()),
-    );
-  }
-
-  void _openStudentsList(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const StudentsListScreen()),
-    );
-  }
-
-  void _openWeeklyRoutine(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const WeeklyRoutineScreen()),
-    );
-  }
-
-  void _openImportRoutines(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const ImportRoutinesScreen()),
     );
   }
 
@@ -90,6 +65,57 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
   }
 
   Widget _buildMobileDashboard(BuildContext context, String userName) {
+    final pages = <Widget>[
+      _buildMobileOverview(context, userName),
+      const StudentsListScreen(),
+      const RegisterBodyEvaluationScreen(),
+      const WeeklyRoutineScreen(),
+      const ImportRoutinesScreen(),
+    ];
+
+    return Scaffold(
+      body: IndexedStack(index: _mobileSectionIndex, children: pages),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _mobileSectionIndex,
+        onTap: (index) => setState(() => _mobileSectionIndex = index),
+        selectedItemColor: const Color(0xFF59D52D),
+        unselectedItemColor: const Color(0xFF616B76),
+        backgroundColor: Colors.white,
+        type: BottomNavigationBarType.fixed,
+        selectedFontSize: 11,
+        unselectedFontSize: 11,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            activeIcon: Icon(Icons.home),
+            label: 'Inicio',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.groups_outlined),
+            activeIcon: Icon(Icons.groups),
+            label: 'Alumnos',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.monitor_weight_outlined),
+            activeIcon: Icon(Icons.monitor_weight),
+            label: 'Evaluar',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.fitness_center_outlined),
+            activeIcon: Icon(Icons.fitness_center),
+            label: 'Rutinas',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.upload_file_outlined),
+            activeIcon: Icon(Icons.upload_file),
+            label: 'Importar',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMobileOverview(BuildContext context, String userName) {
     return Scaffold(
       backgroundColor: const Color(0xFF00111F),
       body: SafeArea(
@@ -161,25 +187,33 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
                             title: 'Ver alumnos',
                             subtitle:
                                 'Listado, estado, plan y ficha del alumno',
-                            onTap: () => _openStudentsList(context),
+                            onTap: () {
+                              setState(() => _mobileSectionIndex = 1);
+                            },
                           ),
                           TeacherActionRow(
                             icon: Icons.monitor_weight,
                             title: 'Registrar evaluación corporal',
                             subtitle: 'Datos de Body Go Pro / Fitdays',
-                            onTap: () => _openRegisterBodyEvaluation(context),
+                            onTap: () {
+                              setState(() => _mobileSectionIndex = 2);
+                            },
                           ),
                           TeacherActionRow(
                             icon: Icons.fitness_center,
                             title: 'Ver rutina semanal',
                             subtitle: 'Plan 2, 3 o 4 sesiones',
-                            onTap: () => _openWeeklyRoutine(context),
+                            onTap: () {
+                              setState(() => _mobileSectionIndex = 3);
+                            },
                           ),
                           TeacherActionRow(
                             icon: Icons.upload_file,
                             title: 'Cargar rutinas desde Excel',
                             subtitle: 'Importar planificación del gimnasio',
-                            onTap: () => _openImportRoutines(context),
+                            onTap: () {
+                              setState(() => _mobileSectionIndex = 4);
+                            },
                           ),
                         ],
                       ),
@@ -233,11 +267,18 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
     String userName,
     double viewportWidth,
   ) {
+    final recentStudents = [...StudentProfileStore.all]
+      ..sort(
+        (first, second) =>
+            second.createdAtEpoch.compareTo(first.createdAtEpoch),
+      );
+    final latestThreeStudents = recentStudents.take(3).toList();
+
     if (_webSectionIndex != 0) {
       final pages = <Widget>[
         const SizedBox.shrink(),
         const StudentsListScreen(),
-        const RegisterStudentScreen(),
+        const StudentsListScreen(initiallyShowRegisterStudent: true),
         const RegisterBodyEvaluationScreen(),
         const WeeklyRoutineScreen(),
         const ImportRoutinesScreen(),
@@ -391,30 +432,34 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
                                     ),
                                   ),
                                   const SizedBox(width: 24),
-                                  const Expanded(
+                                  Expanded(
                                     flex: 2,
                                     child: _WebSection(
                                       title: 'Alumnos recientes',
                                       subtitle: 'Últimos registros',
-                                      child: Column(
-                                        children: [
-                                          _StudentMiniRow(
-                                            name: 'Felipe Durán',
-                                            plan: 'Plan 3 sesiones',
-                                            status: 'Activo',
-                                          ),
-                                          _StudentMiniRow(
-                                            name: 'Camila Rojas',
-                                            plan: 'Plan 2 sesiones',
-                                            status: 'Activo',
-                                          ),
-                                          _StudentMiniRow(
-                                            name: 'Matías Soto',
-                                            plan: 'Plan 4 sesiones',
-                                            status: 'Por vencer',
-                                          ),
-                                        ],
-                                      ),
+                                      child: latestThreeStudents.isEmpty
+                                          ? const Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                vertical: 24,
+                                              ),
+                                              child: Text(
+                                                'Aún no hay alumnos registrados.',
+                                                style: TextStyle(
+                                                  color: Color(0xFF616B76),
+                                                ),
+                                              ),
+                                            )
+                                          : Column(
+                                              children: [
+                                                for (final student
+                                                    in latestThreeStudents)
+                                                  _StudentMiniRow(
+                                                    name: student.name,
+                                                    plan: student.plan,
+                                                    status: student.status,
+                                                  ),
+                                              ],
+                                            ),
                                     ),
                                   ),
                                 ],
@@ -506,21 +551,15 @@ class _WebSidebar extends StatelessWidget {
           const SizedBox(height: 38),
           _SidebarItem(
             icon: Icons.dashboard_rounded,
-            label: 'Dashboard',
+            label: 'Inicio',
             selected: selectedIndex == 0,
             onTap: onDashboard,
           ),
           _SidebarItem(
             icon: Icons.groups_2_rounded,
             label: 'Alumnos',
-            selected: selectedIndex == 1,
+            selected: selectedIndex == 1 || selectedIndex == 2,
             onTap: onStudents,
-          ),
-          _SidebarItem(
-            icon: Icons.person_add_alt_1_rounded,
-            label: 'Registrar alumno',
-            selected: selectedIndex == 2,
-            onTap: onRegisterStudent,
           ),
           _SidebarItem(
             icon: Icons.monitor_weight_rounded,

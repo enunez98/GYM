@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../models/body_evaluation.dart';
 
 class BodyEvaluationStore {
@@ -7,6 +9,34 @@ class BodyEvaluationStore {
 
   static void add(BodyEvaluation evaluation) {
     _evaluations.add(evaluation);
+  }
+
+  static Future<void> addToFirestore(BodyEvaluation evaluation) async {
+    await FirebaseFirestore.instance
+        .collection('evaluations')
+        .doc(evaluation.id)
+        .set(evaluation.toFirestore());
+    _evaluations.add(evaluation);
+  }
+
+  static Future<void> loadForUser(String userId) async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('evaluations')
+        .where('userId', isEqualTo: userId)
+        .get();
+    final items =
+        snapshot.docs
+            .map(
+              (document) =>
+                  BodyEvaluation.fromFirestore(document.id, document.data()),
+            )
+            .toList()
+          ..sort(
+            (first, second) => first.createdAt.compareTo(second.createdAt),
+          );
+    _evaluations
+      ..removeWhere((item) => item.userId == userId)
+      ..addAll(items);
   }
 
   static List<BodyEvaluation> getByUserId(String userId) {
