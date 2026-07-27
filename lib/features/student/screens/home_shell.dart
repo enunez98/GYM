@@ -138,7 +138,7 @@ class _StudentWebShell extends StatelessWidget {
         children: [
           Container(
             width: 260,
-            color: const Color(0xFF07111D),
+            color: const Color(0xFF111214),
             padding: const EdgeInsets.fromLTRB(20, 28, 20, 22),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,

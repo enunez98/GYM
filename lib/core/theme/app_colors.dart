@@ -12,7 +12,7 @@ abstract final class AppColors {
   static const pureWhite = Color(0xFFFFFFFF);
   static const ink = Color(0xFF07111D);
   static const lightBorder = Color(0xFFE7EAEC);
-  static const black = Color(0xFF00111F);
+  static const black = Color(0xFF111214);
 
   static const greenSurface = Color(0xFFEDF9E8);
   static const amberSurface = Color(0xFF3A2C12);

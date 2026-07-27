@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/widgets/app_card.dart';
+import '../../../core/widgets/app_select_field.dart';
 import '../../../core/widgets/app_text_field.dart';
 import '../../../core/widgets/form_header.dart';
 import '../../../core/widgets/responsive_action_button.dart';
@@ -14,7 +15,9 @@ import '../../../services/body_evaluation_store.dart';
 import '../../../services/student_profile_store.dart';
 
 class RegisterBodyEvaluationScreen extends StatefulWidget {
-  const RegisterBodyEvaluationScreen({super.key});
+  final VoidCallback? onClose;
+
+  const RegisterBodyEvaluationScreen({super.key, this.onClose});
 
   @override
   State<RegisterBodyEvaluationScreen> createState() =>
@@ -43,22 +46,22 @@ class _RegisterBodyEvaluationScreenState
   final muscleControlController = TextEditingController();
 
   String? selectedStudentId;
+  bool isSaving = false;
 
   List<StudentProfile> get students => StudentProfileStore.all;
 
   StudentProfile? get selectedStudent {
     final id = selectedStudentId;
-    if (id == null) return students.isEmpty ? null : students.first;
+    if (id == null) return null;
     for (final student in students) {
       if (student.id == id) return student;
     }
-    return students.isEmpty ? null : students.first;
+    return null;
   }
 
   @override
   void initState() {
     super.initState();
-    if (students.isNotEmpty) selectedStudentId = students.first.id;
     weightController.addListener(recalculateFromWeightAndHeight);
     heightController.addListener(recalculateFromWeightAndHeight);
     bodyFatController.addListener(recalculateScore);
@@ -247,7 +250,57 @@ class _RegisterBodyEvaluationScreenState
     return 'Alto';
   }
 
+  void closeScreen() {
+    final onClose = widget.onClose;
+    if (onClose != null) {
+      onClose();
+      return;
+    }
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
+  }
+
+  Future<void> showSaveResult({
+    required bool success,
+    String? technicalMessage,
+  }) {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) => AlertDialog(
+        icon: Icon(
+          success ? Icons.check_circle_outline : Icons.error_outline,
+          color: success
+              ? const Color(0xFF59D52D)
+              : Theme.of(context).colorScheme.error,
+          size: 52,
+        ),
+        title: Text(
+          success
+              ? 'Evaluación registrada'
+              : 'No se pudo registrar la evaluación',
+          textAlign: TextAlign.center,
+        ),
+        content: Text(
+          success
+              ? 'La evaluación fue registrada exitosamente.'
+              : 'No se ha podido registrar la evaluación. Revisa tu conexión e inténtalo nuevamente.${technicalMessage == null ? '' : '\n\n$technicalMessage'}',
+          textAlign: TextAlign.center,
+        ),
+        actionsAlignment: MainAxisAlignment.center,
+        actions: [
+          ElevatedButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Aceptar'),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<void> saveEvaluation() async {
+    if (isSaving) return;
     final weight = parseDouble(weightController.text);
     final height = parseDouble(heightController.text);
     final bodyFatPercent = parseDouble(bodyFatController.text);
@@ -310,18 +363,25 @@ class _RegisterBodyEvaluationScreenState
       muscleControlKg: parseDouble(muscleControlController.text),
     );
 
-    if (Firebase.apps.isEmpty) {
-      BodyEvaluationStore.add(evaluation);
-    } else {
-      await BodyEvaluationStore.addToFirestore(evaluation);
+    setState(() => isSaving = true);
+    try {
+      if (Firebase.apps.isEmpty) {
+        BodyEvaluationStore.add(evaluation);
+      } else {
+        await BodyEvaluationStore.addToFirestore(evaluation);
+      }
+
+      if (!mounted) return;
+      setState(() => isSaving = false);
+      await showSaveResult(success: true);
+      if (!mounted) return;
+      closeScreen();
+    } catch (error) {
+      debugPrint('Error al registrar evaluación corporal: $error');
+      if (!mounted) return;
+      setState(() => isSaving = false);
+      await showSaveResult(success: false);
     }
-
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Evaluación corporal guardada')),
-    );
-
-    Navigator.pop(context);
   }
 
   Widget _buildWebEvaluationPanels() {
@@ -590,7 +650,7 @@ class _RegisterBodyEvaluationScreenState
     final isWebLayout = MediaQuery.sizeOf(context).width >= 900;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF00111F),
+      backgroundColor: const Color(0xFF111214),
       body: SafeArea(
         child: Column(
           children: [
@@ -598,7 +658,7 @@ class _RegisterBodyEvaluationScreenState
               title: 'Evaluación corporal',
               subtitle: 'Registrar datos Body Go Pro / Fitdays',
               icon: Icons.monitor_weight,
-              onBack: () => Navigator.pop(context),
+              onBack: closeScreen,
             ),
             Expanded(
               child: Container(
@@ -625,9 +685,8 @@ class _RegisterBodyEvaluationScreenState
                           _ResponsiveEvaluationRow(
                             isWebLayout: isWebLayout,
                             first: ResponsiveFormField(
-                              child: DropdownButtonFormField<String>(
-                                initialValue: selectedStudent?.id,
-                                isExpanded: true,
+                              child: AppSelectField(
+                                value: selectedStudent?.name,
                                 decoration: InputDecoration(
                                   labelText: 'Alumno',
                                   prefixIcon: const Icon(Icons.person),
@@ -637,17 +696,20 @@ class _RegisterBodyEvaluationScreenState
                                     borderRadius: BorderRadius.circular(14),
                                   ),
                                 ),
-                                hint: const Text('No hay alumnos registrados'),
-                                items: [
-                                  for (final student in students)
-                                    DropdownMenuItem(
-                                      value: student.id,
-                                      child: Text(student.name),
-                                    ),
+                                hint: students.isEmpty
+                                    ? 'No hay alumnos registrados'
+                                    : 'Seleccionar alumno',
+                                options: [
+                                  for (final student in students) student.name,
                                 ],
                                 onChanged: (value) {
                                   setState(() {
-                                    selectedStudentId = value;
+                                    selectedStudentId = students
+                                        .where(
+                                          (student) => student.name == value,
+                                        )
+                                        .firstOrNull
+                                        ?.id;
                                   });
                                 },
                               ),
@@ -994,10 +1056,20 @@ class _RegisterBodyEvaluationScreenState
                                 borderRadius: BorderRadius.circular(14),
                               ),
                             ),
-                            onPressed: saveEvaluation,
-                            icon: const Icon(Icons.save),
-                            label: const Text(
-                              'Guardar evaluación',
+                            onPressed: isSaving ? null : saveEvaluation,
+                            icon: isSaving
+                                ? const SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : const Icon(Icons.save),
+                            label: Text(
+                              isSaving
+                                  ? 'Guardando evaluación...'
+                                  : 'Guardar evaluación',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -1020,7 +1092,7 @@ class _RegisterBodyEvaluationScreenState
                                       borderRadius: BorderRadius.circular(14),
                                     ),
                                   ),
-                                  onPressed: () => Navigator.pop(context),
+                                  onPressed: isSaving ? null : closeScreen,
                                   icon: const Icon(Icons.close),
                                   label: const Text(
                                     'Cancelar',
@@ -1040,7 +1112,7 @@ class _RegisterBodyEvaluationScreenState
                                       borderRadius: BorderRadius.circular(14),
                                     ),
                                   ),
-                                  onPressed: () => Navigator.pop(context),
+                                  onPressed: isSaving ? null : closeScreen,
                                   child: const Text(
                                     'Cancelar',
                                     style: TextStyle(

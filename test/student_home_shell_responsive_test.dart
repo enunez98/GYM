@@ -29,7 +29,26 @@ void main() {
 
     expect(find.byType(BottomNavigationBar), findsNothing);
     expect(find.text('NEXFIT'), findsNothing);
-    expect(find.byType(Image), findsOneWidget);
+    expect(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is Image &&
+            widget.image is AssetImage &&
+            (widget.image as AssetImage).assetName ==
+                'assets/images/nexfit_logo_compact.png',
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is Image &&
+            widget.image is AssetImage &&
+            (widget.image as AssetImage).assetName ==
+                'assets/images/student_home_workout.png',
+      ),
+      findsOneWidget,
+    );
     expect(find.text('Entreno'), findsOneWidget);
     expect(find.text('Alumno'), findsWidgets);
     expect(tester.getSize(find.byType(StudentHomeScreen)).width, 1180);

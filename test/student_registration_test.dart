@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gym_app/core/widgets/app_select_field.dart';
 import 'package:gym_app/features/teacher/screens/register_student_screen.dart';
 import 'package:gym_app/features/teacher/screens/students_list_screen.dart';
 import 'package:gym_app/models/app_user.dart';
@@ -133,6 +134,18 @@ void main() {
     await tester.enterText(fields.at(2), '12.345.678-5');
     await tester.enterText(fields.at(3), '+569 9876 5432');
     await tester.enterText(fields.at(4), 'camila@correo.cl');
+    await tester.tap(find.text('Seleccionar plan'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Plan 3 sesiones'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Seleccionar duración'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Mensual'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Seleccionar método de pago'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Efectivo'));
+    await tester.pumpAndSettle();
 
     final saveButton = find.text('Guardar alumno');
     await tester.scrollUntilVisible(
@@ -141,6 +154,14 @@ void main() {
       scrollable: find.byType(Scrollable).first,
     );
     await tester.tap(saveButton);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Alumno registrado'), findsOneWidget);
+    expect(
+      find.text('El alumno se ha registrado correctamente.'),
+      findsOneWidget,
+    );
+    await tester.tap(find.text('Aceptar'));
     await tester.pumpAndSettle();
 
     final profile = StudentProfileStore.all.last;
@@ -171,6 +192,11 @@ void main() {
     final today = DateTime(now.year, now.month, now.day);
     expect(find.text(formattedDate(today)), findsOneWidget);
     expect(find.text(formattedDate(dateAfterMonths(today, 1))), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('Sin evaluación corporal registrada.'),
+      500,
+      scrollable: find.byType(Scrollable).last,
+    );
     expect(find.text('Sin evaluación corporal registrada.'), findsOneWidget);
   });
 
@@ -187,6 +213,18 @@ void main() {
     await tester.enterText(fields.at(2), '11.111.111-1');
     await tester.enterText(fields.at(3), '+569 1111 2222');
     await tester.enterText(fields.at(4), 'felipe.duplicado@correo.cl');
+    await tester.tap(find.text('Seleccionar plan'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Plan 3 sesiones'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Seleccionar duración'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Mensual'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Seleccionar método de pago'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Efectivo'));
+    await tester.pumpAndSettle();
 
     final saveButton = find.text('Guardar alumno');
     await tester.scrollUntilVisible(
@@ -195,9 +233,17 @@ void main() {
       scrollable: find.byType(Scrollable).first,
     );
     await tester.tap(saveButton);
-    await tester.pump();
+    await tester.pumpAndSettle();
 
-    expect(find.text('Ya existe un alumno con ese RUT'), findsOneWidget);
+    expect(find.text('No se pudo registrar el alumno'), findsOneWidget);
+    expect(
+      find.textContaining('No se ha podido registrar el alumno.'),
+      findsOneWidget,
+    );
+    expect(
+      find.textContaining('Ya existe un alumno con ese RUT'),
+      findsOneWidget,
+    );
     expect(StudentProfileStore.all, hasLength(1));
   });
 
@@ -234,7 +280,7 @@ void main() {
     );
     await tester.tap(find.text('Cancelar').last);
     await tester.pumpAndSettle();
-    final contractFields = find.byType(DropdownButtonFormField<String>);
+    final contractFields = find.byType(AppSelectField);
     expect(
       tester.getTopLeft(contractFields.at(0)).dy,
       tester.getTopLeft(contractFields.at(1)).dy,
@@ -253,10 +299,11 @@ void main() {
       tester.getTopLeft(contractFields.at(2)).dy,
       lessThan(tester.getTopLeft(fields.at(5)).dy),
     );
-    expect(find.text('\$45.000'), findsOneWidget);
-    expect(find.text('Mensual'), findsOneWidget);
-    expect(find.text('Efectivo'), findsOneWidget);
-    await tester.tap(find.text('Mensual'));
+    expect(find.text('Seleccionar plan'), findsOneWidget);
+    expect(find.text('—'), findsOneWidget);
+    expect(find.text('Seleccionar duración'), findsOneWidget);
+    expect(find.text('Seleccionar método de pago'), findsOneWidget);
+    await tester.tap(find.text('Seleccionar duración'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Trimestral'));
     await tester.pumpAndSettle();
@@ -266,7 +313,7 @@ void main() {
       tester.widget<TextField>(fields.at(6)).controller?.text,
       formattedDate(dateAfterMonths(today, 3)),
     );
-    await tester.tap(find.text('Efectivo'));
+    await tester.tap(find.text('Seleccionar método de pago'));
     await tester.pumpAndSettle();
     expect(find.text('Transferencia'), findsOneWidget);
     expect(find.text('Tarjeta débito/crédito'), findsOneWidget);
@@ -276,7 +323,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Transferencia'), findsOneWidget);
 
-    await tester.tap(find.text('Plan 3 sesiones'));
+    await tester.tap(find.text('Seleccionar plan'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Plan 2 sesiones').last);
     await tester.pumpAndSettle();
@@ -295,8 +342,9 @@ void main() {
     await tester.pumpWidget(const MaterialApp(home: RegisterStudentScreen()));
 
     expect(find.text('Valor'), findsOneWidget);
-    expect(find.text('\$45.000'), findsOneWidget);
-    expect(find.text('Efectivo'), findsOneWidget);
+    expect(find.text('Seleccionar plan'), findsOneWidget);
+    expect(find.text('—'), findsOneWidget);
+    expect(find.text('Seleccionar método de pago'), findsOneWidget);
     final mobileFields = find.byType(TextField);
     expect(tester.widget<TextField>(mobileFields.at(5)).readOnly, isTrue);
     expect(tester.widget<TextField>(mobileFields.at(6)).readOnly, isTrue);
@@ -309,7 +357,7 @@ void main() {
     await tester.tap(find.text('Cancelar'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Plan 3 sesiones'));
+    await tester.tap(find.text('Seleccionar plan'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Plan 4 sesiones').last);
     await tester.pumpAndSettle();

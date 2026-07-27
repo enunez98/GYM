@@ -37,5 +37,15 @@ service cloud.firestore {
       allow read: if signedIn()
         && resource.data.userId == request.auth.uid;
     }
+
+    match /routines/{routineId} {
+      allow read, write: if isAdmin();
+      allow read: if signedIn();
+    }
+
+    match /routineAssignments/{userId} {
+      allow read, write: if isAdmin();
+      allow read: if signedIn() && userId == request.auth.uid;
+    }
   }
 }

@@ -4,6 +4,7 @@ import '../../models/app_user.dart';
 import '../../services/demo_auth_service.dart';
 import '../../services/body_evaluation_store.dart';
 import '../../services/firebase_auth_service.dart';
+import '../../services/routine_assignment_store.dart';
 import '../../services/session_store.dart';
 import '../../services/student_profile_store.dart';
 import '../student/screens/home_shell.dart';
@@ -59,9 +60,11 @@ class _LoginScreenState extends State<LoginScreen> {
       );
       if (user.role == UserRole.admin) {
         await StudentProfileStore.loadFromFirestore();
+        await RoutineAssignmentStore.loadAllFromFirestore();
       } else {
         await StudentProfileStore.loadForUser(user.id);
         await BodyEvaluationStore.loadForUser(user.id);
+        await RoutineAssignmentStore.loadForUser(user.id);
       }
       SessionStore.signIn(user);
 

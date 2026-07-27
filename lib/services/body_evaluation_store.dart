@@ -39,6 +39,29 @@ class BodyEvaluationStore {
       ..addAll(items);
   }
 
+  static Stream<List<BodyEvaluation>> watchForUser(String userId) {
+    return FirebaseFirestore.instance
+        .collection('evaluations')
+        .where('userId', isEqualTo: userId)
+        .snapshots()
+        .map((snapshot) {
+          final items =
+              snapshot.docs
+                  .map(
+                    (document) => BodyEvaluation.fromFirestore(
+                      document.id,
+                      document.data(),
+                    ),
+                  )
+                  .toList()
+                ..sort(
+                  (first, second) =>
+                      second.createdAt.compareTo(first.createdAt),
+                );
+          return List.unmodifiable(items);
+        });
+  }
+
   static List<BodyEvaluation> getByUserId(String userId) {
     return List.unmodifiable(
       _evaluations.where((item) => item.userId == userId).toList(),

@@ -2,18 +2,23 @@ import 'dart:typed_data';
 
 import 'package:excel/excel.dart' as xls;
 import 'package:file_selector/file_selector.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/widgets/app_card.dart';
+import '../../../core/widgets/app_select_field.dart';
 import '../../../core/widgets/form_header.dart';
 import '../../../core/widgets/responsive_action_button.dart';
 import '../../../core/widgets/responsive_form_field.dart';
 import '../../../core/widgets/info_row.dart';
 import '../../../models/routine_models.dart';
 import '../../../services/imported_routine_store.dart';
+import '../../../services/routine_persistence_service.dart';
 
 class ImportRoutinesScreen extends StatefulWidget {
-  const ImportRoutinesScreen({super.key});
+  final VoidCallback? onClose;
+
+  const ImportRoutinesScreen({super.key, this.onClose});
 
   @override
   State<ImportRoutinesScreen> createState() => _ImportRoutinesScreenState();
@@ -36,6 +41,51 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
   int detectedSessions = 0;
   int detectedExercises = 0;
   List<DemoRoutineSession> extractedRoutinePreview = [];
+  bool isImporting = false;
+
+  void closeScreen() {
+    final onClose = widget.onClose;
+    if (onClose != null) {
+      onClose();
+      return;
+    }
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
+  }
+
+  Future<void> showRoutineResult({required bool success, String? detail}) {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) => AlertDialog(
+        icon: Icon(
+          success ? Icons.check_circle_outline : Icons.error_outline,
+          color: success
+              ? const Color(0xFF59D52D)
+              : Theme.of(context).colorScheme.error,
+          size: 52,
+        ),
+        title: Text(
+          success ? 'Rutina cargada' : 'No se pudo cargar la rutina',
+          textAlign: TextAlign.center,
+        ),
+        content: Text(
+          success
+              ? 'La rutina se ha cargado exitosamente.${detail == null ? '' : '\n\n$detail'}'
+              : 'No se ha podido cargar la rutina.${detail == null ? ' Inténtalo nuevamente.' : '\n\n$detail'}',
+          textAlign: TextAlign.center,
+        ),
+        actionsAlignment: MainAxisAlignment.center,
+        actions: [
+          ElevatedButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Aceptar'),
+          ),
+        ],
+      ),
+    );
+  }
 
   String normalizeText(String value) {
     return value
@@ -268,9 +318,18 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
       ],
     );
 
-    final XFile? file = await openFile(
-      acceptedTypeGroups: <XTypeGroup>[excelTypeGroup],
-    );
+    XFile? file;
+    try {
+      file = await openFile(acceptedTypeGroups: <XTypeGroup>[excelTypeGroup]);
+    } catch (error) {
+      debugPrint('Error al seleccionar el archivo de rutina: $error');
+      if (!mounted) return;
+      await showRoutineResult(
+        success: false,
+        detail: 'No fue posible abrir el archivo seleccionado.',
+      );
+      return;
+    }
 
     if (!mounted) return;
 
@@ -290,7 +349,19 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
       return;
     }
 
-    final bytes = await file.readAsBytes();
+    late final Uint8List bytes;
+    try {
+      bytes = await file.readAsBytes();
+    } catch (error) {
+      debugPrint('Error al leer el archivo de rutina: $error');
+      if (!mounted) return;
+      await showRoutineResult(
+        success: false,
+        detail: 'No fue posible leer el archivo seleccionado.',
+      );
+      return;
+    }
+    if (!mounted) return;
 
     setState(() {
       selectedFileName = fileName;
@@ -355,7 +426,8 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
     );
   }
 
-  void importRoutine() {
+  Future<void> importRoutine() async {
+    if (isImporting) return;
     if (!fileValidated) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -364,25 +436,50 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
       );
       return;
     }
-    ImportedRoutineStore.save(
-      selectedPlan: selectedPlan,
-      importedSessions: extractedRoutinePreview,
-      sourceFileName: selectedFileName,
-    );
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Rutina cargada: $detectedWeeks semanas, $detectedSessions sesiones, $detectedExercises ejercicios',
-        ),
-      ),
-    );
-    Navigator.pop(context);
+
+    setState(() => isImporting = true);
+    try {
+      if (extractedRoutinePreview.isEmpty) {
+        throw StateError('La rutina no contiene sesiones válidas.');
+      }
+      final result = Firebase.apps.isEmpty
+          ? RoutinePersistenceService.replaceLocally(
+              plan: selectedPlan,
+              sourceFileName: selectedFileName,
+              sessions: extractedRoutinePreview,
+            )
+          : await RoutinePersistenceService.replaceForPlan(
+              plan: selectedPlan,
+              sourceFileName: selectedFileName,
+              sessions: extractedRoutinePreview,
+            );
+      ImportedRoutineStore.save(
+        selectedPlan: selectedPlan,
+        importedSessions: extractedRoutinePreview,
+        sourceFileName: selectedFileName,
+      );
+
+      if (!mounted) return;
+      setState(() => isImporting = false);
+      await showRoutineResult(
+        success: true,
+        detail:
+            '${result.assignedStudents} ${result.assignedStudents == 1 ? 'alumno actualizado' : 'alumnos actualizados'}.',
+      );
+      if (!mounted) return;
+      closeScreen();
+    } catch (error) {
+      debugPrint('Error al cargar la rutina: $error');
+      if (!mounted) return;
+      setState(() => isImporting = false);
+      await showRoutineResult(success: false);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF00111F),
+      backgroundColor: const Color(0xFF111214),
       body: SafeArea(
         child: Column(
           children: [
@@ -390,7 +487,7 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
               title: 'Cargar rutinas',
               subtitle: 'Importar planificación desde Excel',
               icon: Icons.upload_file,
-              onBack: () => Navigator.pop(context),
+              onBack: closeScreen,
             ),
             Expanded(
               child: Container(
@@ -415,7 +512,7 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
                           ),
                           const SizedBox(height: 14),
                           ResponsiveFormField(
-                            child: DropdownButtonFormField<String>(
+                            child: AppSelectField(
                               value: selectedPlan,
                               decoration: InputDecoration(
                                 labelText: 'Plan',
@@ -426,19 +523,10 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
                                   borderRadius: BorderRadius.circular(14),
                                 ),
                               ),
-                              items: const [
-                                DropdownMenuItem(
-                                  value: 'Plan 2 sesiones',
-                                  child: Text('Plan 2 sesiones'),
-                                ),
-                                DropdownMenuItem(
-                                  value: 'Plan 3 sesiones',
-                                  child: Text('Plan 3 sesiones'),
-                                ),
-                                DropdownMenuItem(
-                                  value: 'Plan 4 sesiones',
-                                  child: Text('Plan 4 sesiones'),
-                                ),
+                              options: const [
+                                'Plan 2 sesiones',
+                                'Plan 3 sesiones',
+                                'Plan 4 sesiones',
                               ],
                               onChanged: (value) {
                                 setState(() {
@@ -780,17 +868,29 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
                         child: ElevatedButton.icon(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: fileValidated
-                                ? const Color(0xFF00111F)
+                                ? const Color(0xFF111214)
                                 : Color(0xFFC9CED2),
                             foregroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(14),
                             ),
                           ),
-                          onPressed: importRoutine,
-                          icon: const Icon(Icons.cloud_upload),
-                          label: const Text(
-                            'Cargar rutina',
+                          onPressed: fileValidated && !isImporting
+                              ? importRoutine
+                              : null,
+                          icon: isImporting
+                              ? const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : const Icon(Icons.cloud_upload),
+                          label: Text(
+                            isImporting
+                                ? 'Cargando rutina...'
+                                : 'Cargar rutina',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -811,7 +911,7 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
                               borderRadius: BorderRadius.circular(14),
                             ),
                           ),
-                          onPressed: () => Navigator.pop(context),
+                          onPressed: isImporting ? null : closeScreen,
                           child: const Text(
                             'Cancelar',
                             style: TextStyle(

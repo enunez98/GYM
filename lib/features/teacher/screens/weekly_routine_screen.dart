@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/widgets/app_card.dart';
+import '../../../core/widgets/app_select_field.dart';
 import '../../../core/widgets/form_header.dart';
 import '../../../core/widgets/responsive_action_button.dart';
 import '../../../core/widgets/responsive_form_field.dart';
@@ -199,7 +200,7 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFF00111F),
+      backgroundColor: const Color(0xFF111214),
       body: SafeArea(
         child: Column(
           children: [
@@ -254,9 +255,8 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
                               ),
                               const SizedBox(height: 14),
                               ResponsiveFormField(
-                                child: DropdownButtonFormField<String>(
-                                  initialValue: selectedWeek,
-                                  isExpanded: true,
+                                child: AppSelectField(
+                                  value: selectedWeek,
                                   decoration: InputDecoration(
                                     labelText: 'Semana',
                                     prefixIcon: const Icon(
@@ -268,14 +268,7 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
                                       borderRadius: BorderRadius.circular(14),
                                     ),
                                   ),
-                                  items: weeks
-                                      .map(
-                                        (week) => DropdownMenuItem(
-                                          value: week,
-                                          child: Text(week),
-                                        ),
-                                      )
-                                      .toList(),
+                                  options: weeks,
                                   onChanged: (value) {
                                     setState(() {
                                       selectedWeek = value ?? weeks.first;
@@ -303,9 +296,8 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
                             ),
                             const SizedBox(height: 14),
                             ResponsiveFormField(
-                              child: DropdownButtonFormField<String>(
-                                initialValue: selectedPlan,
-                                isExpanded: true,
+                              child: AppSelectField(
+                                value: selectedPlan,
                                 decoration: InputDecoration(
                                   labelText: 'Plan',
                                   prefixIcon: const Icon(Icons.assignment),
@@ -315,19 +307,10 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
                                     borderRadius: BorderRadius.circular(14),
                                   ),
                                 ),
-                                items: const [
-                                  DropdownMenuItem(
-                                    value: 'Plan 2 sesiones',
-                                    child: Text('Plan 2 sesiones'),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: 'Plan 3 sesiones',
-                                    child: Text('Plan 3 sesiones'),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: 'Plan 4 sesiones',
-                                    child: Text('Plan 4 sesiones'),
-                                  ),
+                                options: const [
+                                  'Plan 2 sesiones',
+                                  'Plan 3 sesiones',
+                                  'Plan 4 sesiones',
                                 ],
                                 onChanged: (value) {
                                   setState(() {
@@ -434,7 +417,7 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
     required bool hasImportedRoutine,
   }) {
     return Scaffold(
-      backgroundColor: const Color(0xFF00111F),
+      backgroundColor: const Color(0xFF111214),
       body: SafeArea(
         child: Column(
           children: [
@@ -481,9 +464,8 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
                           ),
                           SizedBox(
                             width: 360,
-                            child: DropdownButtonFormField<String>(
-                              initialValue: selectedPlan,
-                              isExpanded: true,
+                            child: AppSelectField(
+                              value: selectedPlan,
                               decoration: InputDecoration(
                                 labelText: 'Plan',
                                 prefixIcon: const Icon(Icons.assignment),
@@ -493,19 +475,10 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
                                   borderRadius: BorderRadius.circular(14),
                                 ),
                               ),
-                              items: const [
-                                DropdownMenuItem(
-                                  value: 'Plan 2 sesiones',
-                                  child: Text('Plan 2 sesiones'),
-                                ),
-                                DropdownMenuItem(
-                                  value: 'Plan 3 sesiones',
-                                  child: Text('Plan 3 sesiones'),
-                                ),
-                                DropdownMenuItem(
-                                  value: 'Plan 4 sesiones',
-                                  child: Text('Plan 4 sesiones'),
-                                ),
+                              options: const [
+                                'Plan 2 sesiones',
+                                'Plan 3 sesiones',
+                                'Plan 4 sesiones',
                               ],
                               onChanged: (value) {
                                 setState(() {

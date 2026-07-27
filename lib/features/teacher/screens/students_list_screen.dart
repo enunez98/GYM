@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../../core/widgets/app_card.dart';
+import '../../../core/widgets/app_select_field.dart';
 import '../../../core/widgets/form_header.dart';
 import '../../../core/widgets/metric_card.dart';
 import '../../../core/widgets/responsive_form_field.dart';
@@ -117,7 +118,7 @@ class _StudentsListScreenState extends State<StudentsListScreen> {
     final inactiveCount = _countStatus(students, 'Inactivo');
 
     return Scaffold(
-      backgroundColor: const Color(0xFF00111F),
+      backgroundColor: const Color(0xFF111214),
       body: SafeArea(
         child: Column(
           children: [
@@ -237,25 +238,16 @@ class _StudentsListScreenState extends State<StudentsListScreen> {
                             children: [
                               SizedBox(
                                 width: 210,
-                                child: DropdownButtonFormField<String>(
-                                  initialValue: _selectedStatus,
-                                  isExpanded: true,
+                                child: AppSelectField(
+                                  value: _selectedStatus,
                                   decoration: _filterDecoration(),
-                                  items:
-                                      const [
-                                            'Todos los estados',
-                                            'Activo',
-                                            'Por vencer',
-                                            'Vencido',
-                                            'Inactivo',
-                                          ]
-                                          .map(
-                                            (status) => DropdownMenuItem(
-                                              value: status,
-                                              child: Text(status),
-                                            ),
-                                          )
-                                          .toList(),
+                                  options: const [
+                                    'Todos los estados',
+                                    'Activo',
+                                    'Por vencer',
+                                    'Vencido',
+                                    'Inactivo',
+                                  ],
                                   onChanged: (value) {
                                     setState(() {
                                       _selectedStatus =
@@ -268,22 +260,12 @@ class _StudentsListScreenState extends State<StudentsListScreen> {
                               const Spacer(),
                               SizedBox(
                                 width: 205,
-                                child: DropdownButtonFormField<String>(
-                                  initialValue: _selectedOrder,
-                                  isExpanded: true,
+                                child: AppSelectField(
+                                  value: _selectedOrder,
                                   decoration: _filterDecoration(
                                     label: 'Ordenar por',
                                   ),
-                                  items: const [
-                                    DropdownMenuItem(
-                                      value: 'Nombre A-Z',
-                                      child: Text('Nombre A-Z'),
-                                    ),
-                                    DropdownMenuItem(
-                                      value: 'Nombre Z-A',
-                                      child: Text('Nombre Z-A'),
-                                    ),
-                                  ],
+                                  options: const ['Nombre A-Z', 'Nombre Z-A'],
                                   onChanged: (value) {
                                     setState(() {
                                       _selectedOrder = value ?? 'Nombre A-Z';
@@ -436,7 +418,7 @@ class _StudentsListScreenState extends State<StudentsListScreen> {
     final expiredCount = _countStatus(students, 'Vencido');
 
     return Scaffold(
-      backgroundColor: const Color(0xFF00111F),
+      backgroundColor: const Color(0xFF111214),
       body: SafeArea(
         child: Column(
           children: [
@@ -521,7 +503,7 @@ class _StudentsListScreenState extends State<StudentsListScreen> {
 
   Widget _buildMobileStudentDetail(StudentProfile student) {
     return Scaffold(
-      backgroundColor: const Color(0xFF00111F),
+      backgroundColor: const Color(0xFF111214),
       body: SafeArea(
         child: Column(
           children: [

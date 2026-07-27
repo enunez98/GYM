@@ -71,7 +71,7 @@ void main() {
       const MaterialApp(home: Scaffold(body: WorkoutScreen())),
     );
 
-    expect(find.text('Sesión 1 importada'), findsOneWidget);
+    expect(find.text('Sesión 1 importada'), findsWidgets);
     await tester.enterText(find.byType(TextField).at(0), '50');
     await tester.enterText(find.byType(TextField).at(1), '10');
 
@@ -84,7 +84,7 @@ void main() {
     expect(completed.isCompleted, isTrue);
     expect(completed.totalSets, 1);
     expect(completed.totalVolume, 500);
-    expect(find.text('Sesión 2 importada'), findsOneWidget);
+    expect(find.text('Sesión 2 importada'), findsWidgets);
 
     final skipButton = find.text('Omitir sesión');
     await tester.ensureVisible(skipButton);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gym_app/core/widgets/app_select_field.dart';
 import 'package:gym_app/features/student/screens/body_evaluation_screen.dart';
 import 'package:gym_app/features/teacher/screens/register_body_evaluation_screen.dart';
 import 'package:gym_app/models/app_user.dart';
@@ -149,11 +150,17 @@ void main() {
     await tester.tap(find.text('Abrir formulario'));
     await tester.pumpAndSettle();
 
+    expect(find.text('Seleccionar alumno'), findsOneWidget);
+    await tester.tap(find.byType(AppSelectField).first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Felipe Durán').last);
+    await tester.pumpAndSettle();
+
     final fields = find.byType(TextField);
     expect(tester.widget<TextField>(fields.at(2)).controller?.text, isEmpty);
     expect(tester.widget<TextField>(fields.at(8)).controller?.text, isEmpty);
     expect(
-      tester.getTopLeft(find.byType(DropdownButtonFormField<String>).first).dy,
+      tester.getTopLeft(find.byType(AppSelectField).first).dy,
       tester.getTopLeft(fields.at(0)).dy,
     );
     expect(
@@ -222,6 +229,13 @@ void main() {
     expect(saved?.weightKg, 70);
     expect(saved?.heightCm, 175);
     expect(saved?.bmi, 22.9);
+    expect(find.text('Evaluación registrada'), findsOneWidget);
+    expect(
+      find.text('La evaluación fue registrada exitosamente.'),
+      findsOneWidget,
+    );
+    await tester.tap(find.text('Aceptar'));
+    await tester.pumpAndSettle();
     expect(find.text('Abrir formulario'), findsOneWidget);
   });
 }

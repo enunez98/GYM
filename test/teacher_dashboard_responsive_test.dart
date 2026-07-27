@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gym_app/core/widgets/app_select_field.dart';
 import 'package:gym_app/features/teacher/screens/teacher_dashboard_screen.dart';
 import 'package:gym_app/features/teacher/screens/students_list_screen.dart';
 
@@ -101,8 +102,7 @@ void main() {
           .width,
       lessThanOrEqualTo(360),
     );
-    for (final element
-        in find.byType(DropdownButtonFormField<String>).evaluate()) {
+    for (final element in find.byType(AppSelectField).evaluate()) {
       expect(
         tester.getSize(find.byElementPredicate((e) => e == element)).width,
         lessThanOrEqualTo(520),

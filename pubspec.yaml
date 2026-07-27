@@ -71,6 +71,7 @@ flutter:
     - assets/images/nexfit_gym_background.png
     - assets/images/nexfit_logo.png
     - assets/images/nexfit_logo_compact.png
+    - assets/images/student_home_workout.png
     - assets/images/exercises/
     - assets/images/body_composition/
 

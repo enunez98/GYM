@@ -6,11 +6,14 @@ import 'package:gym_app/features/teacher/screens/student_detail_screen.dart';
 import 'package:gym_app/models/app_user.dart';
 import 'package:gym_app/models/routine_assignment.dart';
 import 'package:gym_app/models/routine_models.dart';
+import 'package:gym_app/models/student_profile.dart';
 import 'package:gym_app/services/demo_student_profile_service.dart';
 import 'package:gym_app/services/imported_routine_store.dart';
 import 'package:gym_app/services/routine_assignment_store.dart';
+import 'package:gym_app/services/routine_persistence_service.dart';
 import 'package:gym_app/services/session_store.dart';
 import 'package:gym_app/services/student_workout_progress_store.dart';
+import 'package:gym_app/services/student_profile_store.dart';
 
 void main() {
   final profile = DemoStudentProfileService.getByUserId('student_001')!;
@@ -80,6 +83,76 @@ void main() {
 
     RoutineAssignmentStore.removeByUserId(profile.userId);
     expect(RoutineAssignmentStore.hasAssignment(profile.userId), isFalse);
+  });
+
+  test('routine replacement automatically updates students from that plan', () {
+    const plan3Student = StudentProfile(
+      id: 'profile_plan_3',
+      userId: 'user_plan_3',
+      name: 'Alumno Plan 3',
+      rut: '123456785',
+      phone: '+56911111111',
+      email: 'plan3@test.cl',
+      plan: 'Plan 3 sesiones',
+      status: 'Activo',
+      startDate: '01-07-2026',
+      endDate: '01-08-2026',
+      daysRemaining: 30,
+      weeklyAttendanceCompleted: 0,
+      weeklyAttendanceTarget: 3,
+      monthlyAttendanceCompleted: 0,
+      monthlyAttendanceTarget: 12,
+      bodyScore: 0,
+      currentWeekLabel: 'Semana 1',
+      currentWeekDates: '-',
+    );
+    const plan4Student = StudentProfile(
+      id: 'profile_plan_4',
+      userId: 'user_plan_4',
+      name: 'Alumno Plan 4',
+      rut: '111111111',
+      phone: '+56922222222',
+      email: 'plan4@test.cl',
+      plan: 'Plan 4 sesiones',
+      status: 'Activo',
+      startDate: '01-07-2026',
+      endDate: '01-08-2026',
+      daysRemaining: 30,
+      weeklyAttendanceCompleted: 0,
+      weeklyAttendanceTarget: 4,
+      monthlyAttendanceCompleted: 0,
+      monthlyAttendanceTarget: 16,
+      bodyScore: 0,
+      currentWeekLabel: 'Semana 1',
+      currentWeekDates: '-',
+    );
+
+    StudentProfileStore.clearAll();
+    StudentProfileStore.add(plan3Student);
+    StudentProfileStore.add(plan4Student);
+    addTearDown(StudentProfileStore.resetToDemo);
+
+    final firstResult = RoutinePersistenceService.replaceLocally(
+      plan: 'Plan 3 sesiones',
+      sourceFileName: 'plan3_v1.xlsx',
+      sessions: sessions,
+    );
+    expect(firstResult.assignedStudents, 1);
+    expect(
+      RoutineAssignmentStore.getByUserId(plan3Student.userId)?.sourceFileName,
+      'plan3_v1.xlsx',
+    );
+    expect(RoutineAssignmentStore.getByUserId(plan4Student.userId), isNull);
+
+    RoutinePersistenceService.replaceLocally(
+      plan: 'Plan 3 sesiones',
+      sourceFileName: 'plan3_v2.xlsx',
+      sessions: [sessions.first],
+    );
+    final replacement = RoutineAssignmentStore.getByUserId(plan3Student.userId);
+    expect(replacement?.sourceFileName, 'plan3_v2.xlsx');
+    expect(replacement?.sessions, hasLength(1));
+    expect(RoutineAssignmentStore.all, hasLength(1));
   });
 
   testWidgets('admin assigns and removes the imported routine from detail', (

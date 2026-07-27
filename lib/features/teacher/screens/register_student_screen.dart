@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import '../../../core/widgets/app_card.dart';
+import '../../../core/widgets/app_select_field.dart';
 import '../../../core/widgets/app_text_field.dart';
 import '../../../core/widgets/form_header.dart';
 import '../../../core/widgets/responsive_action_button.dart';
@@ -10,6 +11,7 @@ import '../../../models/app_user.dart';
 import '../../../models/student_profile.dart';
 import '../../../services/demo_auth_service.dart';
 import '../../../services/firebase_auth_service.dart';
+import '../../../services/routine_persistence_service.dart';
 import '../../../services/student_profile_store.dart';
 
 class RegisterStudentScreen extends StatefulWidget {
@@ -29,16 +31,19 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
   final emailController = TextEditingController();
   final phoneController = TextEditingController(text: '+569');
   final startDateController = TextEditingController(text: '04-07-2026');
-  final endDateController = TextEditingController(text: '04-08-2026');
+  final endDateController = TextEditingController();
 
-  String selectedPlan = 'Plan 3 sesiones';
-  String selectedContractPeriod = 'Mensual';
-  String selectedPaymentMethod = 'Efectivo';
+  String? selectedPlan;
+  String? selectedContractPeriod;
+  String? selectedPaymentMethod;
   bool webDatesInitialized = false;
+  bool isSaving = false;
 
   String get selectedPlanPrice {
-    if (selectedPlan.contains('2')) return '\$30.000';
-    if (selectedPlan.contains('4')) return '\$55.000';
+    final plan = selectedPlan;
+    if (plan == null) return '—';
+    if (plan.contains('2')) return '\$30.000';
+    if (plan.contains('4')) return '\$55.000';
     return '\$45.000';
   }
 
@@ -97,7 +102,8 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
       'Trimestral' => 3,
       'Semestral' => 6,
       'Anual' => 12,
-      _ => 1,
+      'Mensual' => 1,
+      _ => 0,
     };
   }
 
@@ -117,6 +123,10 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
   }
 
   void updateEndDateFromDuration() {
+    if (selectedContractPeriod == null) {
+      endDateController.clear();
+      return;
+    }
     final startDate = parseFormDate(startDateController.text);
     endDateController.text = formatDate(addMonths(startDate, contractMonths));
   }
@@ -167,6 +177,39 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
     Navigator.pop(context);
   }
 
+  Future<void> showRegistrationResult({required bool success, String? detail}) {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) => AlertDialog(
+        icon: Icon(
+          success ? Icons.check_circle_outline : Icons.error_outline,
+          color: success
+              ? const Color(0xFF59D52D)
+              : Theme.of(context).colorScheme.error,
+          size: 52,
+        ),
+        title: Text(
+          success ? 'Alumno registrado' : 'No se pudo registrar el alumno',
+          textAlign: TextAlign.center,
+        ),
+        content: Text(
+          success
+              ? 'El alumno se ha registrado correctamente.'
+              : 'No se ha podido registrar el alumno.${detail == null ? ' Inténtalo nuevamente.' : '\n\n$detail'}',
+          textAlign: TextAlign.center,
+        ),
+        actionsAlignment: MainAxisAlignment.center,
+        actions: [
+          ElevatedButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Aceptar'),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<void> saveStudent() async {
     final name = nameController.text.trim();
     final lastName = lastNameController.text.trim();
@@ -187,8 +230,17 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
       showMessage('Ingresa un correo válido');
       return;
     }
-    if (selectedPlan.isEmpty || startDate.isEmpty || endDate.isEmpty) {
-      showMessage('Completa el plan y sus fechas');
+    final plan = selectedPlan;
+    final contractPeriod = selectedContractPeriod;
+    final paymentMethod = selectedPaymentMethod;
+    if (plan == null ||
+        contractPeriod == null ||
+        paymentMethod == null ||
+        startDate.isEmpty ||
+        endDate.isEmpty) {
+      showMessage(
+        'Selecciona plan, duración y método de pago, y completa sus fechas',
+      );
       return;
     }
 
@@ -198,11 +250,15 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
       return;
     }
     if (StudentProfileStore.existsByRut(normalizedRut)) {
-      showMessage('Ya existe un alumno con ese RUT');
+      await showRegistrationResult(
+        success: false,
+        detail: 'Ya existe un alumno con ese RUT',
+      );
       return;
     }
 
     final fullName = '$name $lastName'.trim();
+    setState(() => isSaving = true);
 
     late final AppUser user;
     try {
@@ -225,11 +281,18 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
       }
     } on AuthException catch (error) {
       if (!mounted) return;
-      showMessage(error.message);
+      setState(() => isSaving = false);
+      await showRegistrationResult(success: false, detail: error.message);
+      return;
+    } catch (error) {
+      debugPrint('Error al crear la cuenta del alumno: $error');
+      if (!mounted) return;
+      setState(() => isSaving = false);
+      await showRegistrationResult(success: false);
       return;
     }
 
-    final weeklyTarget = weeklyTargetFromPlan(selectedPlan);
+    final weeklyTarget = weeklyTargetFromPlan(plan);
     try {
       final profile = StudentProfile(
         id: user.id,
@@ -238,9 +301,9 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
         rut: normalizedRut,
         phone: phone,
         email: email,
-        plan: selectedPlan,
-        contractPeriod: selectedContractPeriod,
-        paymentMethod: selectedPaymentMethod,
+        plan: plan,
+        contractPeriod: contractPeriod,
+        paymentMethod: paymentMethod,
         status: 'Activo',
         startDate: startDate,
         endDate: endDate,
@@ -256,26 +319,34 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
       );
       if (Firebase.apps.isEmpty) {
         StudentProfileStore.add(profile);
+        RoutinePersistenceService.assignActiveRoutineLocally(profile);
       } else {
         await StudentProfileStore.addToFirestore(profile);
+        await RoutinePersistenceService.assignActiveRoutineToStudent(profile);
       }
-    } catch (_) {
+    } catch (error) {
+      debugPrint('Error al guardar la ficha del alumno: $error');
       if (!mounted) return;
-      showMessage('La cuenta fue creada, pero no se pudo guardar la ficha');
+      setState(() => isSaving = false);
+      await showRegistrationResult(
+        success: false,
+        detail: 'La cuenta fue creada, pero no se pudo guardar la ficha.',
+      );
       return;
     }
 
     if (!mounted) return;
-    final temporaryPassword = Firebase.apps.isEmpty ? '1234' : '123456';
-    showMessage('Alumno registrado. Contraseña temporal: $temporaryPassword');
+    setState(() => isSaving = false);
+    await showRegistrationResult(success: true);
+    if (!mounted) return;
     closeScreen();
   }
 
   Widget buildPlanField() {
     return ResponsiveFormField(
-      child: DropdownButtonFormField<String>(
-        initialValue: selectedPlan,
-        isExpanded: true,
+      child: AppSelectField(
+        value: selectedPlan,
+        hint: 'Seleccionar plan',
         decoration: InputDecoration(
           labelText: 'Plan',
           prefixIcon: const Icon(Icons.fitness_center),
@@ -283,22 +354,13 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
           fillColor: const Color(0xFFF6F7F7),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
         ),
-        items: const [
-          DropdownMenuItem(
-            value: 'Plan 2 sesiones',
-            child: Text('Plan 2 sesiones'),
-          ),
-          DropdownMenuItem(
-            value: 'Plan 3 sesiones',
-            child: Text('Plan 3 sesiones'),
-          ),
-          DropdownMenuItem(
-            value: 'Plan 4 sesiones',
-            child: Text('Plan 4 sesiones'),
-          ),
+        options: const [
+          'Plan 2 sesiones',
+          'Plan 3 sesiones',
+          'Plan 4 sesiones',
         ],
         onChanged: (value) {
-          setState(() => selectedPlan = value ?? 'Plan 3 sesiones');
+          setState(() => selectedPlan = value);
         },
       ),
     );
@@ -306,9 +368,9 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
 
   Widget buildContractPeriodField() {
     return ResponsiveFormField(
-      child: DropdownButtonFormField<String>(
-        initialValue: selectedContractPeriod,
-        isExpanded: true,
+      child: AppSelectField(
+        value: selectedContractPeriod,
+        hint: 'Seleccionar duración',
         decoration: InputDecoration(
           labelText: 'Duración',
           prefixIcon: const Icon(Icons.date_range_outlined),
@@ -316,15 +378,10 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
           fillColor: const Color(0xFFF6F7F7),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
         ),
-        items: const [
-          DropdownMenuItem(value: 'Mensual', child: Text('Mensual')),
-          DropdownMenuItem(value: 'Trimestral', child: Text('Trimestral')),
-          DropdownMenuItem(value: 'Semestral', child: Text('Semestral')),
-          DropdownMenuItem(value: 'Anual', child: Text('Anual')),
-        ],
+        options: const ['Mensual', 'Trimestral', 'Semestral', 'Anual'],
         onChanged: (value) {
           setState(() {
-            selectedContractPeriod = value ?? 'Mensual';
+            selectedContractPeriod = value;
             updateEndDateFromDuration();
           });
         },
@@ -334,9 +391,9 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
 
   Widget buildPaymentMethodField() {
     return ResponsiveFormField(
-      child: DropdownButtonFormField<String>(
-        initialValue: selectedPaymentMethod,
-        isExpanded: true,
+      child: AppSelectField(
+        value: selectedPaymentMethod,
+        hint: 'Seleccionar método de pago',
         decoration: InputDecoration(
           labelText: 'Método de pago',
           prefixIcon: const Icon(Icons.account_balance_wallet_outlined),
@@ -344,21 +401,15 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
           fillColor: const Color(0xFFF6F7F7),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
         ),
-        items: const [
-          DropdownMenuItem(value: 'Efectivo', child: Text('Efectivo')),
-          DropdownMenuItem(
-            value: 'Transferencia',
-            child: Text('Transferencia'),
-          ),
-          DropdownMenuItem(
-            value: 'Tarjeta débito/crédito',
-            child: Text('Tarjeta débito/crédito'),
-          ),
-          DropdownMenuItem(value: 'Webpay', child: Text('Webpay')),
-          DropdownMenuItem(value: 'Otro', child: Text('Otro')),
+        options: const [
+          'Efectivo',
+          'Transferencia',
+          'Tarjeta débito/crédito',
+          'Webpay',
+          'Otro',
         ],
         onChanged: (value) {
-          setState(() => selectedPaymentMethod = value ?? 'Efectivo');
+          setState(() => selectedPaymentMethod = value);
         },
       ),
     );
@@ -372,7 +423,7 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
     return Scaffold(
       backgroundColor: widget.embedded
           ? const Color(0xFFF6F7F7)
-          : const Color(0xFF00111F),
+          : const Color(0xFF111214),
       body: SafeArea(
         child: Column(
           children: [
@@ -577,10 +628,20 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
                                 borderRadius: BorderRadius.circular(14),
                               ),
                             ),
-                            onPressed: saveStudent,
-                            icon: const Icon(Icons.save),
-                            label: const Text(
-                              'Guardar alumno',
+                            onPressed: isSaving ? null : saveStudent,
+                            icon: isSaving
+                                ? const SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : const Icon(Icons.save),
+                            label: Text(
+                              isSaving
+                                  ? 'Guardando alumno...'
+                                  : 'Guardar alumno',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -603,7 +664,7 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
                                       borderRadius: BorderRadius.circular(14),
                                     ),
                                   ),
-                                  onPressed: closeScreen,
+                                  onPressed: isSaving ? null : closeScreen,
                                   icon: const Icon(Icons.close),
                                   label: const Text(
                                     'Cancelar',
@@ -623,7 +684,7 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
                                       borderRadius: BorderRadius.circular(14),
                                     ),
                                   ),
-                                  onPressed: closeScreen,
+                                  onPressed: isSaving ? null : closeScreen,
                                   child: const Text(
                                     'Cancelar',
                                     style: TextStyle(

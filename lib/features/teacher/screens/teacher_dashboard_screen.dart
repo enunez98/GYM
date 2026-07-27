@@ -68,9 +68,13 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
     final pages = <Widget>[
       _buildMobileOverview(context, userName),
       const StudentsListScreen(),
-      const RegisterBodyEvaluationScreen(),
+      RegisterBodyEvaluationScreen(
+        onClose: () => setState(() => _mobileSectionIndex = 0),
+      ),
       const WeeklyRoutineScreen(),
-      const ImportRoutinesScreen(),
+      ImportRoutinesScreen(
+        onClose: () => setState(() => _mobileSectionIndex = 0),
+      ),
     ];
 
     return Scaffold(
@@ -117,7 +121,7 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
 
   Widget _buildMobileOverview(BuildContext context, String userName) {
     return Scaffold(
-      backgroundColor: const Color(0xFF00111F),
+      backgroundColor: const Color(0xFF111214),
       body: SafeArea(
         child: Column(
           children: [
@@ -279,9 +283,9 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
         const SizedBox.shrink(),
         const StudentsListScreen(),
         const StudentsListScreen(initiallyShowRegisterStudent: true),
-        const RegisterBodyEvaluationScreen(),
+        RegisterBodyEvaluationScreen(onClose: () => _selectWebSection(0)),
         const WeeklyRoutineScreen(),
-        const ImportRoutinesScreen(),
+        ImportRoutinesScreen(onClose: () => _selectWebSection(0)),
       ];
 
       return _buildWebSectionShell(context, userName, pages[_webSectionIndex]);
@@ -304,7 +308,7 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
           ),
           Expanded(
             child: ColoredBox(
-              color: const Color(0xFF00111F),
+              color: const Color(0xFF111214),
               child: SafeArea(
                 child: Column(
                   children: [
