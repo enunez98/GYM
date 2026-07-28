@@ -144,17 +144,6 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
     showMessage('Rutina asignada a ${student.name}');
   }
 
-  Future<void> removeAssignedRoutine() async {
-    if (Firebase.apps.isEmpty) {
-      RoutineAssignmentStore.removeByUserId(student.userId);
-    } else {
-      await RoutineAssignmentStore.removeFromFirestore(student.userId);
-    }
-    StudentWorkoutProgressStore.resetProgress(student);
-    setState(() {});
-    showMessage('Rutina asignada eliminada');
-  }
-
   void showMessage(String message) {
     ScaffoldMessenger.of(
       context,
@@ -330,57 +319,49 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                                         ),
                                       ),
                                     ],
-                                    const SizedBox(height: 14),
-                                    Text(
-                                      assignmentHelpText,
-                                      style: TextStyle(
-                                        color: importedPlanMatches
-                                            ? const Color(0xFF59D52D)
-                                            : const Color(0xFFFF5B13),
-                                        fontSize: isWeb ? 15 : 13,
-                                        fontWeight: isWeb
-                                            ? FontWeight.w600
-                                            : FontWeight.normal,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 18),
-                                    ResponsiveActionButton(
-                                      webMaxWidth: isWeb ? 470 : 360,
-                                      child: ElevatedButton.icon(
-                                        onPressed: importedPlanMatches
-                                            ? assignImportedRoutine
-                                            : null,
-                                        style: isWeb
-                                            ? ElevatedButton.styleFrom(
-                                                elevation: 0,
-                                                backgroundColor: Colors.white,
-                                                foregroundColor: const Color(
-                                                  0xFF4AC51F,
-                                                ),
-                                                disabledBackgroundColor:
-                                                    Colors.white,
-                                                side: const BorderSide(
-                                                  color: Color(0xFFCFE9C5),
-                                                ),
-                                              )
-                                            : null,
-                                        icon: const Icon(Icons.assignment_add),
-                                        label: Text(
-                                          assignment == null
-                                              ? 'Asignar rutina importada'
-                                              : 'Reasignar rutina importada',
+                                    if (assignment == null ||
+                                        importedRoutineAvailable) ...[
+                                      const SizedBox(height: 14),
+                                      Text(
+                                        assignmentHelpText,
+                                        style: TextStyle(
+                                          color: importedPlanMatches
+                                              ? const Color(0xFF59D52D)
+                                              : const Color(0xFFFF5B13),
+                                          fontSize: isWeb ? 15 : 13,
+                                          fontWeight: isWeb
+                                              ? FontWeight.w600
+                                              : FontWeight.normal,
                                         ),
                                       ),
-                                    ),
-                                    if (assignment != null) ...[
-                                      const SizedBox(height: 8),
+                                      const SizedBox(height: 18),
                                       ResponsiveActionButton(
                                         webMaxWidth: isWeb ? 470 : 360,
-                                        child: OutlinedButton.icon(
-                                          onPressed: removeAssignedRoutine,
-                                          icon: const Icon(Icons.link_off),
-                                          label: const Text(
-                                            'Quitar rutina asignada',
+                                        child: ElevatedButton.icon(
+                                          onPressed: importedPlanMatches
+                                              ? assignImportedRoutine
+                                              : null,
+                                          style: isWeb
+                                              ? ElevatedButton.styleFrom(
+                                                  elevation: 0,
+                                                  backgroundColor: Colors.white,
+                                                  foregroundColor: const Color(
+                                                    0xFF4AC51F,
+                                                  ),
+                                                  disabledBackgroundColor:
+                                                      Colors.white,
+                                                  side: const BorderSide(
+                                                    color: Color(0xFFCFE9C5),
+                                                  ),
+                                                )
+                                              : null,
+                                          icon: const Icon(
+                                            Icons.assignment_add,
+                                          ),
+                                          label: Text(
+                                            assignment == null
+                                                ? 'Asignar rutina importada'
+                                                : 'Reasignar rutina importada',
                                           ),
                                         ),
                                       ),

@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/widgets/app_card.dart';
@@ -349,45 +351,7 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
                                 ),
                               ),
                               const SizedBox(height: 24),
-                              const Row(
-                                children: [
-                                  Expanded(
-                                    child: _WebMetricCard(
-                                      icon: Icons.groups_rounded,
-                                      title: 'Alumnos activos',
-                                      value: '42',
-                                      detail: '+8% este mes',
-                                    ),
-                                  ),
-                                  SizedBox(width: 18),
-                                  Expanded(
-                                    child: _WebMetricCard(
-                                      icon: Icons.calendar_today_rounded,
-                                      title: 'Clases hoy',
-                                      value: '18',
-                                      detail: '12 completadas',
-                                    ),
-                                  ),
-                                  SizedBox(width: 18),
-                                  Expanded(
-                                    child: _WebMetricCard(
-                                      icon: Icons.monitor_weight_rounded,
-                                      title: 'Evaluaciones',
-                                      value: '6',
-                                      detail: 'Esta semana',
-                                    ),
-                                  ),
-                                  SizedBox(width: 18),
-                                  Expanded(
-                                    child: _WebMetricCard(
-                                      icon: Icons.trending_up_rounded,
-                                      title: 'Asistencia',
-                                      value: '87%',
-                                      detail: '+4% vs. mes anterior',
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              const _RealtimeDashboardMetrics(),
                               const SizedBox(height: 24),
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -721,6 +685,206 @@ class _AdminDashboardHeader extends StatelessWidget {
               color: Color(0xFFD8FFE6),
               fontWeight: FontWeight.w700,
             ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _RealtimeDashboardMetrics extends StatelessWidget {
+  const _RealtimeDashboardMetrics();
+
+  @override
+  Widget build(BuildContext context) {
+    if (Firebase.apps.isEmpty) {
+      return _DashboardMetricsRow(
+        metrics: _DashboardMetrics.fromStudents(
+          StudentProfileStore.all
+              .map((student) => student.toFirestore())
+              .toList(),
+          evaluations: const [],
+        ),
+      );
+    }
+
+    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+      stream: FirebaseFirestore.instance.collection('students').snapshots(),
+      builder: (context, studentsSnapshot) {
+        return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+          stream: FirebaseFirestore.instance
+              .collection('evaluations')
+              .snapshots(),
+          builder: (context, evaluationsSnapshot) {
+            if (studentsSnapshot.hasError || evaluationsSnapshot.hasError) {
+              return const _DashboardMetricsRow(
+                metrics: _DashboardMetrics.unavailable(),
+              );
+            }
+            if (!studentsSnapshot.hasData || !evaluationsSnapshot.hasData) {
+              return const _DashboardMetricsRow(
+                metrics: _DashboardMetrics.loading(),
+              );
+            }
+            return _DashboardMetricsRow(
+              metrics: _DashboardMetrics.fromStudents(
+                studentsSnapshot.data!.docs
+                    .map((document) => document.data())
+                    .toList(),
+                evaluations: evaluationsSnapshot.data!.docs
+                    .map((document) => document.data())
+                    .toList(),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class _DashboardMetrics {
+  final String activeStudents;
+  final String weeklyClasses;
+  final String weeklyEvaluations;
+  final String attendance;
+  final String activeDetail;
+  final String classesDetail;
+  final String evaluationsDetail;
+  final String attendanceDetail;
+
+  const _DashboardMetrics({
+    required this.activeStudents,
+    required this.weeklyClasses,
+    required this.weeklyEvaluations,
+    required this.attendance,
+    required this.activeDetail,
+    required this.classesDetail,
+    required this.evaluationsDetail,
+    required this.attendanceDetail,
+  });
+
+  const _DashboardMetrics.loading()
+    : activeStudents = '…',
+      weeklyClasses = '…',
+      weeklyEvaluations = '…',
+      attendance = '…',
+      activeDetail = 'Actualizando desde Firebase',
+      classesDetail = 'Actualizando desde Firebase',
+      evaluationsDetail = 'Actualizando desde Firebase',
+      attendanceDetail = 'Actualizando desde Firebase';
+
+  const _DashboardMetrics.unavailable()
+    : activeStudents = '—',
+      weeklyClasses = '—',
+      weeklyEvaluations = '—',
+      attendance = '—',
+      activeDetail = 'No se pudieron cargar los datos',
+      classesDetail = 'No se pudieron cargar los datos',
+      evaluationsDetail = 'No se pudieron cargar los datos',
+      attendanceDetail = 'No se pudieron cargar los datos';
+
+  factory _DashboardMetrics.fromStudents(
+    List<Map<String, dynamic>> students, {
+    required List<Map<String, dynamic>> evaluations,
+  }) {
+    int number(Map<String, dynamic> data, String key) =>
+        (data[key] as num?)?.toInt() ?? 0;
+    final activeStudents = students.where((student) {
+      final status = (student['status'] as String? ?? '').toLowerCase().trim();
+      return status == 'activo';
+    }).toList();
+    final weeklyCompleted = activeStudents.fold<int>(
+      0,
+      (total, student) => total + number(student, 'weeklyAttendanceCompleted'),
+    );
+    final weeklyTarget = activeStudents.fold<int>(
+      0,
+      (total, student) => total + number(student, 'weeklyAttendanceTarget'),
+    );
+    final monthlyCompleted = activeStudents.fold<int>(
+      0,
+      (total, student) => total + number(student, 'monthlyAttendanceCompleted'),
+    );
+    final monthlyTarget = activeStudents.fold<int>(
+      0,
+      (total, student) => total + number(student, 'monthlyAttendanceTarget'),
+    );
+    final attendancePercent = monthlyTarget == 0
+        ? 0
+        : ((monthlyCompleted / monthlyTarget) * 100).round();
+
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final weekStart = today.subtract(Duration(days: now.weekday - 1));
+    final weekEnd = weekStart.add(const Duration(days: 7));
+    final weeklyEvaluations = evaluations.where((evaluation) {
+      final rawDate = evaluation['createdAt'];
+      final date = rawDate is Timestamp
+          ? rawDate.toDate()
+          : rawDate is DateTime
+          ? rawDate
+          : null;
+      return date != null &&
+          !date.isBefore(weekStart) &&
+          date.isBefore(weekEnd);
+    }).length;
+
+    return _DashboardMetrics(
+      activeStudents: '${activeStudents.length}',
+      weeklyClasses: '$weeklyCompleted',
+      weeklyEvaluations: '$weeklyEvaluations',
+      attendance: '$attendancePercent%',
+      activeDetail: '${students.length} alumnos registrados',
+      classesDetail: '$weeklyCompleted de $weeklyTarget planificadas',
+      evaluationsDetail: 'Esta semana',
+      attendanceDetail: '$monthlyCompleted de $monthlyTarget este mes',
+    );
+  }
+}
+
+class _DashboardMetricsRow extends StatelessWidget {
+  final _DashboardMetrics metrics;
+
+  const _DashboardMetricsRow({required this.metrics});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: _WebMetricCard(
+            icon: Icons.groups_rounded,
+            title: 'Alumnos activos',
+            value: metrics.activeStudents,
+            detail: metrics.activeDetail,
+          ),
+        ),
+        const SizedBox(width: 18),
+        Expanded(
+          child: _WebMetricCard(
+            icon: Icons.calendar_today_rounded,
+            title: 'Clases esta semana',
+            value: metrics.weeklyClasses,
+            detail: metrics.classesDetail,
+          ),
+        ),
+        const SizedBox(width: 18),
+        Expanded(
+          child: _WebMetricCard(
+            icon: Icons.monitor_weight_rounded,
+            title: 'Evaluaciones',
+            value: metrics.weeklyEvaluations,
+            detail: metrics.evaluationsDetail,
+          ),
+        ),
+        const SizedBox(width: 18),
+        Expanded(
+          child: _WebMetricCard(
+            icon: Icons.trending_up_rounded,
+            title: 'Asistencia',
+            value: metrics.attendance,
+            detail: metrics.attendanceDetail,
           ),
         ),
       ],

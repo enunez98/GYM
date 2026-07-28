@@ -73,7 +73,9 @@ flutter:
     - assets/images/nexfit_logo_compact.png
     - assets/images/student_home_workout.png
     - assets/images/exercises/
+    - assets/images/exercises_3d/
     - assets/images/body_composition/
+    - assets/data/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

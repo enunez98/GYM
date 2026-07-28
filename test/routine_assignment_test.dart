@@ -155,7 +155,7 @@ void main() {
     expect(RoutineAssignmentStore.all, hasLength(1));
   });
 
-  testWidgets('admin assigns and removes the imported routine from detail', (
+  testWidgets('admin assigns and keeps the imported routine in detail', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(1440, 1400);
@@ -201,23 +201,15 @@ void main() {
     );
     expect(find.text('Sesión 1 importada'), findsOneWidget);
 
+    ImportedRoutineStore.clear();
     await tester.pumpWidget(
       MaterialApp(home: StudentDetailScreen(student: profile)),
     );
-    final removeButton = find.text('Quitar rutina asignada');
-    await tester.scrollUntilVisible(
-      removeButton,
-      400,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tester.tap(removeButton);
-    await tester.pump();
 
-    expect(RoutineAssignmentStore.hasAssignment(profile.userId), isFalse);
-    expect(
-      find.text('Este alumno aún no tiene rutina asignada.'),
-      findsOneWidget,
-    );
+    expect(RoutineAssignmentStore.hasAssignment(profile.userId), isTrue);
+    expect(find.text('plan_felipe.xlsx'), findsOneWidget);
+    expect(find.text('Primero carga una rutina desde Excel'), findsNothing);
+    expect(find.text('Quitar rutina asignada'), findsNothing);
   });
 
   testWidgets('detail blocks an imported routine from another plan', (
