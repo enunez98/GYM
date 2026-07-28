@@ -13,6 +13,42 @@ class RoutinePersistenceResult {
   const RoutinePersistenceResult({required this.assignedStudents});
 }
 
+class PersistedRoutine {
+  final String id;
+  final String plan;
+  final String sourceFileName;
+  final DateTime? updatedAt;
+  final List<DemoRoutineSession> sessions;
+
+  const PersistedRoutine({
+    required this.id,
+    required this.plan,
+    required this.sourceFileName,
+    required this.updatedAt,
+    required this.sessions,
+  });
+
+  factory PersistedRoutine.fromFirestore(String id, Map<String, dynamic> data) {
+    final rawSessions = data['sessions'] as List<dynamic>? ?? const [];
+    final rawUpdatedAt = data['updatedAt'];
+
+    return PersistedRoutine(
+      id: id,
+      plan: data['plan'] as String? ?? '',
+      sourceFileName: data['sourceFileName'] as String? ?? '',
+      updatedAt: rawUpdatedAt is Timestamp ? rawUpdatedAt.toDate() : null,
+      sessions: rawSessions
+          .whereType<Map>()
+          .map(
+            (item) => DemoRoutineSession.fromFirestore(
+              Map<String, dynamic>.from(item),
+            ),
+          )
+          .toList(),
+    );
+  }
+}
+
 class RoutinePersistenceService {
   static String planDocumentId(String plan) {
     final sessions = RegExp(r'\d+').firstMatch(plan)?.group(0);
@@ -33,6 +69,31 @@ class RoutinePersistenceService {
         .replaceAll(' ', '')
         .trim();
     return normalize(first) == normalize(second);
+  }
+
+  static Future<List<PersistedRoutine>> loadRoutines() async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('routines')
+        .get();
+    final routines = snapshot.docs
+        .map(
+          (document) =>
+              PersistedRoutine.fromFirestore(document.id, document.data()),
+        )
+        .where((routine) => routine.plan.isNotEmpty)
+        .toList();
+    routines.sort((first, second) {
+      final firstSessions =
+          int.tryParse(RegExp(r'\d+').firstMatch(first.plan)?.group(0) ?? '') ??
+          0;
+      final secondSessions =
+          int.tryParse(
+            RegExp(r'\d+').firstMatch(second.plan)?.group(0) ?? '',
+          ) ??
+          0;
+      return firstSessions.compareTo(secondSessions);
+    });
+    return routines;
   }
 
   static Future<RoutinePersistenceResult> replaceForPlan({

@@ -25,7 +25,7 @@ class ImportRoutinesScreen extends StatefulWidget {
 }
 
 class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
-  String selectedPlan = 'Plan 3 sesiones';
+  String? selectedPlan;
   String selectedFileName = 'Ningún archivo seleccionado';
   bool fileSelected = false;
   bool fileValidated = false;
@@ -42,6 +42,7 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
   int detectedExercises = 0;
   List<DemoRoutineSession> extractedRoutinePreview = [];
   bool isImporting = false;
+  bool showTechnicalValidationDetails = false;
 
   void closeScreen() {
     final onClose = widget.onClose;
@@ -73,7 +74,7 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
         content: Text(
           success
               ? 'La rutina se ha cargado exitosamente.${detail == null ? '' : '\n\n$detail'}'
-              : 'No se ha podido cargar la rutina.${detail == null ? ' Inténtalo nuevamente.' : '\n\n$detail'}',
+              : detail ?? 'Inténtalo nuevamente.',
           textAlign: TextAlign.center,
         ),
         actionsAlignment: MainAxisAlignment.center,
@@ -97,6 +98,25 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
         .replaceAll('ú', 'u')
         .replaceAll('ñ', 'n')
         .trim();
+  }
+
+  int getSessionNumber(String value) {
+    return int.tryParse(RegExp(r'\d+').firstMatch(value)?.group(0) ?? '') ?? 0;
+  }
+
+  int _selectedPlanSessionCount() {
+    return selectedPlan == null ? 0 : getSessionNumber(selectedPlan!);
+  }
+
+  List<DemoRoutineSession> _sessionsForSelectedPlan() {
+    final maximumSession = _selectedPlanSessionCount();
+    return extractedRoutinePreview
+        .where(
+          (session) =>
+              getSessionNumber(session.title) > 0 &&
+              getSessionNumber(session.title) <= maximumSession,
+        )
+        .toList();
   }
 
   String cellToText(dynamic cell) {
@@ -166,32 +186,6 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
           sessionHeaderRows.add(rowIndex);
         }
       }
-      const sessionConfigs = [
-        {
-          'session': 'Sesión 1',
-          'exerciseCol': 0,
-          'seriesCol': 2,
-          'volumeCol': 3,
-        },
-        {
-          'session': 'Sesión 2',
-          'exerciseCol': 7,
-          'seriesCol': 10,
-          'volumeCol': 11,
-        },
-        {
-          'session': 'Sesión 3',
-          'exerciseCol': 23,
-          'seriesCol': 26,
-          'volumeCol': 27,
-        },
-        {
-          'session': 'Sesión 4',
-          'exerciseCol': 31,
-          'seriesCol': 34,
-          'volumeCol': 35,
-        },
-      ];
       final parsedSessions = <DemoRoutineSession>[];
       for (
         int blockIndex = 0;
@@ -203,11 +197,55 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
             ? sessionHeaderRows[blockIndex + 1]
             : rows.length;
         final weekNumber = blockIndex + 1;
-        for (final config in sessionConfigs) {
-          final sessionName = config['session'] as String;
-          final exerciseCol = config['exerciseCol'] as int;
-          final seriesCol = config['seriesCol'] as int;
-          final volumeCol = config['volumeCol'] as int;
+        final sessionHeader = rows[startRow];
+        final fieldHeader = startRow + 1 < rows.length
+            ? rows[startRow + 1]
+            : sessionHeader.take(0).toList();
+        final sessionColumns = <({int number, int start, int end})>[];
+
+        for (int column = 0; column < sessionHeader.length; column++) {
+          final header = normalizeText(cellToText(sessionHeader[column]));
+          final match = RegExp(r'^sesion\s*([1-4])$').firstMatch(header);
+          if (match == null) continue;
+          sessionColumns.add((
+            number: int.parse(match.group(1)!),
+            start: column,
+            end: sessionHeader.length,
+          ));
+        }
+        sessionColumns.sort(
+          (first, second) => first.start.compareTo(second.start),
+        );
+        final boundedSessionColumns = <({int number, int start, int end})>[
+          for (int index = 0; index < sessionColumns.length; index++)
+            (
+              number: sessionColumns[index].number,
+              start: sessionColumns[index].start,
+              end: index + 1 < sessionColumns.length
+                  ? sessionColumns[index + 1].start
+                  : sessionHeader.length,
+            ),
+        ];
+
+        for (final sessionColumn in boundedSessionColumns) {
+          var seriesCol = sessionColumn.start + 2;
+          var volumeCol = sessionColumn.start + 3;
+          for (
+            int column = sessionColumn.start;
+            column < sessionColumn.end && column < fieldHeader.length;
+            column++
+          ) {
+            final field = normalizeText(cellToText(fieldHeader[column]));
+            if (field.contains('serie')) seriesCol = column;
+            if (field.contains('volumen') ||
+                field.contains('repet') ||
+                field == 'reps') {
+              volumeCol = column;
+            }
+          }
+
+          final sessionName = 'Sesión ${sessionColumn.number}';
+          final exerciseCol = sessionColumn.start;
           final exercises = <DemoRoutineExercise>[];
           for (int rowIndex = startRow + 2; rowIndex < endRow; rowIndex++) {
             final row = rows[rowIndex];
@@ -282,9 +320,6 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
         detectedSessions = parsedSessions.length;
         detectedExercises = totalExercises;
         extractedRoutinePreview = parsedSessions;
-        if (detectedSessions >= 4) {
-          selectedPlan = 'Plan 4 sesiones';
-        }
       });
     } catch (e) {
       setState(() {
@@ -378,84 +413,70 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
     ).showSnackBar(SnackBar(content: Text('Archivo seleccionado: $fileName')));
   }
 
-  void validateFile() {
+  String? validationError() {
+    if (selectedPlan == null) {
+      return 'Debes seleccionar el plan de destino.';
+    }
     if (!fileSelected || selectedFileBytes == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Primero selecciona un archivo Excel')),
-      );
-      return;
+      return 'Debes seleccionar un archivo Excel.';
     }
-
+    if (!selectedFileName.toLowerCase().endsWith('.xlsx')) {
+      return 'El archivo seleccionado debe estar en formato .xlsx.';
+    }
     if (detectedSheetName != 'PLANIFICACION') {
-      setState(() {
-        fileValidated = false;
-        missingColumns = ['Hoja PLANIFICACION'];
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No se encontró la hoja PLANIFICACION')),
-      );
-      return;
+      return 'No se encontró la hoja obligatoria PLANIFICACION.';
     }
-
     if (detectedWeeks == 0 || detectedSessions == 0 || detectedExercises == 0) {
-      setState(() {
-        fileValidated = false;
-        missingColumns = ['Bloques de sesiones', 'Ejercicios planificados'];
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No se detectaron sesiones o ejercicios en el Excel'),
-        ),
-      );
-      return;
+      return 'No se detectaron semanas, sesiones o ejercicios válidos en el Excel.';
     }
-
-    setState(() {
-      fileValidated = true;
-      missingColumns = [];
+    final sessionsToImport = _sessionsForSelectedPlan();
+    if (sessionsToImport.isEmpty) {
+      return 'El Excel no contiene sesiones válidas para el plan seleccionado.';
+    }
+    final expectedSessions = _selectedPlanSessionCount();
+    final weeks = sessionsToImport.map((session) => session.session).toSet();
+    final incompleteWeek = weeks.any((week) {
+      final sessionNumbers = sessionsToImport
+          .where((session) => session.session == week)
+          .map((session) => getSessionNumber(session.title))
+          .toSet();
+      return [
+        for (int number = 1; number <= expectedSessions; number++) number,
+      ].any((number) => !sessionNumbers.contains(number));
     });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Excel validado: $detectedWeeks semanas, $detectedSessions sesiones, $detectedExercises ejercicios',
-        ),
-      ),
-    );
+    if (incompleteWeek) {
+      return 'El archivo no contiene las $expectedSessions sesiones del plan en cada semana.';
+    }
+    return null;
   }
 
   Future<void> importRoutine() async {
     if (isImporting) return;
-    if (!fileValidated) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Primero valida el archivo antes de cargarlo'),
-        ),
-      );
+    final error = validationError();
+    if (error != null) {
+      await showRoutineResult(success: false, detail: error);
       return;
     }
+    final destinationPlan = selectedPlan;
+    if (destinationPlan == null) return;
+    final sessionsToImport = _sessionsForSelectedPlan();
 
     setState(() => isImporting = true);
     try {
-      if (extractedRoutinePreview.isEmpty) {
-        throw StateError('La rutina no contiene sesiones válidas.');
-      }
       final result = Firebase.apps.isEmpty
           ? RoutinePersistenceService.replaceLocally(
-              plan: selectedPlan,
+              plan: destinationPlan,
               sourceFileName: selectedFileName,
-              sessions: extractedRoutinePreview,
+              sessions: sessionsToImport,
             )
           : await RoutinePersistenceService.replaceForPlan(
-              plan: selectedPlan,
+              plan: destinationPlan,
               sourceFileName: selectedFileName,
-              sessions: extractedRoutinePreview,
+              sessions: sessionsToImport,
             );
       ImportedRoutineStore.save(
-        selectedPlan: selectedPlan,
-        importedSessions: extractedRoutinePreview,
+        selectedPlan: destinationPlan,
+        importedSessions: sessionsToImport,
         sourceFileName: selectedFileName,
       );
 
@@ -472,8 +493,60 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
       debugPrint('Error al cargar la rutina: $error');
       if (!mounted) return;
       setState(() => isImporting = false);
-      await showRoutineResult(success: false);
+      await showRoutineResult(
+        success: false,
+        detail:
+            'No fue posible guardar la rutina. Revisa tu conexión e inténtalo nuevamente.',
+      );
     }
+  }
+
+  Widget buildSelectFileButton() {
+    return SizedBox(
+      height: 54,
+      child: OutlinedButton.icon(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: const Color(0xFF59D52D),
+          side: const BorderSide(color: Color(0xFF59D52D)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+        ),
+        onPressed: isImporting ? null : selectFile,
+        icon: const Icon(Icons.attach_file),
+        label: const Text(
+          'Seleccionar Excel',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+  }
+
+  Widget buildImportButton() {
+    return SizedBox(
+      height: 54,
+      child: ElevatedButton.icon(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF111214),
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+        ),
+        onPressed: isImporting ? null : importRoutine,
+        icon: isImporting
+            ? const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+            : const Icon(Icons.cloud_upload),
+        label: Text(
+          isImporting ? 'Cargando rutina...' : 'Cargar rutina',
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
   }
 
   @override
@@ -514,6 +587,7 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
                           ResponsiveFormField(
                             child: AppSelectField(
                               value: selectedPlan,
+                              hint: 'Seleccionar plan',
                               decoration: InputDecoration(
                                 labelText: 'Plan',
                                 prefixIcon: const Icon(Icons.assignment),
@@ -529,9 +603,7 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
                                 'Plan 4 sesiones',
                               ],
                               onChanged: (value) {
-                                setState(() {
-                                  selectedPlan = value ?? 'Plan 3 sesiones';
-                                });
+                                setState(() => selectedPlan = value);
                               },
                             ),
                           ),
@@ -598,330 +670,283 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
                             ),
                           ),
                           const SizedBox(height: 14),
-                          ResponsiveActionButton(
-                            child: SizedBox(
-                              height: 52,
-                              child: OutlinedButton.icon(
-                                style: OutlinedButton.styleFrom(
-                                  foregroundColor: const Color(0xFF59D52D),
-                                  side: const BorderSide(
-                                    color: Color(0xFF59D52D),
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(14),
-                                  ),
-                                ),
-                                onPressed: selectFile,
-                                icon: const Icon(Icons.attach_file),
-                                label: const Text(
-                                  'Seleccionar Excel',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 14),
-                    AppCard(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
-                            'Columnas esperadas',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 14),
-                          _ImportColumnRow(
-                            name: 'Semana',
-                            description: 'Ej: Semana 1, Semana 2',
-                          ),
-                          _ImportColumnRow(
-                            name: 'Tipo semana',
-                            description: 'Ordinario, carga o recuperación',
-                          ),
-                          _ImportColumnRow(
-                            name: 'Sesión',
-                            description: 'Sesión 1, 2, 3 o 4',
-                          ),
-                          _ImportColumnRow(
-                            name: 'Ejercicio',
-                            description: 'Nombre del ejercicio',
-                          ),
-                          _ImportColumnRow(
-                            name: 'Series',
-                            description: 'Cantidad de series planificadas',
-                          ),
-                          _ImportColumnRow(
-                            name: 'Repeticiones',
-                            description: 'Rango objetivo de reps',
-                          ),
-                          _ImportColumnRow(
-                            name: 'Orden',
-                            description: 'Orden del ejercicio en la sesión',
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 14),
-                    AppCard(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Lectura del Excel',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 14),
-                          InfoRow(
-                            icon: Icons.description_outlined,
-                            label: 'Hoja detectada',
-                            value: detectedSheetName,
-                          ),
-                          InfoRow(
-                            icon: Icons.table_chart_outlined,
-                            label: 'Hojas',
-                            value: '$detectedSheets',
-                          ),
-                          InfoRow(
-                            icon: Icons.view_list_outlined,
-                            label: 'Filas',
-                            value: '$detectedRows',
-                          ),
-                          InfoRow(
-                            icon: Icons.view_column_outlined,
-                            label: 'Columnas',
-                            value: '$detectedColumnsCount',
-                          ),
-                          InfoRow(
-                            icon: Icons.calendar_month,
-                            label: 'Semanas detectadas',
-                            value: '$detectedWeeks',
-                          ),
-                          InfoRow(
-                            icon: Icons.fitness_center,
-                            label: 'Sesiones detectadas',
-                            value: '$detectedSessions',
-                          ),
-                          InfoRow(
-                            icon: Icons.list_alt,
-                            label: 'Ejercicios detectados',
-                            value: '$detectedExercises',
-                          ),
-                          if (detectedColumns.isNotEmpty) ...[
-                            const SizedBox(height: 8),
-                            const Text(
-                              'Columnas encontradas',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 8),
-                            Wrap(
-                              spacing: 8,
-                              runSpacing: 8,
-                              children: detectedColumns
-                                  .map(
-                                    (column) => Chip(
-                                      label: Text(column),
-                                      backgroundColor: const Color(0xFFEDF9E8),
+                          ResponsiveFormField(
+                            webMaxWidth: 720,
+                            child: LayoutBuilder(
+                              builder: (context, constraints) {
+                                if (MediaQuery.sizeOf(context).width >= 900) {
+                                  return Row(
+                                    children: [
+                                      Expanded(child: buildSelectFileButton()),
+                                      const SizedBox(width: 14),
+                                      Expanded(child: buildImportButton()),
+                                    ],
+                                  );
+                                }
+                                return Column(
+                                  children: [
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child: buildSelectFileButton(),
                                     ),
-                                  )
-                                  .toList(),
+                                    const SizedBox(height: 10),
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child: buildImportButton(),
+                                    ),
+                                  ],
+                                );
+                              },
                             ),
-                          ],
-                          if (missingColumns.isNotEmpty) ...[
-                            const SizedBox(height: 12),
-                            const Text(
-                              'Columnas faltantes',
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    if (showTechnicalValidationDetails) ...[
+                      AppCard(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const [
+                            Text(
+                              'Columnas esperadas',
                               style: TextStyle(
-                                color: Color(0xFFE11D48),
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            const SizedBox(height: 8),
-                            Wrap(
-                              spacing: 8,
-                              runSpacing: 8,
-                              children: missingColumns
-                                  .map(
-                                    (column) => Chip(
-                                      label: Text(column),
-                                      backgroundColor: const Color(0xFFFFE4E6),
-                                    ),
-                                  )
-                                  .toList(),
+                            SizedBox(height: 14),
+                            _ImportColumnRow(
+                              name: 'Semana',
+                              description: 'Ej: Semana 1, Semana 2',
+                            ),
+                            _ImportColumnRow(
+                              name: 'Tipo semana',
+                              description: 'Ordinario, carga o recuperación',
+                            ),
+                            _ImportColumnRow(
+                              name: 'Sesión',
+                              description: 'Sesión 1, 2, 3 o 4',
+                            ),
+                            _ImportColumnRow(
+                              name: 'Ejercicio',
+                              description: 'Nombre del ejercicio',
+                            ),
+                            _ImportColumnRow(
+                              name: 'Series',
+                              description: 'Cantidad de series planificadas',
+                            ),
+                            _ImportColumnRow(
+                              name: 'Repeticiones',
+                              description: 'Rango objetivo de reps',
+                            ),
+                            _ImportColumnRow(
+                              name: 'Orden',
+                              description: 'Orden del ejercicio en la sesión',
                             ),
                           ],
-                        ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 14),
-                    if (extractedRoutinePreview.isNotEmpty)
+                      const SizedBox(height: 14),
                       AppCard(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text(
-                              'Rutinas detectadas',
+                              'Lectura del Excel',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             const SizedBox(height: 14),
-                            for (
-                              int i = 0;
-                              i < extractedRoutinePreview.take(8).length;
-                              i++
-                            ) ...[
-                              Text(
-                                '${extractedRoutinePreview[i].session} · ${extractedRoutinePreview[i].title}',
-                                style: const TextStyle(
+                            InfoRow(
+                              icon: Icons.description_outlined,
+                              label: 'Hoja detectada',
+                              value: detectedSheetName,
+                            ),
+                            InfoRow(
+                              icon: Icons.table_chart_outlined,
+                              label: 'Hojas',
+                              value: '$detectedSheets',
+                            ),
+                            InfoRow(
+                              icon: Icons.view_list_outlined,
+                              label: 'Filas',
+                              value: '$detectedRows',
+                            ),
+                            InfoRow(
+                              icon: Icons.view_column_outlined,
+                              label: 'Columnas',
+                              value: '$detectedColumnsCount',
+                            ),
+                            InfoRow(
+                              icon: Icons.calendar_month,
+                              label: 'Semanas detectadas',
+                              value: '$detectedWeeks',
+                            ),
+                            InfoRow(
+                              icon: Icons.fitness_center,
+                              label: 'Sesiones detectadas',
+                              value: '$detectedSessions',
+                            ),
+                            InfoRow(
+                              icon: Icons.list_alt,
+                              label: 'Ejercicios detectados',
+                              value: '$detectedExercises',
+                            ),
+                            if (detectedColumns.isNotEmpty) ...[
+                              const SizedBox(height: 8),
+                              const Text(
+                                'Columnas encontradas',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(height: 8),
+                              Wrap(
+                                spacing: 8,
+                                runSpacing: 8,
+                                children: detectedColumns
+                                    .map(
+                                      (column) => Chip(
+                                        label: Text(column),
+                                        backgroundColor: const Color(
+                                          0xFFEDF9E8,
+                                        ),
+                                      ),
+                                    )
+                                    .toList(),
+                              ),
+                            ],
+                            if (missingColumns.isNotEmpty) ...[
+                              const SizedBox(height: 12),
+                              const Text(
+                                'Columnas faltantes',
+                                style: TextStyle(
+                                  color: Color(0xFFE11D48),
                                   fontWeight: FontWeight.bold,
-                                  color: Color(0xFF59D52D),
                                 ),
                               ),
-                              const SizedBox(height: 6),
-                              Text(
-                                extractedRoutinePreview[i].exercises
-                                    .take(4)
-                                    .map((exercise) => exercise.name)
-                                    .join(' | '),
-                                style: const TextStyle(
-                                  color: Color(0xFF616B76),
-                                  fontSize: 12,
-                                ),
+                              const SizedBox(height: 8),
+                              Wrap(
+                                spacing: 8,
+                                runSpacing: 8,
+                                children: missingColumns
+                                    .map(
+                                      (column) => Chip(
+                                        label: Text(column),
+                                        backgroundColor: const Color(
+                                          0xFFFFE4E6,
+                                        ),
+                                      ),
+                                    )
+                                    .toList(),
                               ),
-                              if (i <
-                                  extractedRoutinePreview.take(8).length - 1)
-                                const Divider(height: 18),
                             ],
                           ],
                         ),
                       ),
-                    const SizedBox(height: 14),
-                    AppCard(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Estado de validación',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 14),
-                          _ValidationRow(
-                            label: 'Archivo seleccionado',
-                            isOk: fileSelected,
-                          ),
-                          _ValidationRow(
-                            label: 'Formato .xlsx',
-                            isOk: fileSelected,
-                          ),
-                          _ValidationRow(
-                            label: 'Columnas obligatorias',
-                            isOk: fileValidated,
-                          ),
-                          _ValidationRow(
-                            label: 'Rutina lista para cargar',
-                            isOk: fileValidated,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 18),
-                    ResponsiveActionButton(
-                      child: SizedBox(
-                        height: 54,
-                        child: ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF59D52D),
-                            foregroundColor: const Color(0xFF111214),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                          ),
-                          onPressed: validateFile,
-                          icon: const Icon(Icons.fact_check),
-                          label: const Text(
-                            'Validar archivo',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    ResponsiveActionButton(
-                      child: SizedBox(
-                        height: 54,
-                        child: ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: fileValidated
-                                ? const Color(0xFF111214)
-                                : Color(0xFFC9CED2),
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                          ),
-                          onPressed: fileValidated && !isImporting
-                              ? importRoutine
-                              : null,
-                          icon: isImporting
-                              ? const SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
+                      const SizedBox(height: 14),
+                      if (extractedRoutinePreview.isNotEmpty)
+                        AppCard(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Rutinas detectadas',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 14),
+                              for (
+                                int i = 0;
+                                i < extractedRoutinePreview.take(8).length;
+                                i++
+                              ) ...[
+                                Text(
+                                  '${extractedRoutinePreview[i].session} · ${extractedRoutinePreview[i].title}',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF59D52D),
                                   ),
-                                )
-                              : const Icon(Icons.cloud_upload),
-                          label: Text(
-                            isImporting
-                                ? 'Cargando rutina...'
-                                : 'Cargar rutina',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                                ),
+                                const SizedBox(height: 6),
+                                Text(
+                                  extractedRoutinePreview[i].exercises
+                                      .take(4)
+                                      .map((exercise) => exercise.name)
+                                      .join(' | '),
+                                  style: const TextStyle(
+                                    color: Color(0xFF616B76),
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                if (i <
+                                    extractedRoutinePreview.take(8).length - 1)
+                                  const Divider(height: 18),
+                              ],
+                            ],
+                          ),
+                        ),
+                      const SizedBox(height: 14),
+                      AppCard(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Estado de validación',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 14),
+                            _ValidationRow(
+                              label: 'Archivo seleccionado',
+                              isOk: fileSelected,
+                            ),
+                            _ValidationRow(
+                              label: 'Formato .xlsx',
+                              isOk: fileSelected,
+                            ),
+                            _ValidationRow(
+                              label: 'Columnas obligatorias',
+                              isOk: fileValidated,
+                            ),
+                            _ValidationRow(
+                              label: 'Rutina lista para cargar',
+                              isOk: fileValidated && selectedPlan != null,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 18),
+                      ResponsiveActionButton(
+                        child: SizedBox(
+                          height: 54,
+                          child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF59D52D),
+                              foregroundColor: const Color(0xFF111214),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                            ),
+                            onPressed: null,
+                            icon: const Icon(Icons.fact_check),
+                            label: const Text(
+                              'Validar archivo',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    ResponsiveActionButton(
-                      child: SizedBox(
-                        height: 54,
-                        child: OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: const Color(0xFF111214),
-                            side: const BorderSide(color: Color(0xFFC9CED2)),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                          ),
-                          onPressed: isImporting ? null : closeScreen,
-                          child: const Text(
-                            'Cancelar',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+                      const SizedBox(height: 10),
+                    ],
                     const SizedBox(height: 24),
                   ],
                 ),

@@ -120,7 +120,19 @@ void main() {
     await tester.tap(find.text('Rutinas'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Semana 2 - Ordinario'), findsOneWidget);
+    expect(find.text('Seleccionar plan'), findsWidgets);
+    expect(find.text('Seleccionar semana'), findsWidgets);
+    expect(find.text('Agregar ejercicio'), findsNothing);
+
+    await tester.tap(find.text('Seleccionar plan').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Plan 3 sesiones'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(AppSelectField).at(1));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Semana 1'));
+    await tester.pumpAndSettle();
+
     expect(find.text('Ver calendario'), findsOneWidget);
     expect(find.text('Ejercicio'), findsWidgets);
     expect(find.text('Series'), findsWidgets);
@@ -158,6 +170,10 @@ void main() {
     await tester.tap(find.text('Plan 3 sesiones'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Plan 2 sesiones').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(AppSelectField).at(1));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Semana 1'));
     await tester.pumpAndSettle();
 
     expect(find.text('Full body A'), findsOneWidget);

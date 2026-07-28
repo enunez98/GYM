@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/app_select_field.dart';
@@ -8,6 +9,7 @@ import '../../../core/widgets/responsive_form_field.dart';
 import '../../../core/widgets/status_chip.dart';
 import '../../../models/routine_models.dart';
 import '../../../services/imported_routine_store.dart';
+import '../../../services/routine_persistence_service.dart';
 
 class WeeklyRoutineScreen extends StatefulWidget {
   const WeeklyRoutineScreen({super.key});
@@ -17,11 +19,41 @@ class WeeklyRoutineScreen extends StatefulWidget {
 }
 
 class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
-  String selectedPlan = ImportedRoutineStore.hasData
-      ? ImportedRoutineStore.plan
-      : 'Plan 3 sesiones';
+  String? selectedPlan;
+  String? selectedWeek;
+  List<PersistedRoutine> persistedRoutines = const [];
+  bool isLoadingRoutines = false;
+  String? routineLoadError;
 
-  String selectedWeek = 'Semana 1';
+  @override
+  void initState() {
+    super.initState();
+    _loadFirebaseRoutines();
+  }
+
+  Future<void> _loadFirebaseRoutines() async {
+    if (Firebase.apps.isEmpty) return;
+
+    setState(() {
+      isLoadingRoutines = true;
+      routineLoadError = null;
+    });
+    try {
+      final loadedRoutines = await RoutinePersistenceService.loadRoutines();
+      if (!mounted) return;
+      setState(() {
+        persistedRoutines = loadedRoutines;
+        isLoadingRoutines = false;
+      });
+    } catch (error) {
+      debugPrint('Error al cargar rutinas desde Firebase: $error');
+      if (!mounted) return;
+      setState(() {
+        isLoadingRoutines = false;
+        routineLoadError = 'No se pudieron cargar las rutinas desde Firebase.';
+      });
+    }
+  }
 
   final routines = {
     'Plan 2 sesiones': [
@@ -162,40 +194,80 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
   }
 
   List<String> get importedWeeks {
-    final weeks = ImportedRoutineStore.sessions
+    final weeks = activeSessions
         .map((session) => session.session)
         .toSet()
         .toList();
+    if (weeks.isEmpty && Firebase.apps.isEmpty && selectedPlan != null) {
+      return const ['Semana 1'];
+    }
 
     weeks.sort((a, b) => getWeekNumber(a).compareTo(getWeekNumber(b)));
 
     return weeks;
   }
 
+  PersistedRoutine? get selectedPersistedRoutine {
+    for (final routine in persistedRoutines) {
+      if (routine.plan == selectedPlan) return routine;
+    }
+    return null;
+  }
+
+  bool get isUsingLocalImport =>
+      selectedPlan != null &&
+      ImportedRoutineStore.hasData &&
+      selectedPlan == ImportedRoutineStore.plan;
+
+  bool get isUsingFirebaseRoutine =>
+      !isUsingLocalImport && selectedPersistedRoutine != null;
+
+  bool get hasRealRoutine => isUsingFirebaseRoutine || isUsingLocalImport;
+
+  List<DemoRoutineSession> get activeSessions {
+    if (isUsingFirebaseRoutine) return selectedPersistedRoutine!.sessions;
+    if (isUsingLocalImport) return ImportedRoutineStore.sessions;
+    return const [];
+  }
+
+  String get activeSourceFileName {
+    if (isUsingFirebaseRoutine) {
+      return selectedPersistedRoutine!.sourceFileName;
+    }
+    if (isUsingLocalImport) return ImportedRoutineStore.fileName;
+    return '';
+  }
+
+  List<String> get availablePlans {
+    final plans = persistedRoutines.map((routine) => routine.plan).toList();
+    if (ImportedRoutineStore.hasData &&
+        !plans.contains(ImportedRoutineStore.plan)) {
+      plans.add(ImportedRoutineStore.plan);
+    }
+    return plans.isEmpty
+        ? const ['Plan 2 sesiones', 'Plan 3 sesiones', 'Plan 4 sesiones']
+        : plans;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final hasImportedRoutine = ImportedRoutineStore.hasData;
+    final hasImportedRoutine = hasRealRoutine;
+    final isUsingDemoRoutine = Firebase.apps.isEmpty && !hasImportedRoutine;
     final weeks = importedWeeks;
 
-    if (hasImportedRoutine &&
-        weeks.isNotEmpty &&
-        !weeks.contains(selectedWeek)) {
-      selectedWeek = weeks.first;
-    }
-
-    final showingImportedRoutine =
-        hasImportedRoutine && selectedPlan == ImportedRoutineStore.plan;
-    final selectedSessions = showingImportedRoutine
-        ? ImportedRoutineStore.sessions
+    final selectedSessions = hasImportedRoutine && selectedWeek != null
+        ? activeSessions
               .where((session) => session.session == selectedWeek)
               .toList()
-        : routines[selectedPlan] ?? [];
+        : isUsingDemoRoutine && selectedPlan != null && selectedWeek != null
+        ? routines[selectedPlan] ?? []
+        : <DemoRoutineSession>[];
 
     if (MediaQuery.sizeOf(context).width >= 900) {
       return _buildWebRoutine(
         context,
         selectedSessions: selectedSessions,
-        hasImportedRoutine: showingImportedRoutine,
+        hasImportedRoutine: hasImportedRoutine,
       );
     }
 
@@ -234,137 +306,158 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
                             ),
                             const SizedBox(height: 6),
                             Text(
-                              '${ImportedRoutineStore.plan} · ${ImportedRoutineStore.sessions.length} sesiones',
+                              '$selectedPlan · ${activeSessions.length} sesiones'
+                              '${activeSourceFileName.isEmpty ? '' : ' · $activeSourceFileName'}',
                               style: const TextStyle(color: Color(0xFF616B76)),
                             ),
                           ],
                         ),
                       ),
-                      if (weeks.isNotEmpty) ...[
-                        const SizedBox(height: 14),
-                        AppCard(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Seleccionar semana',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 14),
-                              ResponsiveFormField(
-                                child: AppSelectField(
-                                  value: selectedWeek,
-                                  decoration: InputDecoration(
-                                    labelText: 'Semana',
-                                    prefixIcon: const Icon(
-                                      Icons.calendar_month,
-                                    ),
-                                    filled: true,
-                                    fillColor: const Color(0xFFF6F7F7),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(14),
-                                    ),
-                                  ),
-                                  options: weeks,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedWeek = value ?? weeks.first;
-                                    });
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
                       const SizedBox(height: 14),
                     ],
-                    if (!hasImportedRoutine)
-                      AppCard(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Seleccionar plan',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 14),
-                            ResponsiveFormField(
-                              child: AppSelectField(
-                                value: selectedPlan,
-                                decoration: InputDecoration(
-                                  labelText: 'Plan',
-                                  prefixIcon: const Icon(Icons.assignment),
-                                  filled: true,
-                                  fillColor: const Color(0xFFF6F7F7),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(14),
-                                  ),
-                                ),
-                                options: const [
-                                  'Plan 2 sesiones',
-                                  'Plan 3 sesiones',
-                                  'Plan 4 sesiones',
-                                ],
-                                onChanged: (value) {
-                                  setState(() {
-                                    selectedPlan = value ?? 'Plan 3 sesiones';
-                                  });
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    if (!hasImportedRoutine) const SizedBox(height: 14),
                     AppCard(
-                      child: Row(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  hasImportedRoutine
-                                      ? selectedWeek
-                                      : 'Semana 2 - Ordinario',
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(height: 4),
-                                Text(
-                                  hasImportedRoutine
-                                      ? 'Mostrando sesiones importadas para esta semana'
-                                      : '06 Jul - 12 Jul 2026',
-                                  style: const TextStyle(
-                                    color: Color(0xFF616B76),
-                                  ),
-                                ),
-                              ],
+                          const Text(
+                            'Seleccionar plan',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          StatusChip(
-                            text: 'CARGA',
-                            background: const Color(0xFFEDF9E8),
-                            textColor: const Color(0xFF59D52D),
+                          const SizedBox(height: 14),
+                          ResponsiveFormField(
+                            child: AppSelectField(
+                              value: selectedPlan,
+                              hint: 'Seleccionar plan',
+                              decoration: InputDecoration(
+                                labelText: 'Plan',
+                                prefixIcon: const Icon(Icons.assignment),
+                                filled: true,
+                                fillColor: const Color(0xFFF6F7F7),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                              ),
+                              options: availablePlans,
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedPlan = value;
+                                  selectedWeek = null;
+                                });
+                              },
+                            ),
                           ),
                         ],
                       ),
                     ),
                     const SizedBox(height: 14),
+                    AppCard(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Seleccionar semana',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 14),
+                          ResponsiveFormField(
+                            child: AppSelectField(
+                              value: selectedWeek,
+                              hint: 'Seleccionar semana',
+                              decoration: InputDecoration(
+                                labelText: 'Semana',
+                                prefixIcon: const Icon(Icons.calendar_month),
+                                filled: true,
+                                fillColor: const Color(0xFFF6F7F7),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                              ),
+                              options: selectedPlan == null ? const [] : weeks,
+                              onChanged: selectedPlan == null
+                                  ? null
+                                  : (value) {
+                                      setState(() => selectedWeek = value);
+                                    },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    if (isLoadingRoutines) ...[
+                      const LinearProgressIndicator(),
+                      const SizedBox(height: 14),
+                    ],
+                    if (routineLoadError != null) ...[
+                      AppCard(
+                        child: Row(
+                          children: [
+                            const Icon(Icons.cloud_off, color: Colors.red),
+                            const SizedBox(width: 12),
+                            Expanded(child: Text(routineLoadError!)),
+                            TextButton(
+                              onPressed: _loadFirebaseRoutines,
+                              child: const Text('Reintentar'),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+                    ],
+                    if (selectedPlan != null && selectedWeek != null)
+                      AppCard(
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    hasImportedRoutine
+                                        ? selectedWeek!
+                                        : !isUsingDemoRoutine
+                                        ? 'Sin rutina cargada'
+                                        : 'Semana 2 - Ordinario',
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    hasImportedRoutine
+                                        ? 'Mostrando sesiones importadas para esta semana'
+                                        : !isUsingDemoRoutine
+                                        ? 'Importa una planificación para $selectedPlan'
+                                        : '06 Jul - 12 Jul 2026',
+                                    style: const TextStyle(
+                                      color: Color(0xFF616B76),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            StatusChip(
+                              text: 'CARGA',
+                              background: const Color(0xFFEDF9E8),
+                              textColor: const Color(0xFF59D52D),
+                            ),
+                          ],
+                        ),
+                      ),
+                    if (selectedPlan != null && selectedWeek != null)
+                      const SizedBox(height: 14),
                     for (final session in selectedSessions) ...[
                       _RoutineSessionCard(session: session),
                       const SizedBox(height: 14),
                     ],
-                    if (hasImportedRoutine) ...[
+                    if (isUsingLocalImport && Firebase.apps.isEmpty) ...[
                       const SizedBox(height: 4),
                       ResponsiveActionButton(
                         child: SizedBox(
@@ -380,8 +473,8 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
                             onPressed: () {
                               setState(() {
                                 ImportedRoutineStore.clear();
-                                selectedPlan = 'Plan 3 sesiones';
-                                selectedWeek = 'Semana 1';
+                                selectedPlan = null;
+                                selectedWeek = null;
                               });
 
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -437,132 +530,293 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
                 ),
                 child: ListView(
                   children: [
-                    AppCard(
-                      child: Row(
-                        children: [
-                          const Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: AppCard(
+                            padding: const EdgeInsets.all(24),
+                            child: Row(
                               children: [
-                                Text(
-                                  'Seleccionar plan',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
+                                const Expanded(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Plan',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(height: 8),
+                                      Text(
+                                        'La rutina cambia según la cantidad de sesiones',
+                                        style: TextStyle(
+                                          color: Color(0xFF616B76),
+                                          fontSize: 14,
+                                          height: 1.5,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                SizedBox(height: 4),
-                                Text(
-                                  'La rutina cambia según la cantidad de sesiones',
-                                  style: TextStyle(
-                                    color: Color(0xFF616B76),
-                                    fontSize: 13,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: 360,
-                            child: AppSelectField(
-                              value: selectedPlan,
-                              decoration: InputDecoration(
-                                labelText: 'Plan',
-                                prefixIcon: const Icon(Icons.assignment),
-                                filled: true,
-                                fillColor: const Color(0xFFF6F7F7),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(14),
-                                ),
-                              ),
-                              options: const [
-                                'Plan 2 sesiones',
-                                'Plan 3 sesiones',
-                                'Plan 4 sesiones',
-                              ],
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedPlan = value ?? 'Plan 3 sesiones';
-                                });
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 14),
-                    AppCard(
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 52,
-                            height: 52,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFEDF9E8),
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                            child: const Icon(
-                              Icons.calendar_month,
-                              color: Color(0xFF3BAF19),
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  hasImportedRoutine
-                                      ? selectedWeek
-                                      : 'Semana 2 - Ordinario',
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(height: 5),
-                                Text(
-                                  hasImportedRoutine
-                                      ? 'Rutina importada · $selectedPlan'
-                                      : '06 Jul - 12 Jul 2026',
-                                  style: const TextStyle(
-                                    color: Color(0xFF616B76),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              const StatusChip(
-                                text: 'CARGA',
-                                background: Color(0xFFEDF9E8),
-                                textColor: Color(0xFF3BAF19),
-                              ),
-                              const SizedBox(height: 8),
-                              OutlinedButton.icon(
-                                onPressed: () {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                        'Calendario semanal seleccionado',
+                                const SizedBox(width: 20),
+                                Expanded(
+                                  flex: 2,
+                                  child: AppSelectField(
+                                    value: selectedPlan,
+                                    hint: 'Seleccionar plan',
+                                    decoration: InputDecoration(
+                                      prefixIcon: const Icon(Icons.assignment),
+                                      filled: true,
+                                      fillColor: const Color(0xFFFAFBFB),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(14),
                                       ),
                                     ),
-                                  );
-                                },
-                                icon: const Icon(
-                                  Icons.calendar_today_outlined,
-                                  size: 17,
+                                    options: availablePlans,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedPlan = value;
+                                        selectedWeek = null;
+                                      });
+                                    },
+                                  ),
                                 ),
-                                label: const Text('Ver calendario'),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(width: 20),
+                        Expanded(
+                          child: AppCard(
+                            padding: const EdgeInsets.all(24),
+                            child: Row(
+                              children: [
+                                const Expanded(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Semana',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(height: 8),
+                                      Text(
+                                        'Elige la semana que deseas planificar o revisar',
+                                        style: TextStyle(
+                                          color: Color(0xFF616B76),
+                                          fontSize: 14,
+                                          height: 1.5,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 20),
+                                Expanded(
+                                  flex: 2,
+                                  child: AppSelectField(
+                                    value: selectedWeek,
+                                    hint: 'Seleccionar semana',
+                                    decoration: InputDecoration(
+                                      prefixIcon: const Icon(
+                                        Icons.calendar_month,
+                                      ),
+                                      filled: true,
+                                      fillColor: const Color(0xFFFAFBFB),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(14),
+                                      ),
+                                    ),
+                                    options: selectedPlan == null
+                                        ? const []
+                                        : importedWeeks,
+                                    onChanged: selectedPlan == null
+                                        ? null
+                                        : (value) {
+                                            setState(
+                                              () => selectedWeek = value,
+                                            );
+                                          },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 14),
+                    const SizedBox(height: 20),
+                    if (isLoadingRoutines) ...[
+                      const LinearProgressIndicator(),
+                      const SizedBox(height: 14),
+                    ],
+                    if (routineLoadError != null) ...[
+                      AppCard(
+                        child: Row(
+                          children: [
+                            const Icon(Icons.cloud_off, color: Colors.red),
+                            const SizedBox(width: 12),
+                            Expanded(child: Text(routineLoadError!)),
+                            TextButton(
+                              onPressed: _loadFirebaseRoutines,
+                              child: const Text('Reintentar'),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+                    ],
+                    if (selectedPlan != null && selectedWeek != null)
+                      Container(
+                        clipBehavior: Clip.antiAlias,
+                        padding: const EdgeInsets.fromLTRB(28, 16, 24, 16),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(18),
+                          border: Border.all(color: const Color(0xFFE5E7EB)),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0x0D000000),
+                              blurRadius: 12,
+                              offset: Offset(0, 6),
+                            ),
+                          ],
+                        ),
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            Positioned(
+                              left: -28,
+                              top: -16,
+                              bottom: -16,
+                              child: Container(
+                                width: 4,
+                                color: const Color(0xFF59D52D),
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                Container(
+                                  width: 72,
+                                  height: 72,
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xFFEDF9E8),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(
+                                    Icons.calendar_month,
+                                    color: Color(0xFF3BAF19),
+                                    size: 30,
+                                  ),
+                                ),
+                                const SizedBox(width: 20),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        hasImportedRoutine
+                                            ? selectedWeek!
+                                            : Firebase.apps.isNotEmpty
+                                            ? 'Sin rutina cargada'
+                                            : selectedWeek!,
+                                        style: const TextStyle(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text.rich(
+                                        TextSpan(
+                                          children: [
+                                            TextSpan(
+                                              text: hasImportedRoutine
+                                                  ? 'Rutina importada'
+                                                  : 'Planificación semanal',
+                                            ),
+                                            const TextSpan(
+                                              text: '  •  ',
+                                              style: TextStyle(
+                                                color: Color(0xFF59D52D),
+                                              ),
+                                            ),
+                                            TextSpan(text: selectedPlan),
+                                          ],
+                                        ),
+                                        style: const TextStyle(
+                                          color: Color(0xFF616B76),
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    const StatusChip(
+                                      text: 'CARGA',
+                                      background: Color(0xFFEDF9E8),
+                                      textColor: Color(0xFF3BAF19),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    OutlinedButton.icon(
+                                      style: OutlinedButton.styleFrom(
+                                        foregroundColor: const Color(
+                                          0xFF3BAF19,
+                                        ),
+                                        side: const BorderSide(
+                                          color: Color(0xFF59D52D),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 22,
+                                          vertical: 14,
+                                        ),
+                                        shape: const StadiumBorder(),
+                                      ),
+                                      onPressed: () {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                              'Calendario semanal seleccionado',
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      icon: const Icon(
+                                        Icons.calendar_today_outlined,
+                                        size: 18,
+                                      ),
+                                      label: const Text(
+                                        'Ver calendario',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    if (selectedPlan != null && selectedWeek != null)
+                      const SizedBox(height: 14),
                     for (final session in selectedSessions) ...[
                       _WebRoutineSessionCard(
                         session: session,

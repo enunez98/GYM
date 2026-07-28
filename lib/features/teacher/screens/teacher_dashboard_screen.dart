@@ -537,7 +537,7 @@ class _WebSidebar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 260,
-      color: const Color(0xFF07111D),
+      color: const Color(0xFF111214),
       padding: const EdgeInsets.fromLTRB(20, 28, 20, 22),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
