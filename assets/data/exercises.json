@@ -3898,5 +3898,1055 @@
     },
     "series": "4",
     "repeticiones": "8-12"
+  },
+  {
+    "id": 301,
+    "nombre": "ABS ROTACION",
+    "musculo": "Espalda",
+    "imagen": "abs_rotacion_inicio.webp",
+    "imagenes": {
+      "inicio": "abs_rotacion_inicio.webp",
+      "bajada": "abs_rotacion_bajada.webp",
+      "subida": "abs_rotacion_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 302,
+    "nombre": "BANCO ROMANO",
+    "musculo": "Espalda",
+    "imagen": "banco_romano_inicio.webp",
+    "imagenes": {
+      "inicio": "banco_romano_inicio.webp",
+      "bajada": "banco_romano_bajada.webp",
+      "subida": "banco_romano_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 303,
+    "nombre": "BANCO SCOTT",
+    "musculo": "Hombro",
+    "imagen": "banco_scott_inicio.webp",
+    "imagenes": {
+      "inicio": "banco_scott_inicio.webp",
+      "bajada": "banco_scott_bajada.webp",
+      "subida": "banco_scott_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 304,
+    "nombre": "BICEPS 45",
+    "musculo": "Hombro",
+    "imagen": "biceps_45_inicio.webp",
+    "imagenes": {
+      "inicio": "biceps_45_inicio.webp",
+      "bajada": "biceps_45_bajada.webp",
+      "subida": "biceps_45_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 305,
+    "nombre": "BICEPS 45 C/M",
+    "musculo": "Hombro",
+    "imagen": "biceps_45_c_m_inicio.webp",
+    "imagenes": {
+      "inicio": "biceps_45_c_m_inicio.webp",
+      "bajada": "biceps_45_c_m_bajada.webp",
+      "subida": "biceps_45_c_m_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 306,
+    "nombre": "BICEPS CON BARRA EN POLEA",
+    "musculo": "Hombro",
+    "imagen": "biceps_con_barra_en_polea_inicio.webp",
+    "imagenes": {
+      "inicio": "biceps_con_barra_en_polea_inicio.webp",
+      "bajada": "biceps_con_barra_en_polea_bajada.webp",
+      "subida": "biceps_con_barra_en_polea_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 307,
+    "nombre": "BICEPS CON BARRA EN POLEA  (DROP SET",
+    "musculo": "Hombro",
+    "imagen": "biceps_con_barra_en_polea_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "biceps_con_barra_en_polea_drop_set_inicio.webp",
+      "bajada": "biceps_con_barra_en_polea_drop_set_bajada.webp",
+      "subida": "biceps_con_barra_en_polea_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 308,
+    "nombre": "BICEPS CON BARRA Z",
+    "musculo": "Hombro",
+    "imagen": "biceps_con_barra_z_inicio.webp",
+    "imagenes": {
+      "inicio": "biceps_con_barra_z_inicio.webp",
+      "bajada": "biceps_con_barra_z_bajada.webp",
+      "subida": "biceps_con_barra_z_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 309,
+    "nombre": "BICEPS MARTILLO",
+    "musculo": "Hombro",
+    "imagen": "biceps_martillo_inicio.webp",
+    "imagenes": {
+      "inicio": "biceps_martillo_inicio.webp",
+      "bajada": "biceps_martillo_bajada.webp",
+      "subida": "biceps_martillo_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 310,
+    "nombre": "BICEPS MARTILLO (DROP SET",
+    "musculo": "Hombro",
+    "imagen": "biceps_martillo_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "biceps_martillo_drop_set_inicio.webp",
+      "bajada": "biceps_martillo_drop_set_bajada.webp",
+      "subida": "biceps_martillo_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 311,
+    "nombre": "BICEPS ROTACION",
+    "musculo": "Hombro",
+    "imagen": "biceps_rotacion_inicio.webp",
+    "imagenes": {
+      "inicio": "biceps_rotacion_inicio.webp",
+      "bajada": "biceps_rotacion_bajada.webp",
+      "subida": "biceps_rotacion_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 312,
+    "nombre": "CHEST PRESS",
+    "musculo": "Pecho",
+    "imagen": "chest_press_inicio.webp",
+    "imagenes": {
+      "inicio": "chest_press_inicio.webp",
+      "bajada": "chest_press_bajada.webp",
+      "subida": "chest_press_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 313,
+    "nombre": "CHEST PRESS (DROP SET",
+    "musculo": "Pecho",
+    "imagen": "chest_press_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "chest_press_drop_set_inicio.webp",
+      "bajada": "chest_press_drop_set_bajada.webp",
+      "subida": "chest_press_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 314,
+    "nombre": "CROSS OVER ALTO",
+    "musculo": "Pecho",
+    "imagen": "cross_over_alto_inicio.webp",
+    "imagenes": {
+      "inicio": "cross_over_alto_inicio.webp",
+      "bajada": "cross_over_alto_bajada.webp",
+      "subida": "cross_over_alto_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 315,
+    "nombre": "CROSS OVER ALTO (DROP SET",
+    "musculo": "Pecho",
+    "imagen": "cross_over_alto_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "cross_over_alto_drop_set_inicio.webp",
+      "bajada": "cross_over_alto_drop_set_bajada.webp",
+      "subida": "cross_over_alto_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 316,
+    "nombre": "CROSS OVER MEDIO (DROP SET",
+    "musculo": "Pecho",
+    "imagen": "cross_over_medio_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "cross_over_medio_drop_set_inicio.webp",
+      "bajada": "cross_over_medio_drop_set_bajada.webp",
+      "subida": "cross_over_medio_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 317,
+    "nombre": "CRUNCH",
+    "musculo": "Espalda",
+    "imagen": "crunch_inicio.webp",
+    "imagenes": {
+      "inicio": "crunch_inicio.webp",
+      "bajada": "crunch_bajada.webp",
+      "subida": "crunch_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 318,
+    "nombre": "DEAD BUG",
+    "musculo": "Espalda",
+    "imagen": "dead_bug_inicio.webp",
+    "imagenes": {
+      "inicio": "dead_bug_inicio.webp",
+      "bajada": "dead_bug_bajada.webp",
+      "subida": "dead_bug_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 319,
+    "nombre": "ESTOCADA BULGARA",
+    "musculo": "Piernas",
+    "imagen": "estocada_bulgara_inicio.webp",
+    "imagenes": {
+      "inicio": "estocada_bulgara_inicio.webp",
+      "bajada": "estocada_bulgara_bajada.webp",
+      "subida": "estocada_bulgara_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 320,
+    "nombre": "ESTOCADA BULGARA D/C",
+    "musculo": "Piernas",
+    "imagen": "estocada_bulgara_d_c_inicio.webp",
+    "imagenes": {
+      "inicio": "estocada_bulgara_d_c_inicio.webp",
+      "bajada": "estocada_bulgara_d_c_bajada.webp",
+      "subida": "estocada_bulgara_d_c_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 321,
+    "nombre": "ESTOCADA C/M",
+    "musculo": "Piernas",
+    "imagen": "estocada_c_m_inicio.webp",
+    "imagenes": {
+      "inicio": "estocada_c_m_inicio.webp",
+      "bajada": "estocada_c_m_bajada.webp",
+      "subida": "estocada_c_m_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 322,
+    "nombre": "ESTOCADA D/C",
+    "musculo": "Piernas",
+    "imagen": "estocada_d_c_inicio.webp",
+    "imagenes": {
+      "inicio": "estocada_d_c_inicio.webp",
+      "bajada": "estocada_d_c_bajada.webp",
+      "subida": "estocada_d_c_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 323,
+    "nombre": "EXCENTRICO EN RODILLO",
+    "musculo": "Piernas",
+    "imagen": "excentrico_en_rodillo_inicio.webp",
+    "imagenes": {
+      "inicio": "excentrico_en_rodillo_inicio.webp",
+      "bajada": "excentrico_en_rodillo_bajada.webp",
+      "subida": "excentrico_en_rodillo_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 324,
+    "nombre": "HIIT",
+    "musculo": "Piernas",
+    "imagen": "hiit_inicio.webp",
+    "imagenes": {
+      "inicio": "hiit_inicio.webp",
+      "bajada": "hiit_bajada.webp",
+      "subida": "hiit_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 325,
+    "nombre": "HIP THRUST UNILATERAL",
+    "musculo": "Piernas",
+    "imagen": "hip_thrust_unilateral_inicio.webp",
+    "imagenes": {
+      "inicio": "hip_thrust_unilateral_inicio.webp",
+      "bajada": "hip_thrust_unilateral_bajada.webp",
+      "subida": "hip_thrust_unilateral_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 326,
+    "nombre": "LAT PULL DOWN",
+    "musculo": "Espalda",
+    "imagen": "lat_pull_down_inicio.webp",
+    "imagenes": {
+      "inicio": "lat_pull_down_inicio.webp",
+      "bajada": "lat_pull_down_bajada.webp",
+      "subida": "lat_pull_down_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 327,
+    "nombre": "LAT PULL DOWN (DROP SET",
+    "musculo": "Espalda",
+    "imagen": "lat_pull_down_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "lat_pull_down_drop_set_inicio.webp",
+      "bajada": "lat_pull_down_drop_set_bajada.webp",
+      "subida": "lat_pull_down_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 328,
+    "nombre": "LEG CURL",
+    "musculo": "Piernas",
+    "imagen": "leg_curl_inicio.webp",
+    "imagenes": {
+      "inicio": "leg_curl_inicio.webp",
+      "bajada": "leg_curl_bajada.webp",
+      "subida": "leg_curl_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 329,
+    "nombre": "LEG CURL (DROP SET",
+    "musculo": "Piernas",
+    "imagen": "leg_curl_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "leg_curl_drop_set_inicio.webp",
+      "bajada": "leg_curl_drop_set_bajada.webp",
+      "subida": "leg_curl_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 330,
+    "nombre": "LEG EXTENSION",
+    "musculo": "Piernas",
+    "imagen": "leg_extension_inicio.webp",
+    "imagenes": {
+      "inicio": "leg_extension_inicio.webp",
+      "bajada": "leg_extension_bajada.webp",
+      "subida": "leg_extension_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 331,
+    "nombre": "LEG EXTENSION (DROP SET",
+    "musculo": "Piernas",
+    "imagen": "leg_extension_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "leg_extension_drop_set_inicio.webp",
+      "bajada": "leg_extension_drop_set_bajada.webp",
+      "subida": "leg_extension_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 332,
+    "nombre": "MAQUINA ABDUCCION",
+    "musculo": "Piernas",
+    "imagen": "maquina_abduccion_inicio.webp",
+    "imagenes": {
+      "inicio": "maquina_abduccion_inicio.webp",
+      "bajada": "maquina_abduccion_bajada.webp",
+      "subida": "maquina_abduccion_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 333,
+    "nombre": "MAQUINA ABDUCCION (DROP SET",
+    "musculo": "Piernas",
+    "imagen": "maquina_abduccion_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "maquina_abduccion_drop_set_inicio.webp",
+      "bajada": "maquina_abduccion_drop_set_bajada.webp",
+      "subida": "maquina_abduccion_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 334,
+    "nombre": "MAQUINA ADUCTOR",
+    "musculo": "Piernas",
+    "imagen": "maquina_aductor_inicio.webp",
+    "imagenes": {
+      "inicio": "maquina_aductor_inicio.webp",
+      "bajada": "maquina_aductor_bajada.webp",
+      "subida": "maquina_aductor_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 335,
+    "nombre": "MAQUINA ADUCTOR (DROP SET",
+    "musculo": "Piernas",
+    "imagen": "maquina_aductor_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "maquina_aductor_drop_set_inicio.webp",
+      "bajada": "maquina_aductor_drop_set_bajada.webp",
+      "subida": "maquina_aductor_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 336,
+    "nombre": "PALLOF PRESS",
+    "musculo": "Espalda",
+    "imagen": "pallof_press_inicio.webp",
+    "imagenes": {
+      "inicio": "pallof_press_inicio.webp",
+      "bajada": "pallof_press_bajada.webp",
+      "subida": "pallof_press_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 337,
+    "nombre": "PATADA DE TRICEPS C/M",
+    "musculo": "Hombro",
+    "imagen": "patada_de_triceps_c_m_inicio.webp",
+    "imagenes": {
+      "inicio": "patada_de_triceps_c_m_inicio.webp",
+      "bajada": "patada_de_triceps_c_m_bajada.webp",
+      "subida": "patada_de_triceps_c_m_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 338,
+    "nombre": "PLANCHA C/M",
+    "musculo": "Espalda",
+    "imagen": "plancha_c_m_inicio.webp",
+    "imagenes": {
+      "inicio": "plancha_c_m_inicio.webp",
+      "bajada": "plancha_c_m_bajada.webp",
+      "subida": "plancha_c_m_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 339,
+    "nombre": "PRENSA 45",
+    "musculo": "Piernas",
+    "imagen": "prensa_45_inicio.webp",
+    "imagenes": {
+      "inicio": "prensa_45_inicio.webp",
+      "bajada": "prensa_45_bajada.webp",
+      "subida": "prensa_45_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 340,
+    "nombre": "PRESS BANCA EN SMITH",
+    "musculo": "Pecho",
+    "imagen": "press_banca_en_smith_inicio.webp",
+    "imagenes": {
+      "inicio": "press_banca_en_smith_inicio.webp",
+      "bajada": "press_banca_en_smith_bajada.webp",
+      "subida": "press_banca_en_smith_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 341,
+    "nombre": "PRESS BANCA EN SMITH (DROP SET",
+    "musculo": "Pecho",
+    "imagen": "press_banca_en_smith_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "press_banca_en_smith_drop_set_inicio.webp",
+      "bajada": "press_banca_en_smith_drop_set_bajada.webp",
+      "subida": "press_banca_en_smith_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 342,
+    "nombre": "PRESS HOMBRO C/M",
+    "musculo": "Hombro",
+    "imagen": "press_hombro_c_m_inicio.webp",
+    "imagenes": {
+      "inicio": "press_hombro_c_m_inicio.webp",
+      "bajada": "press_hombro_c_m_bajada.webp",
+      "subida": "press_hombro_c_m_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 343,
+    "nombre": "PRESS HOMBRO C/M SENTADO",
+    "musculo": "Hombro",
+    "imagen": "press_hombro_c_m_sentado_inicio.webp",
+    "imagenes": {
+      "inicio": "press_hombro_c_m_sentado_inicio.webp",
+      "bajada": "press_hombro_c_m_sentado_bajada.webp",
+      "subida": "press_hombro_c_m_sentado_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 344,
+    "nombre": "PRESS HOMBRO EN SMITH",
+    "musculo": "Hombro",
+    "imagen": "press_hombro_en_smith_inicio.webp",
+    "imagenes": {
+      "inicio": "press_hombro_en_smith_inicio.webp",
+      "bajada": "press_hombro_en_smith_bajada.webp",
+      "subida": "press_hombro_en_smith_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 345,
+    "nombre": "PRESS INCLINADO C/M",
+    "musculo": "Pecho",
+    "imagen": "press_inclinado_c_m_inicio.webp",
+    "imagenes": {
+      "inicio": "press_inclinado_c_m_inicio.webp",
+      "bajada": "press_inclinado_c_m_bajada.webp",
+      "subida": "press_inclinado_c_m_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 346,
+    "nombre": "PULL DOWN NEUTRO",
+    "musculo": "Espalda",
+    "imagen": "pull_down_neutro_inicio.webp",
+    "imagenes": {
+      "inicio": "pull_down_neutro_inicio.webp",
+      "bajada": "pull_down_neutro_bajada.webp",
+      "subida": "pull_down_neutro_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 347,
+    "nombre": "REMO EN PRONO BANCO T",
+    "musculo": "Espalda",
+    "imagen": "remo_en_prono_banco_t_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_en_prono_banco_t_inicio.webp",
+      "bajada": "remo_en_prono_banco_t_bajada.webp",
+      "subida": "remo_en_prono_banco_t_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 348,
+    "nombre": "REMO NEUTRO BANCO T",
+    "musculo": "Espalda",
+    "imagen": "remo_neutro_banco_t_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_neutro_banco_t_inicio.webp",
+      "bajada": "remo_neutro_banco_t_bajada.webp",
+      "subida": "remo_neutro_banco_t_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 349,
+    "nombre": "REMO SENTADO EN POLEA",
+    "musculo": "Espalda",
+    "imagen": "remo_sentado_en_polea_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_sentado_en_polea_inicio.webp",
+      "bajada": "remo_sentado_en_polea_bajada.webp",
+      "subida": "remo_sentado_en_polea_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 350,
+    "nombre": "REMO SENTADO EN POLEA  (DROP SET",
+    "musculo": "Espalda",
+    "imagen": "remo_sentado_en_polea_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_sentado_en_polea_drop_set_inicio.webp",
+      "bajada": "remo_sentado_en_polea_drop_set_bajada.webp",
+      "subida": "remo_sentado_en_polea_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 351,
+    "nombre": "REMO UNILATERAL EN POLEA",
+    "musculo": "Espalda",
+    "imagen": "remo_unilateral_en_polea_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_unilateral_en_polea_inicio.webp",
+      "bajada": "remo_unilateral_en_polea_bajada.webp",
+      "subida": "remo_unilateral_en_polea_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 352,
+    "nombre": "SENTADILLA EN SMITH",
+    "musculo": "Piernas",
+    "imagen": "sentadilla_en_smith_inicio.webp",
+    "imagenes": {
+      "inicio": "sentadilla_en_smith_inicio.webp",
+      "bajada": "sentadilla_en_smith_bajada.webp",
+      "subida": "sentadilla_en_smith_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 353,
+    "nombre": "SENTADILLA EN SMITH (DROP SET",
+    "musculo": "Piernas",
+    "imagen": "sentadilla_en_smith_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "sentadilla_en_smith_drop_set_inicio.webp",
+      "bajada": "sentadilla_en_smith_drop_set_bajada.webp",
+      "subida": "sentadilla_en_smith_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 354,
+    "nombre": "SHOULDER PRESS",
+    "musculo": "Hombro",
+    "imagen": "shoulder_press_inicio.webp",
+    "imagenes": {
+      "inicio": "shoulder_press_inicio.webp",
+      "bajada": "shoulder_press_bajada.webp",
+      "subida": "shoulder_press_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 355,
+    "nombre": "SHOULDER PRESS (DROP SET",
+    "musculo": "Hombro",
+    "imagen": "shoulder_press_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "shoulder_press_drop_set_inicio.webp",
+      "bajada": "shoulder_press_drop_set_bajada.webp",
+      "subida": "shoulder_press_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 356,
+    "nombre": "TRICEPS CUERDA",
+    "musculo": "Hombro",
+    "imagen": "triceps_cuerda_inicio.webp",
+    "imagenes": {
+      "inicio": "triceps_cuerda_inicio.webp",
+      "bajada": "triceps_cuerda_bajada.webp",
+      "subida": "triceps_cuerda_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 357,
+    "nombre": "TRICEPS CUERDA (DROP SET",
+    "musculo": "Hombro",
+    "imagen": "triceps_cuerda_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "triceps_cuerda_drop_set_inicio.webp",
+      "bajada": "triceps_cuerda_drop_set_bajada.webp",
+      "subida": "triceps_cuerda_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 358,
+    "nombre": "TRICEPS CUERDA SOBRE LA CABEZA",
+    "musculo": "Hombro",
+    "imagen": "triceps_cuerda_sobre_la_cabeza_inicio.webp",
+    "imagenes": {
+      "inicio": "triceps_cuerda_sobre_la_cabeza_inicio.webp",
+      "bajada": "triceps_cuerda_sobre_la_cabeza_bajada.webp",
+      "subida": "triceps_cuerda_sobre_la_cabeza_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 359,
+    "nombre": "TRICEPS CUERDA SOBRE LA CABEZA (DROP SET",
+    "musculo": "Hombro",
+    "imagen": "triceps_cuerda_sobre_la_cabeza_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "triceps_cuerda_sobre_la_cabeza_drop_set_inicio.webp",
+      "bajada": "triceps_cuerda_sobre_la_cabeza_drop_set_bajada.webp",
+      "subida": "triceps_cuerda_sobre_la_cabeza_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 360,
+    "nombre": "TRICEPS CUERDA TRAS NUCA",
+    "musculo": "Hombro",
+    "imagen": "triceps_cuerda_tras_nuca_inicio.webp",
+    "imagenes": {
+      "inicio": "triceps_cuerda_tras_nuca_inicio.webp",
+      "bajada": "triceps_cuerda_tras_nuca_bajada.webp",
+      "subida": "triceps_cuerda_tras_nuca_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 361,
+    "nombre": "TRICEPS UNILATERAL EN POLEA",
+    "musculo": "Hombro",
+    "imagen": "triceps_unilateral_en_polea_inicio.webp",
+    "imagenes": {
+      "inicio": "triceps_unilateral_en_polea_inicio.webp",
+      "bajada": "triceps_unilateral_en_polea_bajada.webp",
+      "subida": "triceps_unilateral_en_polea_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 362,
+    "nombre": "VUELO LATERAL UNILATERAL EN POLEA",
+    "musculo": "Hombro",
+    "imagen": "vuelo_lateral_unilateral_en_polea_inicio.webp",
+    "imagenes": {
+      "inicio": "vuelo_lateral_unilateral_en_polea_inicio.webp",
+      "bajada": "vuelo_lateral_unilateral_en_polea_bajada.webp",
+      "subida": "vuelo_lateral_unilateral_en_polea_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 363,
+    "nombre": "VUELOS LATERALES",
+    "musculo": "Hombro",
+    "imagen": "vuelos_laterales_inicio.webp",
+    "imagenes": {
+      "inicio": "vuelos_laterales_inicio.webp",
+      "bajada": "vuelos_laterales_bajada.webp",
+      "subida": "vuelos_laterales_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 364,
+    "nombre": "VUELOS LATERALES (DROP SET",
+    "musculo": "Hombro",
+    "imagen": "vuelos_laterales_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "vuelos_laterales_drop_set_inicio.webp",
+      "bajada": "vuelos_laterales_drop_set_bajada.webp",
+      "subida": "vuelos_laterales_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 365,
+    "nombre": "VUELOS LATERALES EN POLEA",
+    "musculo": "Hombro",
+    "imagen": "vuelos_laterales_en_polea_inicio.webp",
+    "imagenes": {
+      "inicio": "vuelos_laterales_en_polea_inicio.webp",
+      "bajada": "vuelos_laterales_en_polea_bajada.webp",
+      "subida": "vuelos_laterales_en_polea_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 366,
+    "nombre": "VUELOS LATERALES SENTADO",
+    "musculo": "Hombro",
+    "imagen": "vuelos_laterales_sentado_inicio.webp",
+    "imagenes": {
+      "inicio": "vuelos_laterales_sentado_inicio.webp",
+      "bajada": "vuelos_laterales_sentado_bajada.webp",
+      "subida": "vuelos_laterales_sentado_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 367,
+    "nombre": "VUELOS LATERALES SENTADO (DROP SET",
+    "musculo": "Hombro",
+    "imagen": "vuelos_laterales_sentado_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "vuelos_laterales_sentado_drop_set_inicio.webp",
+      "bajada": "vuelos_laterales_sentado_drop_set_bajada.webp",
+      "subida": "vuelos_laterales_sentado_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 368,
+    "nombre": "VUELOS POSTERIOR EN POLEA",
+    "musculo": "Hombro",
+    "imagen": "vuelos_posterior_en_polea_inicio.webp",
+    "imagenes": {
+      "inicio": "vuelos_posterior_en_polea_inicio.webp",
+      "bajada": "vuelos_posterior_en_polea_bajada.webp",
+      "subida": "vuelos_posterior_en_polea_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 369,
+    "nombre": "FACE PULL",
+    "musculo": "Espalda",
+    "imagen": "face_pull_inicio.webp",
+    "imagenes": {
+      "inicio": "face_pull_inicio.webp",
+      "bajada": "face_pull_bajada.webp",
+      "subida": "face_pull_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 370,
+    "nombre": "HIP THRUST",
+    "musculo": "Piernas",
+    "imagen": "hip_thrust_inicio.webp",
+    "imagenes": {
+      "inicio": "hip_thrust_inicio.webp",
+      "bajada": "hip_thrust_bajada.webp",
+      "subida": "hip_thrust_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 371,
+    "nombre": "PESO MUERTO CONVENCIONAL",
+    "musculo": "Espalda",
+    "imagen": "peso_muerto_convencional_inicio.webp",
+    "imagenes": {
+      "inicio": "peso_muerto_convencional_inicio.webp",
+      "bajada": "peso_muerto_convencional_bajada.webp",
+      "subida": "peso_muerto_convencional_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 372,
+    "nombre": "PESO MUERTO RUMANO",
+    "musculo": "Espalda",
+    "imagen": "peso_muerto_rumano_inicio.webp",
+    "imagenes": {
+      "inicio": "peso_muerto_rumano_inicio.webp",
+      "bajada": "peso_muerto_rumano_bajada.webp",
+      "subida": "peso_muerto_rumano_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 373,
+    "nombre": "PRESS BANCA",
+    "musculo": "Pecho",
+    "imagen": "press_banca_inicio.webp",
+    "imagenes": {
+      "inicio": "press_banca_inicio.webp",
+      "bajada": "press_banca_bajada.webp",
+      "subida": "press_banca_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 374,
+    "nombre": "REMO CON BARRA EN SUPINO",
+    "musculo": "Espalda",
+    "imagen": "remo_con_barra_en_supino_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_con_barra_en_supino_inicio.webp",
+      "bajada": "remo_con_barra_en_supino_bajada.webp",
+      "subida": "remo_con_barra_en_supino_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 375,
+    "nombre": "SENTADILLA",
+    "musculo": "Piernas",
+    "imagen": "sentadilla_inicio.webp",
+    "imagenes": {
+      "inicio": "sentadilla_inicio.webp",
+      "bajada": "sentadilla_bajada.webp",
+      "subida": "sentadilla_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
   }
 ]

@@ -986,7 +986,7 @@ class _AddExerciseDialogState extends State<_AddExerciseDialog> {
   }
 }
 
-class _WebRoutineSessionCard extends StatelessWidget {
+class _WebRoutineSessionCard extends StatefulWidget {
   final DemoRoutineSession session;
   final VoidCallback onAddExercise;
 
@@ -996,7 +996,15 @@ class _WebRoutineSessionCard extends StatelessWidget {
   });
 
   @override
+  State<_WebRoutineSessionCard> createState() => _WebRoutineSessionCardState();
+}
+
+class _WebRoutineSessionCardState extends State<_WebRoutineSessionCard> {
+  bool _isExpanded = false;
+
+  @override
   Widget build(BuildContext context) {
+    final session = widget.session;
     final totalSeries = session.exercises.fold<int>(
       0,
       (total, exercise) => total + exercise.series,
@@ -1004,78 +1012,120 @@ class _WebRoutineSessionCard extends StatelessWidget {
     final estimatedMinutes = ((totalSeries * 3) / 5).ceil() * 5;
 
     return AppCard(
+      webContentMaxWidth: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      session.session,
-                      style: const TextStyle(color: Color(0xFF616B76)),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      session.title,
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Column(
+          InkWell(
+            borderRadius: BorderRadius.circular(12),
+            onTap: () => setState(() => _isExpanded = !_isExpanded),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Row(
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          session.session,
+                          style: const TextStyle(color: Color(0xFF616B76)),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          session.title,
+                          style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      const Icon(Icons.fitness_center, size: 19),
-                      const SizedBox(width: 8),
+                      Row(
+                        children: [
+                          const Icon(Icons.fitness_center, size: 19),
+                          const SizedBox(width: 8),
+                          Text(
+                            '$totalSeries series',
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(width: 14),
+                          AnimatedRotation(
+                            turns: _isExpanded ? 0.5 : 0,
+                            duration: const Duration(milliseconds: 220),
+                            child: const Icon(Icons.keyboard_arrow_down),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 5),
                       Text(
-                        '$totalSeries series',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        _isExpanded
+                            ? 'Ocultar ejercicios'
+                            : '${session.exercises.length} ejercicios · Ver detalle',
+                        style: const TextStyle(
+                          color: Color(0xFF616B76),
+                          fontSize: 12,
+                        ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 5),
-                  Text(
-                    'Duración estimada: $estimatedMinutes min',
-                    style: const TextStyle(
-                      color: Color(0xFF616B76),
-                      fontSize: 12,
-                    ),
-                  ),
                 ],
               ),
-            ],
+            ),
           ),
-          const SizedBox(height: 20),
-          const _WebRoutineTableHeader(),
-          const SizedBox(height: 8),
-          for (int index = 0; index < session.exercises.length; index++) ...[
-            _WebRoutineExerciseRow(
-              number: index + 1,
-              exercise: session.exercises[index],
-            ),
-            if (index < session.exercises.length - 1) const SizedBox(height: 6),
-          ],
-          const SizedBox(height: 10),
-          OutlinedButton.icon(
-            style: OutlinedButton.styleFrom(
-              foregroundColor: const Color(0xFF3BAF19),
-              side: const BorderSide(color: Color(0xFF59D52D)),
-            ),
-            onPressed: onAddExercise,
-            icon: const Icon(Icons.add, size: 18),
-            label: const Text(
-              'Agregar ejercicio',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
+          AnimatedSize(
+            duration: const Duration(milliseconds: 240),
+            curve: Curves.easeInOut,
+            child: !_isExpanded
+                ? const SizedBox(width: double.infinity)
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 20),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          'Duración estimada: $estimatedMinutes min',
+                          style: const TextStyle(
+                            color: Color(0xFF616B76),
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                      const _WebRoutineTableHeader(),
+                      const SizedBox(height: 8),
+                      for (
+                        int index = 0;
+                        index < session.exercises.length;
+                        index++
+                      ) ...[
+                        _WebRoutineExerciseRow(
+                          number: index + 1,
+                          exercise: session.exercises[index],
+                        ),
+                        if (index < session.exercises.length - 1)
+                          const SizedBox(height: 6),
+                      ],
+                      const SizedBox(height: 10),
+                      OutlinedButton.icon(
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: const Color(0xFF3BAF19),
+                          side: const BorderSide(color: Color(0xFF59D52D)),
+                        ),
+                        onPressed: widget.onAddExercise,
+                        icon: const Icon(Icons.add, size: 18),
+                        label: const Text(
+                          'Agregar ejercicio',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
           ),
         ],
       ),
@@ -1252,31 +1302,84 @@ String _exerciseImagePath(String exerciseName) {
   return 'assets/images/exercises/$asset.png';
 }
 
-class _RoutineSessionCard extends StatelessWidget {
+class _RoutineSessionCard extends StatefulWidget {
   final DemoRoutineSession session;
 
   const _RoutineSessionCard({required this.session});
 
   @override
+  State<_RoutineSessionCard> createState() => _RoutineSessionCardState();
+}
+
+class _RoutineSessionCardState extends State<_RoutineSessionCard> {
+  bool _isExpanded = false;
+
+  @override
   Widget build(BuildContext context) {
+    final session = widget.session;
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            session.session,
-            style: const TextStyle(color: Color(0xFF616B76)),
+          InkWell(
+            borderRadius: BorderRadius.circular(12),
+            onTap: () => setState(() => _isExpanded = !_isExpanded),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        session.session,
+                        style: const TextStyle(color: Color(0xFF616B76)),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        session.title,
+                        style: const TextStyle(
+                          fontSize: 21,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '${session.exercises.length} ejercicios',
+                        style: const TextStyle(
+                          color: Color(0xFF616B76),
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                AnimatedRotation(
+                  turns: _isExpanded ? 0.5 : 0,
+                  duration: const Duration(milliseconds: 220),
+                  child: const Icon(Icons.keyboard_arrow_down),
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            session.title,
-            style: const TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
+          AnimatedSize(
+            duration: const Duration(milliseconds: 240),
+            curve: Curves.easeInOut,
+            child: !_isExpanded
+                ? const SizedBox(width: double.infinity)
+                : Column(
+                    children: [
+                      const SizedBox(height: 14),
+                      for (int i = 0; i < session.exercises.length; i++) ...[
+                        _RoutineExerciseRow(
+                          number: i + 1,
+                          exercise: session.exercises[i],
+                        ),
+                        if (i < session.exercises.length - 1)
+                          const Divider(height: 18),
+                      ],
+                    ],
+                  ),
           ),
-          const SizedBox(height: 14),
-          for (int i = 0; i < session.exercises.length; i++) ...[
-            _RoutineExerciseRow(number: i + 1, exercise: session.exercises[i]),
-            if (i < session.exercises.length - 1) const Divider(height: 18),
-          ],
         ],
       ),
     );

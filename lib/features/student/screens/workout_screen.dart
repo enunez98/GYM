@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/widgets/app_card.dart';
+import '../../../core/widgets/exercise_motion_preview.dart';
 import '../../../core/widgets/responsive_action_button.dart';
 import '../../../core/widgets/screen_header.dart';
 import '../../../core/widgets/status_chip.dart';
@@ -891,23 +892,6 @@ class _WebWorkoutExerciseCard extends StatelessWidget {
     required this.repsControllerFor,
   });
 
-  String _exerciseAsset() {
-    final normalized = exercise.name.toLowerCase();
-    if (normalized.contains('sentadilla')) {
-      return 'assets/images/exercises/squat.png';
-    }
-    if (normalized.contains('remo')) {
-      return 'assets/images/exercises/seated_row.png';
-    }
-    if (normalized.contains('prensa')) {
-      return 'assets/images/exercises/leg_press.png';
-    }
-    if (normalized.contains('press')) {
-      return 'assets/images/exercises/bench_press.png';
-    }
-    return 'assets/images/exercises/generic_dumbbell.png';
-  }
-
   @override
   Widget build(BuildContext context) {
     final totalSeries = exercise.series <= 0 ? 1 : exercise.series;
@@ -937,7 +921,7 @@ class _WebWorkoutExerciseCard extends StatelessWidget {
               color: const Color(0xFFF5F6F6),
               borderRadius: BorderRadius.circular(14),
             ),
-            child: Image.asset(_exerciseAsset(), fit: BoxFit.contain),
+            child: ExerciseMotionPreview(exerciseName: exercise.name),
           ),
           const SizedBox(width: 20),
           Expanded(
@@ -1119,6 +1103,12 @@ class _ImportedWorkoutExerciseCard extends StatelessWidget {
                 style: const TextStyle(color: Color(0xFF616B76), fontSize: 12),
               ),
             ],
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            height: 210,
+            child: ExerciseMotionPreview(exerciseName: exercise.name),
           ),
           const SizedBox(height: 8),
           Text(

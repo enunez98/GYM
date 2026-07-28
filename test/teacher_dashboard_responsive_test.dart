@@ -134,6 +134,11 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Ver calendario'), findsOneWidget);
+    expect(find.text('Agregar ejercicio'), findsNothing);
+
+    await tester.tap(find.text('Sesión 1').first);
+    await tester.pumpAndSettle();
+
     expect(find.text('Ejercicio'), findsWidgets);
     expect(find.text('Series'), findsWidgets);
     expect(find.text('Repeticiones'), findsWidgets);
