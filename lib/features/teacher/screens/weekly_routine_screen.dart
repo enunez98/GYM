@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/app_select_field.dart';
+import '../../../core/widgets/exercise_motion_preview.dart';
 import '../../../core/widgets/form_header.dart';
 import '../../../core/widgets/responsive_action_button.dart';
 import '../../../core/widgets/responsive_form_field.dart';
@@ -24,6 +28,8 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
   List<PersistedRoutine> persistedRoutines = const [];
   bool isLoadingRoutines = false;
   String? routineLoadError;
+  bool hasUnsavedChanges = false;
+  bool isSavingRoutine = false;
 
   @override
   void initState() {
@@ -821,6 +827,13 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
                       _WebRoutineSessionCard(
                         session: session,
                         onAddExercise: () => _showAddExerciseDialog(session),
+                        onEditExercise: (index) =>
+                            _showEditExerciseDialog(session, index),
+                        onDeleteExercise: (index) =>
+                            _deleteExercise(session, index),
+                        onSave: _saveRoutineChanges,
+                        hasUnsavedChanges: hasUnsavedChanges,
+                        isSaving: isSavingRoutine,
                       ),
                       const SizedBox(height: 14),
                     ],
@@ -854,29 +867,207 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
     );
 
     if (exercise == null || !mounted) return;
-    setState(() => session.exercises.add(exercise));
+    setState(() {
+      session.exercises.add(exercise);
+      hasUnsavedChanges = true;
+    });
+  }
+
+  Future<void> _showEditExerciseDialog(
+    DemoRoutineSession session,
+    int index,
+  ) async {
+    final exercise = await showDialog<DemoRoutineExercise>(
+      context: context,
+      builder: (_) => _AddExerciseDialog(
+        sessionLabel: session.session,
+        initialExercise: session.exercises[index],
+      ),
+    );
+    if (exercise == null || !mounted) return;
+    setState(() {
+      session.exercises[index] = exercise;
+      hasUnsavedChanges = true;
+    });
+  }
+
+  Future<void> _deleteExercise(DemoRoutineSession session, int index) async {
+    final exercise = session.exercises[index];
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Eliminar ejercicio'),
+        content: Text('¿Quieres eliminar "${exercise.name}" de la rutina?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancelar'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Eliminar'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+    setState(() {
+      session.exercises.removeAt(index);
+      hasUnsavedChanges = true;
+    });
+  }
+
+  Future<void> _saveRoutineChanges() async {
+    final plan = selectedPlan;
+    final sessions = activeSessions.isNotEmpty
+        ? activeSessions
+        : routines[plan] ?? const <DemoRoutineSession>[];
+    if (plan == null || sessions.isEmpty || isSavingRoutine) return;
+
+    setState(() => isSavingRoutine = true);
+    try {
+      final sourceFileName = activeSourceFileName.isEmpty
+          ? 'Edición manual'
+          : activeSourceFileName;
+      final result = Firebase.apps.isEmpty
+          ? RoutinePersistenceService.replaceLocally(
+              plan: plan,
+              sourceFileName: sourceFileName,
+              sessions: sessions,
+            )
+          : await RoutinePersistenceService.replaceForPlan(
+              plan: plan,
+              sourceFileName: sourceFileName,
+              sessions: sessions,
+            );
+      if (!mounted) return;
+      setState(() {
+        hasUnsavedChanges = false;
+        isSavingRoutine = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Rutina guardada y actualizada para ${result.assignedStudents} alumnos',
+          ),
+        ),
+      );
+    } catch (error) {
+      debugPrint('Error al guardar la rutina: $error');
+      if (!mounted) return;
+      setState(() => isSavingRoutine = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No se pudo guardar la rutina. Intenta nuevamente.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }
 
 class _AddExerciseDialog extends StatefulWidget {
   final String sessionLabel;
+  final DemoRoutineExercise? initialExercise;
 
-  const _AddExerciseDialog({required this.sessionLabel});
+  const _AddExerciseDialog({required this.sessionLabel, this.initialExercise});
 
   @override
   State<_AddExerciseDialog> createState() => _AddExerciseDialogState();
 }
 
 class _AddExerciseDialogState extends State<_AddExerciseDialog> {
-  final nameController = TextEditingController();
-  final seriesController = TextEditingController(text: '3');
-  final repsController = TextEditingController(text: '10 - 12');
-  final restController = TextEditingController(text: '60 - 90 seg');
-  String? errorText;
+  final formKey = GlobalKey<FormState>();
+  late final TextEditingController nameController;
+  final nameFocusNode = FocusNode();
+  late final TextEditingController seriesController;
+  late final TextEditingController repsController;
+  late final TextEditingController restController;
+  List<String> catalogExerciseNames = const [];
+  String? selectedExerciseName;
+  bool isLoadingCatalog = true;
+  bool showSearchResults = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final exercise = widget.initialExercise;
+    nameController = TextEditingController(text: exercise?.name ?? '');
+    seriesController = TextEditingController(
+      text: exercise?.series.toString() ?? '3',
+    );
+    repsController = TextEditingController(text: exercise?.reps ?? '10 - 12');
+    restController = TextEditingController(
+      text: exercise?.rest.isNotEmpty == true ? exercise!.rest : '60 - 90 seg',
+    );
+    selectedExerciseName = exercise?.name;
+    _loadExerciseCatalog();
+  }
+
+  Future<void> _loadExerciseCatalog() async {
+    final source = await rootBundle.loadString('assets/data/exercises.json');
+    final items = jsonDecode(source) as List<dynamic>;
+    final names =
+        items
+            .whereType<Map>()
+            .where((rawItem) {
+              final images = rawItem['imagenes'];
+              return images is Map &&
+                  images.values.whereType<String>().any(
+                    (image) => image.isNotEmpty,
+                  );
+            })
+            .map((rawItem) {
+              final item = Map<String, dynamic>.from(rawItem);
+              return (item['nombre'] as String? ??
+                      item['name'] as String? ??
+                      '')
+                  .trim();
+            })
+            .where((name) => name.isNotEmpty)
+            .toSet()
+            .toList()
+          ..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
+
+    if (!mounted) return;
+    setState(() {
+      catalogExerciseNames = names;
+      selectedExerciseName = _catalogMatch();
+      isLoadingCatalog = false;
+    });
+  }
+
+  String _normalize(String value) {
+    const accented = 'áéíóúüñ';
+    const plain = 'aeiouun';
+    var result = value.toLowerCase().trim();
+    for (var index = 0; index < accented.length; index++) {
+      result = result.replaceAll(accented[index], plain[index]);
+    }
+    return result;
+  }
+
+  String? _catalogMatch() {
+    final query = _normalize(nameController.text);
+    for (final name in catalogExerciseNames) {
+      if (_normalize(name) == query) return name;
+    }
+    return null;
+  }
+
+  List<String> get _searchResults {
+    final query = _normalize(nameController.text);
+    if (query.isEmpty || !showSearchResults) return const [];
+    return catalogExerciseNames
+        .where((name) => _normalize(name).contains(query))
+        .take(5)
+        .toList();
+  }
 
   @override
   void dispose() {
     nameController.dispose();
+    nameFocusNode.dispose();
     seriesController.dispose();
     repsController.dispose();
     restController.dispose();
@@ -884,15 +1075,12 @@ class _AddExerciseDialogState extends State<_AddExerciseDialog> {
   }
 
   void _save() {
-    final name = nameController.text.trim();
+    if (!(formKey.currentState?.validate() ?? false)) return;
+
+    final name = _catalogMatch()!;
     final series = int.tryParse(seriesController.text.trim()) ?? 0;
     final reps = repsController.text.trim();
     final rest = restController.text.trim();
-
-    if (name.isEmpty || series <= 0 || reps.isEmpty || rest.isEmpty) {
-      setState(() => errorText = 'Completa todos los datos del ejercicio');
-      return;
-    }
 
     Navigator.pop(
       context,
@@ -903,72 +1091,155 @@ class _AddExerciseDialogState extends State<_AddExerciseDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Agregar ejercicio · ${widget.sessionLabel}'),
+      title: Text(
+        '${widget.initialExercise == null ? 'Agregar' : 'Editar'} ejercicio · ${widget.sessionLabel}',
+      ),
       content: SizedBox(
         width: 560,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: nameController,
-              autofocus: true,
-              decoration: const InputDecoration(
-                labelText: 'Ejercicio',
-                hintText: 'Ej: Press francés',
-                prefixIcon: Icon(Icons.fitness_center),
-                border: OutlineInputBorder(),
+        child: Form(
+          key: formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                key: const Key('exercise_search_field'),
+                controller: nameController,
+                focusNode: nameFocusNode,
+                autofocus: true,
+                onChanged: (value) {
+                  setState(() {
+                    showSearchResults = value.trim().isNotEmpty;
+                    if (value != selectedExerciseName) {
+                      selectedExerciseName = null;
+                    }
+                  });
+                },
+                decoration: InputDecoration(
+                  labelText: 'Buscar ejercicio',
+                  hintText: isLoadingCatalog
+                      ? 'Cargando ejercicios...'
+                      : 'Escribe para buscar en el catálogo',
+                  prefixIcon: const Icon(Icons.search),
+                  suffixIcon: selectedExerciseName == null
+                      ? null
+                      : const Icon(
+                          Icons.check_circle,
+                          color: Color(0xFF3BAF19),
+                        ),
+                  border: const OutlineInputBorder(),
+                ),
+                validator: (_) => _catalogMatch() == null
+                    ? 'Selecciona un ejercicio de la lista'
+                    : null,
               ),
-            ),
-            const SizedBox(height: 14),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: seriesController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Series',
-                      hintText: 'Ej: 3',
-                      prefixIcon: Icon(Icons.numbers),
-                      border: OutlineInputBorder(),
-                    ),
+              if (!isLoadingCatalog && catalogExerciseNames.isEmpty)
+                const Padding(
+                  padding: EdgeInsets.only(top: 8),
+                  child: Text(
+                    'No se pudo cargar el catálogo de ejercicios',
+                    style: TextStyle(color: Colors.red),
                   ),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: TextField(
-                    controller: repsController,
-                    decoration: const InputDecoration(
-                      labelText: 'Repeticiones',
-                      hintText: 'Ej: 10 - 12',
-                      prefixIcon: Icon(Icons.repeat),
-                      border: OutlineInputBorder(),
+              if (_searchResults.isNotEmpty) ...[
+                const SizedBox(height: 6),
+                Material(
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    side: const BorderSide(color: Color(0xFFDDE2E5)),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxHeight: 290),
+                    child: ListView.builder(
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      shrinkWrap: true,
+                      itemCount: _searchResults.length,
+                      itemBuilder: (context, index) {
+                        final name = _searchResults[index];
+                        return ListTile(
+                          leading: SizedBox(
+                            width: 48,
+                            height: 48,
+                            child: ExerciseMotionPreview(
+                              exerciseName: name,
+                              borderRadius: BorderRadius.circular(8),
+                              animate: false,
+                              showPhaseLabel: false,
+                            ),
+                          ),
+                          title: Text(name),
+                          onTap: () {
+                            setState(() {
+                              selectedExerciseName = name;
+                              showSearchResults = false;
+                              nameController.text = name;
+                            });
+                            nameFocusNode.unfocus();
+                            formKey.currentState?.validate();
+                          },
+                        );
+                      },
                     ),
                   ),
                 ),
               ],
-            ),
-            const SizedBox(height: 14),
-            TextField(
-              controller: restController,
-              decoration: const InputDecoration(
-                labelText: 'Descanso',
-                hintText: 'Ej: 60 - 90 seg',
-                prefixIcon: Icon(Icons.timer_outlined),
-                border: OutlineInputBorder(),
+              const SizedBox(height: 14),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      key: const Key('exercise_series_field'),
+                      controller: seriesController,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        labelText: 'Series',
+                        hintText: 'Ej: 3',
+                        prefixIcon: Icon(Icons.numbers),
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        final series = int.tryParse(value?.trim() ?? '');
+                        return series == null || series <= 0
+                            ? 'Ingresa una cantidad válida'
+                            : null;
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: TextFormField(
+                      key: const Key('exercise_reps_field'),
+                      controller: repsController,
+                      decoration: const InputDecoration(
+                        labelText: 'Repeticiones',
+                        hintText: 'Ej: 10 - 12',
+                        prefixIcon: Icon(Icons.repeat),
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) => (value?.trim().isEmpty ?? true)
+                          ? 'Completa las repeticiones'
+                          : null,
+                    ),
+                  ),
+                ],
               ),
-            ),
-            if (errorText != null) ...[
-              const SizedBox(height: 10),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  errorText!,
-                  style: const TextStyle(color: Colors.red),
+              const SizedBox(height: 14),
+              TextFormField(
+                key: const Key('exercise_rest_field'),
+                controller: restController,
+                decoration: const InputDecoration(
+                  labelText: 'Descanso',
+                  hintText: 'Ej: 60 - 90 seg',
+                  prefixIcon: Icon(Icons.timer_outlined),
+                  border: OutlineInputBorder(),
                 ),
+                validator: (value) => (value?.trim().isEmpty ?? true)
+                    ? 'Completa el descanso'
+                    : null,
               ),
             ],
-          ],
+          ),
         ),
       ),
       actions: [
@@ -978,8 +1249,12 @@ class _AddExerciseDialogState extends State<_AddExerciseDialog> {
         ),
         ElevatedButton.icon(
           onPressed: _save,
-          icon: const Icon(Icons.add),
-          label: const Text('Guardar ejercicio'),
+          icon: Icon(widget.initialExercise == null ? Icons.add : Icons.save),
+          label: Text(
+            widget.initialExercise == null
+                ? 'Guardar ejercicio'
+                : 'Guardar cambios',
+          ),
         ),
       ],
     );
@@ -989,10 +1264,20 @@ class _AddExerciseDialogState extends State<_AddExerciseDialog> {
 class _WebRoutineSessionCard extends StatefulWidget {
   final DemoRoutineSession session;
   final VoidCallback onAddExercise;
+  final ValueChanged<int> onEditExercise;
+  final ValueChanged<int> onDeleteExercise;
+  final VoidCallback onSave;
+  final bool hasUnsavedChanges;
+  final bool isSaving;
 
   const _WebRoutineSessionCard({
     required this.session,
     required this.onAddExercise,
+    required this.onEditExercise,
+    required this.onDeleteExercise,
+    required this.onSave,
+    required this.hasUnsavedChanges,
+    required this.isSaving,
   });
 
   @override
@@ -1107,22 +1392,48 @@ class _WebRoutineSessionCardState extends State<_WebRoutineSessionCard> {
                         _WebRoutineExerciseRow(
                           number: index + 1,
                           exercise: session.exercises[index],
+                          onEdit: () => widget.onEditExercise(index),
+                          onDelete: () => widget.onDeleteExercise(index),
                         ),
                         if (index < session.exercises.length - 1)
                           const SizedBox(height: 6),
                       ],
                       const SizedBox(height: 10),
-                      OutlinedButton.icon(
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: const Color(0xFF3BAF19),
-                          side: const BorderSide(color: Color(0xFF59D52D)),
-                        ),
-                        onPressed: widget.onAddExercise,
-                        icon: const Icon(Icons.add, size: 18),
-                        label: const Text(
-                          'Agregar ejercicio',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
+                      Row(
+                        children: [
+                          OutlinedButton.icon(
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: const Color(0xFF3BAF19),
+                              side: const BorderSide(color: Color(0xFF59D52D)),
+                            ),
+                            onPressed: widget.onAddExercise,
+                            icon: const Icon(Icons.add, size: 18),
+                            label: const Text(
+                              'Agregar ejercicio',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          ElevatedButton.icon(
+                            key: const Key('save_routine_button'),
+                            onPressed:
+                                widget.hasUnsavedChanges && !widget.isSaving
+                                ? widget.onSave
+                                : null,
+                            icon: widget.isSaving
+                                ? const SizedBox(
+                                    width: 18,
+                                    height: 18,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : const Icon(Icons.save_outlined),
+                            label: Text(
+                              widget.isSaving ? 'Guardando...' : 'Guardar',
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -1157,8 +1468,15 @@ class _WebRoutineTableHeader extends StatelessWidget {
 class _WebRoutineExerciseRow extends StatelessWidget {
   final int number;
   final DemoRoutineExercise exercise;
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
 
-  const _WebRoutineExerciseRow({required this.number, required this.exercise});
+  const _WebRoutineExerciseRow({
+    required this.number,
+    required this.exercise,
+    required this.onEdit,
+    required this.onDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1205,16 +1523,11 @@ class _WebRoutineExerciseRow extends StatelessWidget {
                     color: const Color(0xFFF4F6F7),
                     borderRadius: BorderRadius.circular(9),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(2),
-                    child: Image.asset(
-                      _exerciseImagePath(exercise.name),
-                      fit: BoxFit.contain,
-                      errorBuilder: (_, _, _) => const Icon(
-                        Icons.sports_gymnastics,
-                        color: Color(0xFF3BAF19),
-                      ),
-                    ),
+                  child: ExerciseMotionPreview(
+                    exerciseName: exercise.name,
+                    borderRadius: BorderRadius.circular(9),
+                    animate: false,
+                    showPhaseLabel: false,
                   ),
                 ),
                 Expanded(
@@ -1235,6 +1548,10 @@ class _WebRoutineExerciseRow extends StatelessWidget {
             child: PopupMenuButton<String>(
               tooltip: 'Acciones',
               icon: const Icon(Icons.more_vert),
+              onSelected: (action) {
+                if (action == 'edit') onEdit();
+                if (action == 'delete') onDelete();
+              },
               itemBuilder: (_) => const [
                 PopupMenuItem(value: 'edit', child: Text('Editar')),
                 PopupMenuItem(value: 'delete', child: Text('Eliminar')),
@@ -1245,61 +1562,6 @@ class _WebRoutineExerciseRow extends StatelessWidget {
       ),
     );
   }
-}
-
-String _exerciseImagePath(String exerciseName) {
-  final name = exerciseName
-      .toLowerCase()
-      .replaceAll('á', 'a')
-      .replaceAll('é', 'e')
-      .replaceAll('í', 'i')
-      .replaceAll('ó', 'o')
-      .replaceAll('ú', 'u');
-
-  String asset;
-  if (name.contains('sentadilla')) {
-    asset = 'squat';
-  } else if (name.contains('inclinado')) {
-    asset = 'incline_press';
-  } else if (name.contains('press banca')) {
-    asset = 'bench_press';
-  } else if (name.contains('remo sentado')) {
-    asset = 'seated_row';
-  } else if (name.contains('remo')) {
-    asset = 'barbell_row';
-  } else if (name.contains('plancha')) {
-    asset = 'plank';
-  } else if (name.contains('peso muerto')) {
-    asset = 'romanian_deadlift';
-  } else if (name.contains('press militar')) {
-    asset = 'military_press';
-  } else if (name.contains('jalon')) {
-    asset = 'lat_pulldown';
-  } else if (name.contains('curl')) {
-    asset = 'biceps_curl';
-  } else if (name.contains('apertura')) {
-    asset = 'pec_deck';
-  } else if (name.contains('extension cuadriceps')) {
-    asset = 'leg_extension';
-  } else if (name.contains('extension') && name.contains('triceps')) {
-    asset = 'triceps_extension';
-  } else if (name.contains('triceps')) {
-    asset = 'triceps_rope';
-  } else if (name.contains('prensa')) {
-    asset = 'leg_press';
-  } else if (name.contains('elevacion')) {
-    asset = 'lateral_raise';
-  } else if (name.contains('press hombro')) {
-    asset = 'shoulder_press';
-  } else if (name.contains('crossover')) {
-    asset = 'cable_crossover';
-  } else if (name.contains('pullover')) {
-    asset = 'cable_pullover';
-  } else {
-    asset = 'generic_dumbbell';
-  }
-
-  return 'assets/images/exercises/$asset.png';
 }
 
 class _RoutineSessionCard extends StatefulWidget {
@@ -1405,6 +1667,17 @@ class _RoutineExerciseRow extends StatelessWidget {
               color: Color(0xFF59D52D),
               fontWeight: FontWeight.bold,
             ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        SizedBox(
+          width: 46,
+          height: 46,
+          child: ExerciseMotionPreview(
+            exerciseName: exercise.name,
+            borderRadius: BorderRadius.circular(9),
+            animate: false,
+            showPhaseLabel: false,
           ),
         ),
         const SizedBox(width: 12),

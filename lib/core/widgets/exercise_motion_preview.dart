@@ -7,12 +7,16 @@ class ExerciseMotionPreview extends StatefulWidget {
   final String exerciseName;
   final BoxFit fit;
   final BorderRadius borderRadius;
+  final bool animate;
+  final bool showPhaseLabel;
 
   const ExerciseMotionPreview({
     super.key,
     required this.exerciseName,
     this.fit = BoxFit.contain,
     this.borderRadius = const BorderRadius.all(Radius.circular(14)),
+    this.animate = true,
+    this.showPhaseLabel = true,
   });
 
   @override
@@ -32,7 +36,8 @@ class _ExerciseMotionPreviewState extends State<ExerciseMotionPreview>
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 2400),
-    )..repeat();
+    );
+    if (widget.animate) _controller.repeat();
   }
 
   @override
@@ -176,41 +181,42 @@ class _ExerciseMotionPreviewState extends State<ExerciseMotionPreview>
                             Image.asset(_fallback, fit: widget.fit),
                       ),
                     ),
-                    Positioned(
-                      left: 8,
-                      bottom: 8,
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: const Color(0xD9111214),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 5,
+                    if (widget.showPhaseLabel)
+                      Positioned(
+                        left: 8,
+                        bottom: 8,
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: const Color(0xD9111214),
+                            borderRadius: BorderRadius.circular(20),
                           ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(
-                                Icons.play_arrow_rounded,
-                                color: Color(0xFF59D52D),
-                                size: 15,
-                              ),
-                              const SizedBox(width: 3),
-                              Text(
-                                phase,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w800,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 5,
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  Icons.play_arrow_rounded,
+                                  color: Color(0xFF59D52D),
+                                  size: 15,
                                 ),
-                              ),
-                            ],
+                                const SizedBox(width: 3),
+                                Text(
+                                  phase,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
                   ],
                 );
               },

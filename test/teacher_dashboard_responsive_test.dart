@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gym_app/core/widgets/app_select_field.dart';
+import 'package:gym_app/core/widgets/exercise_motion_preview.dart';
 import 'package:gym_app/features/teacher/screens/teacher_dashboard_screen.dart';
 import 'package:gym_app/features/teacher/screens/students_list_screen.dart';
 
@@ -147,31 +148,112 @@ void main() {
     expect(
       find.byWidgetPredicate(
         (widget) =>
-            widget is Image &&
-            widget.image is AssetImage &&
-            (widget.image as AssetImage).assetName.endsWith('bench_press.png'),
+            widget is ExerciseMotionPreview &&
+            widget.exerciseName == 'Press banca plano' &&
+            !widget.animate,
       ),
       findsOneWidget,
     );
 
     await tester.tap(find.text('Agregar ejercicio').first);
     await tester.pumpAndSettle();
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 100)),
+    );
+    await tester.pump();
     expect(find.byType(AlertDialog), findsOneWidget);
 
-    final modalFields = find.descendant(
-      of: find.byType(AlertDialog),
-      matching: find.byType(TextField),
-    );
-    await tester.enterText(modalFields.at(0), 'Press francés');
-    await tester.enterText(modalFields.at(1), '4');
-    await tester.enterText(modalFields.at(2), '12');
-    await tester.enterText(modalFields.at(3), '45 seg');
+    final nameField = find.byKey(const Key('exercise_search_field'));
+    final seriesField = find.byKey(const Key('exercise_series_field'));
+    final repsField = find.byKey(const Key('exercise_reps_field'));
+    final restField = find.byKey(const Key('exercise_rest_field'));
+    await tester.enterText(nameField, 'Ejercicio inexistente');
+    await tester.enterText(seriesField, '');
+    await tester.enterText(repsField, '');
+    await tester.enterText(restField, '');
     await tester.tap(find.text('Guardar ejercicio'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Press francés'), findsOneWidget);
-    expect(find.text('18 series'), findsOneWidget);
+    expect(find.text('Selecciona un ejercicio de la lista'), findsOneWidget);
+    expect(find.text('Ingresa una cantidad válida'), findsOneWidget);
+    expect(find.text('Completa las repeticiones'), findsOneWidget);
+    expect(find.text('Completa el descanso'), findsOneWidget);
 
+    await tester.enterText(nameField, 'Press banca plano con barra');
+    await tester.pumpAndSettle();
+    expect(
+      find.text('No se pudo cargar el catálogo de ejercicios'),
+      findsNothing,
+    );
+    final catalogOption = find.widgetWithText(
+      ListTile,
+      'Press banca plano con barra',
+    );
+    expect(catalogOption, findsOneWidget);
+    await tester.tap(catalogOption);
+    await tester.pumpAndSettle();
+    await tester.enterText(seriesField, '4');
+    await tester.enterText(repsField, '12');
+    await tester.enterText(restField, '45 seg');
+    await tester.tap(find.text('Guardar ejercicio'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Selecciona un ejercicio de la lista'), findsNothing);
+    expect(find.text('Ingresa una cantidad válida'), findsNothing);
+    expect(find.text('Completa las repeticiones'), findsNothing);
+    expect(find.text('Completa el descanso'), findsNothing);
+    expect(find.byType(AlertDialog), findsNothing);
+    expect(find.text('Press banca plano con barra'), findsOneWidget);
+    expect(find.text('18 series'), findsOneWidget);
+    final saveRoutineButton = find.byKey(const Key('save_routine_button'));
+    expect(
+      tester.widget<ElevatedButton>(saveRoutineButton).onPressed,
+      isNotNull,
+    );
+
+    await tester.ensureVisible(find.byTooltip('Acciones').last);
+    await tester.tap(find.byTooltip('Acciones').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Editar'));
+    await tester.pumpAndSettle();
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 100)),
+    );
+    await tester.pump();
+    expect(find.textContaining('Editar ejercicio'), findsOneWidget);
+    await tester.enterText(find.byKey(const Key('exercise_series_field')), '5');
+    await tester.tap(find.text('Guardar cambios'));
+    await tester.pumpAndSettle();
+    expect(find.text('19 series'), findsOneWidget);
+
+    tester.widget<ElevatedButton>(saveRoutineButton).onPressed!();
+    await tester.pumpAndSettle();
+    expect(
+      find.textContaining('Rutina guardada y actualizada'),
+      findsOneWidget,
+    );
+    expect(tester.widget<ElevatedButton>(saveRoutineButton).onPressed, isNull);
+
+    await tester.ensureVisible(find.byTooltip('Acciones').last);
+    await tester.tap(find.byTooltip('Acciones').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Eliminar'));
+    await tester.pumpAndSettle();
+    expect(find.text('Eliminar ejercicio'), findsOneWidget);
+    await tester.tap(find.widgetWithText(FilledButton, 'Eliminar'));
+    await tester.pumpAndSettle();
+    expect(find.text('Press banca plano con barra'), findsNothing);
+    expect(
+      tester.widget<ElevatedButton>(saveRoutineButton).onPressed,
+      isNotNull,
+    );
+
+    await tester.fling(
+      find.byType(ListView).first,
+      const Offset(0, 2000),
+      1000,
+    );
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Plan 3 sesiones'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Plan 2 sesiones').last);
