@@ -21,7 +21,7 @@ class ProgressScreen extends StatelessWidget {
     final chartValues = summary.oneRmTrend;
 
     return Container(
-      color: const Color(0xFF00111F),
+      color: const Color(0xFF111214),
       child: SafeArea(
         child: Column(
           children: [

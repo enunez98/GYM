@@ -32,7 +32,7 @@ class BodyEvaluationScreen extends StatelessWidget {
     final evaluation = BodyEvaluationStore.getLastByUserId(user?.id);
 
     return Container(
-      color: const Color(0xFF00111F),
+      color: const Color(0xFF111214),
       child: SafeArea(
         child: Column(
           children: [

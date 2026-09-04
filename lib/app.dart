@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'core/theme/app_colors.dart';
 import 'features/auth/login_screen.dart';
@@ -11,6 +12,13 @@ class GymApp extends StatelessWidget {
     return MaterialApp(
       title: 'GYM Pro',
       debugShowCheckedModeBanner: false,
+      locale: const Locale('es', 'CL'),
+      supportedLocales: const [Locale('es', 'CL')],
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       theme: ThemeData(
         fontFamily: 'Arial',
         brightness: Brightness.light,

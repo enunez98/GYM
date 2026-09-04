@@ -1,0 +1,35 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "nexfit-gym",
+          "appId": "1:263384268159:android:bcb294b3f7bb61b023ee4a",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "nexfit-gym",
+          "appId": "1:263384268159:ios:0d71077b838033cf23ee4a",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "nexfit-gym",
+          "configurations": {
+            "android": "1:263384268159:android:bcb294b3f7bb61b023ee4a",
+            "ios": "1:263384268159:ios:0d71077b838033cf23ee4a",
+            "web": "1:263384268159:web:19fae87573a2e9a223ee4a"
+          }
+        }
+      }
+    }
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  }
+}

@@ -16,15 +16,19 @@ class FormHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDesktop = MediaQuery.sizeOf(context).width >= 900;
+    final showBackButton = !isDesktop;
+
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 18, 20, 24),
+      padding: EdgeInsets.fromLTRB(showBackButton ? 12 : 20, 18, 20, 24),
       child: Row(
         children: [
-          IconButton(
-            onPressed: onBack,
-            icon: const Icon(Icons.arrow_back_ios_new),
-            color: Colors.white,
-          ),
+          if (showBackButton)
+            IconButton(
+              onPressed: onBack,
+              icon: const Icon(Icons.arrow_back_ios_new),
+              color: Colors.white,
+            ),
           CircleAvatar(
             radius: 24,
             backgroundColor: const Color(0xFF59D52D),

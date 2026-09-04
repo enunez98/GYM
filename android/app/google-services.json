@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "263384268159",
+    "project_id": "nexfit-gym",
+    "storage_bucket": "nexfit-gym.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:263384268159:android:bcb294b3f7bb61b023ee4a",
+        "android_client_info": {
+          "package_name": "cl.nexfit.gym"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBhHcI2tYet3m8k-iWLBTWgXL0wM_AlUo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

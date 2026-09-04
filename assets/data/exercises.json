@@ -1,0 +1,4952 @@
+[
+  {
+    "id": 1,
+    "nombre": "Press banca plano con barra",
+    "musculo": "Pecho",
+    "imagen": "press_banca_plano_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "press_banca_plano_con_barra_inicio.webp",
+      "bajada": "press_banca_plano_con_barra_bajada.webp",
+      "subida": "press_banca_plano_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 2,
+    "nombre": "Press banca plano con mancuernas",
+    "musculo": "Pecho",
+    "imagen": "press_banca_plano_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "press_banca_plano_con_mancuernas_inicio.webp",
+      "bajada": "press_banca_plano_con_mancuernas_bajada.webp",
+      "subida": "press_banca_plano_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 3,
+    "nombre": "Press banca plano en máquina",
+    "musculo": "Pecho",
+    "imagen": "press_banca_plano_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "press_banca_plano_en_maquina_inicio.webp",
+      "bajada": "press_banca_plano_en_maquina_bajada.webp",
+      "subida": "press_banca_plano_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 4,
+    "nombre": "Press banca inclinado con barra",
+    "musculo": "Pecho",
+    "imagen": "press_banca_inclinado_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "press_banca_inclinado_con_barra_inicio.webp",
+      "bajada": "press_banca_inclinado_con_barra_bajada.webp",
+      "subida": "press_banca_inclinado_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 5,
+    "nombre": "Press banca inclinado con mancuernas",
+    "musculo": "Pecho",
+    "imagen": "press_banca_inclinado_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "press_banca_inclinado_con_mancuernas_inicio.webp",
+      "bajada": "press_banca_inclinado_con_mancuernas_bajada.webp",
+      "subida": "press_banca_inclinado_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 6,
+    "nombre": "Press banca inclinado en máquina",
+    "musculo": "Pecho",
+    "imagen": "press_banca_inclinado_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "press_banca_inclinado_en_maquina_inicio.webp",
+      "bajada": "press_banca_inclinado_en_maquina_bajada.webp",
+      "subida": "press_banca_inclinado_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 7,
+    "nombre": "Press banca declinado con barra",
+    "musculo": "Pecho",
+    "imagen": "press_banca_declinado_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "press_banca_declinado_con_barra_inicio.webp",
+      "bajada": "press_banca_declinado_con_barra_bajada.webp",
+      "subida": "press_banca_declinado_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 8,
+    "nombre": "Press banca declinado con mancuernas",
+    "musculo": "Pecho",
+    "imagen": "press_banca_declinado_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "press_banca_declinado_con_mancuernas_inicio.webp",
+      "bajada": "press_banca_declinado_con_mancuernas_bajada.webp",
+      "subida": "press_banca_declinado_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 9,
+    "nombre": "Press banca declinado en máquina",
+    "musculo": "Pecho",
+    "imagen": "press_banca_declinado_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "press_banca_declinado_en_maquina_inicio.webp",
+      "bajada": "press_banca_declinado_en_maquina_bajada.webp",
+      "subida": "press_banca_declinado_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 10,
+    "nombre": "Press de pecho sentado con barra",
+    "musculo": "Pecho",
+    "imagen": "press_de_pecho_sentado_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "press_de_pecho_sentado_con_barra_inicio.webp",
+      "bajada": "press_de_pecho_sentado_con_barra_bajada.webp",
+      "subida": "press_de_pecho_sentado_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 11,
+    "nombre": "Press de pecho sentado con mancuernas",
+    "musculo": "Pecho",
+    "imagen": "press_de_pecho_sentado_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "press_de_pecho_sentado_con_mancuernas_inicio.webp",
+      "bajada": "press_de_pecho_sentado_con_mancuernas_bajada.webp",
+      "subida": "press_de_pecho_sentado_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 12,
+    "nombre": "Press de pecho sentado en máquina",
+    "musculo": "Pecho",
+    "imagen": "press_de_pecho_sentado_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "press_de_pecho_sentado_en_maquina_inicio.webp",
+      "bajada": "press_de_pecho_sentado_en_maquina_bajada.webp",
+      "subida": "press_de_pecho_sentado_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 13,
+    "nombre": "Press de pecho unilateral con barra",
+    "musculo": "Pecho",
+    "imagen": "press_de_pecho_unilateral_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "press_de_pecho_unilateral_con_barra_inicio.webp",
+      "bajada": "press_de_pecho_unilateral_con_barra_bajada.webp",
+      "subida": "press_de_pecho_unilateral_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 14,
+    "nombre": "Press de pecho unilateral con mancuernas",
+    "musculo": "Pecho",
+    "imagen": "press_de_pecho_unilateral_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "press_de_pecho_unilateral_con_mancuernas_inicio.webp",
+      "bajada": "press_de_pecho_unilateral_con_mancuernas_bajada.webp",
+      "subida": "press_de_pecho_unilateral_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 15,
+    "nombre": "Press de pecho unilateral en máquina",
+    "musculo": "Pecho",
+    "imagen": "press_de_pecho_unilateral_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "press_de_pecho_unilateral_en_maquina_inicio.webp",
+      "bajada": "press_de_pecho_unilateral_en_maquina_bajada.webp",
+      "subida": "press_de_pecho_unilateral_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 16,
+    "nombre": "Press de pecho agarre neutro con barra",
+    "musculo": "Pecho",
+    "imagen": "press_de_pecho_agarre_neutro_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "press_de_pecho_agarre_neutro_con_barra_inicio.webp",
+      "bajada": "press_de_pecho_agarre_neutro_con_barra_bajada.webp",
+      "subida": "press_de_pecho_agarre_neutro_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 17,
+    "nombre": "Press de pecho agarre neutro con mancuernas",
+    "musculo": "Pecho",
+    "imagen": "press_de_pecho_agarre_neutro_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "press_de_pecho_agarre_neutro_con_mancuernas_inicio.webp",
+      "bajada": "press_de_pecho_agarre_neutro_con_mancuernas_bajada.webp",
+      "subida": "press_de_pecho_agarre_neutro_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 18,
+    "nombre": "Press de pecho agarre neutro en máquina",
+    "musculo": "Pecho",
+    "imagen": "press_de_pecho_agarre_neutro_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "press_de_pecho_agarre_neutro_en_maquina_inicio.webp",
+      "bajada": "press_de_pecho_agarre_neutro_en_maquina_bajada.webp",
+      "subida": "press_de_pecho_agarre_neutro_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 19,
+    "nombre": "Press de pecho en suelo con barra",
+    "musculo": "Pecho",
+    "imagen": "press_de_pecho_en_suelo_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "press_de_pecho_en_suelo_con_barra_inicio.webp",
+      "bajada": "press_de_pecho_en_suelo_con_barra_bajada.webp",
+      "subida": "press_de_pecho_en_suelo_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 20,
+    "nombre": "Press de pecho en suelo con mancuernas",
+    "musculo": "Pecho",
+    "imagen": "press_de_pecho_en_suelo_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "press_de_pecho_en_suelo_con_mancuernas_inicio.webp",
+      "bajada": "press_de_pecho_en_suelo_con_mancuernas_bajada.webp",
+      "subida": "press_de_pecho_en_suelo_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 21,
+    "nombre": "Press de pecho en suelo en máquina",
+    "musculo": "Pecho",
+    "imagen": "press_de_pecho_en_suelo_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "press_de_pecho_en_suelo_en_maquina_inicio.webp",
+      "bajada": "press_de_pecho_en_suelo_en_maquina_bajada.webp",
+      "subida": "press_de_pecho_en_suelo_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 22,
+    "nombre": "Press hexagonal con barra",
+    "musculo": "Pecho",
+    "imagen": "press_hexagonal_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "press_hexagonal_con_barra_inicio.webp",
+      "bajada": "press_hexagonal_con_barra_bajada.webp",
+      "subida": "press_hexagonal_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 23,
+    "nombre": "Press hexagonal con mancuernas",
+    "musculo": "Pecho",
+    "imagen": "press_hexagonal_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "press_hexagonal_con_mancuernas_inicio.webp",
+      "bajada": "press_hexagonal_con_mancuernas_bajada.webp",
+      "subida": "press_hexagonal_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 24,
+    "nombre": "Press hexagonal en máquina",
+    "musculo": "Pecho",
+    "imagen": "press_hexagonal_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "press_hexagonal_en_maquina_inicio.webp",
+      "bajada": "press_hexagonal_en_maquina_bajada.webp",
+      "subida": "press_hexagonal_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 25,
+    "nombre": "Press Svend con barra",
+    "musculo": "Pecho",
+    "imagen": "press_svend_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "press_svend_con_barra_inicio.webp",
+      "bajada": "press_svend_con_barra_bajada.webp",
+      "subida": "press_svend_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 26,
+    "nombre": "Press Svend con mancuernas",
+    "musculo": "Pecho",
+    "imagen": "press_svend_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "press_svend_con_mancuernas_inicio.webp",
+      "bajada": "press_svend_con_mancuernas_bajada.webp",
+      "subida": "press_svend_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 27,
+    "nombre": "Press Svend en máquina",
+    "musculo": "Pecho",
+    "imagen": "press_svend_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "press_svend_en_maquina_inicio.webp",
+      "bajada": "press_svend_en_maquina_bajada.webp",
+      "subida": "press_svend_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 28,
+    "nombre": "Press guillotina con barra",
+    "musculo": "Pecho",
+    "imagen": "press_guillotina_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "press_guillotina_con_barra_inicio.webp",
+      "bajada": "press_guillotina_con_barra_bajada.webp",
+      "subida": "press_guillotina_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 29,
+    "nombre": "Press guillotina con mancuernas",
+    "musculo": "Pecho",
+    "imagen": "press_guillotina_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "press_guillotina_con_mancuernas_inicio.webp",
+      "bajada": "press_guillotina_con_mancuernas_bajada.webp",
+      "subida": "press_guillotina_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 30,
+    "nombre": "Press guillotina en máquina",
+    "musculo": "Pecho",
+    "imagen": "press_guillotina_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "press_guillotina_en_maquina_inicio.webp",
+      "bajada": "press_guillotina_en_maquina_bajada.webp",
+      "subida": "press_guillotina_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 31,
+    "nombre": "Apertura plana con barra",
+    "musculo": "Pecho",
+    "imagen": "apertura_plana_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "apertura_plana_con_barra_inicio.webp",
+      "bajada": "apertura_plana_con_barra_bajada.webp",
+      "subida": "apertura_plana_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 32,
+    "nombre": "Apertura plana con mancuernas",
+    "musculo": "Pecho",
+    "imagen": "apertura_plana_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "apertura_plana_con_mancuernas_inicio.webp",
+      "bajada": "apertura_plana_con_mancuernas_bajada.webp",
+      "subida": "apertura_plana_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 33,
+    "nombre": "Apertura plana en máquina",
+    "musculo": "Pecho",
+    "imagen": "apertura_plana_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "apertura_plana_en_maquina_inicio.webp",
+      "bajada": "apertura_plana_en_maquina_bajada.webp",
+      "subida": "apertura_plana_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 34,
+    "nombre": "Apertura inclinada con barra",
+    "musculo": "Pecho",
+    "imagen": "apertura_inclinada_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "apertura_inclinada_con_barra_inicio.webp",
+      "bajada": "apertura_inclinada_con_barra_bajada.webp",
+      "subida": "apertura_inclinada_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 35,
+    "nombre": "Apertura inclinada con mancuernas",
+    "musculo": "Pecho",
+    "imagen": "apertura_inclinada_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "apertura_inclinada_con_mancuernas_inicio.webp",
+      "bajada": "apertura_inclinada_con_mancuernas_bajada.webp",
+      "subida": "apertura_inclinada_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 36,
+    "nombre": "Apertura inclinada en máquina",
+    "musculo": "Pecho",
+    "imagen": "apertura_inclinada_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "apertura_inclinada_en_maquina_inicio.webp",
+      "bajada": "apertura_inclinada_en_maquina_bajada.webp",
+      "subida": "apertura_inclinada_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 37,
+    "nombre": "Apertura declinada con barra",
+    "musculo": "Pecho",
+    "imagen": "apertura_declinada_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "apertura_declinada_con_barra_inicio.webp",
+      "bajada": "apertura_declinada_con_barra_bajada.webp",
+      "subida": "apertura_declinada_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 38,
+    "nombre": "Apertura declinada con mancuernas",
+    "musculo": "Pecho",
+    "imagen": "apertura_declinada_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "apertura_declinada_con_mancuernas_inicio.webp",
+      "bajada": "apertura_declinada_con_mancuernas_bajada.webp",
+      "subida": "apertura_declinada_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 39,
+    "nombre": "Apertura declinada en máquina",
+    "musculo": "Pecho",
+    "imagen": "apertura_declinada_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "apertura_declinada_en_maquina_inicio.webp",
+      "bajada": "apertura_declinada_en_maquina_bajada.webp",
+      "subida": "apertura_declinada_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 40,
+    "nombre": "Apertura unilateral con barra",
+    "musculo": "Pecho",
+    "imagen": "apertura_unilateral_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "apertura_unilateral_con_barra_inicio.webp",
+      "bajada": "apertura_unilateral_con_barra_bajada.webp",
+      "subida": "apertura_unilateral_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 41,
+    "nombre": "Apertura unilateral con mancuernas",
+    "musculo": "Pecho",
+    "imagen": "apertura_unilateral_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "apertura_unilateral_con_mancuernas_inicio.webp",
+      "bajada": "apertura_unilateral_con_mancuernas_bajada.webp",
+      "subida": "apertura_unilateral_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 42,
+    "nombre": "Apertura unilateral en máquina",
+    "musculo": "Pecho",
+    "imagen": "apertura_unilateral_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "apertura_unilateral_en_maquina_inicio.webp",
+      "bajada": "apertura_unilateral_en_maquina_bajada.webp",
+      "subida": "apertura_unilateral_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 43,
+    "nombre": "Cruce de poleas alto con barra",
+    "musculo": "Pecho",
+    "imagen": "cruce_de_poleas_alto_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "cruce_de_poleas_alto_con_barra_inicio.webp",
+      "bajada": "cruce_de_poleas_alto_con_barra_bajada.webp",
+      "subida": "cruce_de_poleas_alto_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 44,
+    "nombre": "Cruce de poleas alto con mancuernas",
+    "musculo": "Pecho",
+    "imagen": "cruce_de_poleas_alto_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "cruce_de_poleas_alto_con_mancuernas_inicio.webp",
+      "bajada": "cruce_de_poleas_alto_con_mancuernas_bajada.webp",
+      "subida": "cruce_de_poleas_alto_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 45,
+    "nombre": "Cruce de poleas alto en máquina",
+    "musculo": "Pecho",
+    "imagen": "cruce_de_poleas_alto_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "cruce_de_poleas_alto_en_maquina_inicio.webp",
+      "bajada": "cruce_de_poleas_alto_en_maquina_bajada.webp",
+      "subida": "cruce_de_poleas_alto_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 46,
+    "nombre": "Cruce de poleas medio con barra",
+    "musculo": "Pecho",
+    "imagen": "cruce_de_poleas_medio_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "cruce_de_poleas_medio_con_barra_inicio.webp",
+      "bajada": "cruce_de_poleas_medio_con_barra_bajada.webp",
+      "subida": "cruce_de_poleas_medio_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 47,
+    "nombre": "Cruce de poleas medio con mancuernas",
+    "musculo": "Pecho",
+    "imagen": "cruce_de_poleas_medio_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "cruce_de_poleas_medio_con_mancuernas_inicio.webp",
+      "bajada": "cruce_de_poleas_medio_con_mancuernas_bajada.webp",
+      "subida": "cruce_de_poleas_medio_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 48,
+    "nombre": "Cruce de poleas medio en máquina",
+    "musculo": "Pecho",
+    "imagen": "cruce_de_poleas_medio_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "cruce_de_poleas_medio_en_maquina_inicio.webp",
+      "bajada": "cruce_de_poleas_medio_en_maquina_bajada.webp",
+      "subida": "cruce_de_poleas_medio_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 49,
+    "nombre": "Cruce de poleas bajo con barra",
+    "musculo": "Pecho",
+    "imagen": "cruce_de_poleas_bajo_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "cruce_de_poleas_bajo_con_barra_inicio.webp",
+      "bajada": "cruce_de_poleas_bajo_con_barra_bajada.webp",
+      "subida": "cruce_de_poleas_bajo_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 50,
+    "nombre": "Cruce de poleas bajo con mancuernas",
+    "musculo": "Pecho",
+    "imagen": "cruce_de_poleas_bajo_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "cruce_de_poleas_bajo_con_mancuernas_inicio.webp",
+      "bajada": "cruce_de_poleas_bajo_con_mancuernas_bajada.webp",
+      "subida": "cruce_de_poleas_bajo_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 51,
+    "nombre": "Cruce de poleas bajo en máquina",
+    "musculo": "Pecho",
+    "imagen": "cruce_de_poleas_bajo_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "cruce_de_poleas_bajo_en_maquina_inicio.webp",
+      "bajada": "cruce_de_poleas_bajo_en_maquina_bajada.webp",
+      "subida": "cruce_de_poleas_bajo_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 52,
+    "nombre": "Fondos para pecho con barra",
+    "musculo": "Pecho",
+    "imagen": "fondos_para_pecho_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "fondos_para_pecho_con_barra_inicio.webp",
+      "bajada": "fondos_para_pecho_con_barra_bajada.webp",
+      "subida": "fondos_para_pecho_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 53,
+    "nombre": "Fondos para pecho con mancuernas",
+    "musculo": "Pecho",
+    "imagen": "fondos_para_pecho_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "fondos_para_pecho_con_mancuernas_inicio.webp",
+      "bajada": "fondos_para_pecho_con_mancuernas_bajada.webp",
+      "subida": "fondos_para_pecho_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 54,
+    "nombre": "Fondos para pecho en máquina",
+    "musculo": "Pecho",
+    "imagen": "fondos_para_pecho_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "fondos_para_pecho_en_maquina_inicio.webp",
+      "bajada": "fondos_para_pecho_en_maquina_bajada.webp",
+      "subida": "fondos_para_pecho_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 55,
+    "nombre": "Flexión tradicional con barra",
+    "musculo": "Pecho",
+    "imagen": "flexion_tradicional_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "flexion_tradicional_con_barra_inicio.webp",
+      "bajada": "flexion_tradicional_con_barra_bajada.webp",
+      "subida": "flexion_tradicional_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 56,
+    "nombre": "Flexión tradicional con mancuernas",
+    "musculo": "Pecho",
+    "imagen": "flexion_tradicional_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "flexion_tradicional_con_mancuernas_inicio.webp",
+      "bajada": "flexion_tradicional_con_mancuernas_bajada.webp",
+      "subida": "flexion_tradicional_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 57,
+    "nombre": "Flexión tradicional en máquina",
+    "musculo": "Pecho",
+    "imagen": "flexion_tradicional_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "flexion_tradicional_en_maquina_inicio.webp",
+      "bajada": "flexion_tradicional_en_maquina_bajada.webp",
+      "subida": "flexion_tradicional_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 58,
+    "nombre": "Flexión inclinada con barra",
+    "musculo": "Pecho",
+    "imagen": "flexion_inclinada_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "flexion_inclinada_con_barra_inicio.webp",
+      "bajada": "flexion_inclinada_con_barra_bajada.webp",
+      "subida": "flexion_inclinada_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 59,
+    "nombre": "Flexión inclinada con mancuernas",
+    "musculo": "Pecho",
+    "imagen": "flexion_inclinada_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "flexion_inclinada_con_mancuernas_inicio.webp",
+      "bajada": "flexion_inclinada_con_mancuernas_bajada.webp",
+      "subida": "flexion_inclinada_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 60,
+    "nombre": "Flexión inclinada en máquina",
+    "musculo": "Pecho",
+    "imagen": "flexion_inclinada_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "flexion_inclinada_en_maquina_inicio.webp",
+      "bajada": "flexion_inclinada_en_maquina_bajada.webp",
+      "subida": "flexion_inclinada_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 61,
+    "nombre": "Flexión declinada con barra",
+    "musculo": "Pecho",
+    "imagen": "flexion_declinada_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "flexion_declinada_con_barra_inicio.webp",
+      "bajada": "flexion_declinada_con_barra_bajada.webp",
+      "subida": "flexion_declinada_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 62,
+    "nombre": "Flexión declinada con mancuernas",
+    "musculo": "Pecho",
+    "imagen": "flexion_declinada_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "flexion_declinada_con_mancuernas_inicio.webp",
+      "bajada": "flexion_declinada_con_mancuernas_bajada.webp",
+      "subida": "flexion_declinada_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 63,
+    "nombre": "Flexión declinada en máquina",
+    "musculo": "Pecho",
+    "imagen": "flexion_declinada_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "flexion_declinada_en_maquina_inicio.webp",
+      "bajada": "flexion_declinada_en_maquina_bajada.webp",
+      "subida": "flexion_declinada_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 64,
+    "nombre": "Flexión diamante con barra",
+    "musculo": "Pecho",
+    "imagen": "flexion_diamante_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "flexion_diamante_con_barra_inicio.webp",
+      "bajada": "flexion_diamante_con_barra_bajada.webp",
+      "subida": "flexion_diamante_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 65,
+    "nombre": "Flexión diamante con mancuernas",
+    "musculo": "Pecho",
+    "imagen": "flexion_diamante_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "flexion_diamante_con_mancuernas_inicio.webp",
+      "bajada": "flexion_diamante_con_mancuernas_bajada.webp",
+      "subida": "flexion_diamante_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 66,
+    "nombre": "Flexión diamante en máquina",
+    "musculo": "Pecho",
+    "imagen": "flexion_diamante_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "flexion_diamante_en_maquina_inicio.webp",
+      "bajada": "flexion_diamante_en_maquina_bajada.webp",
+      "subida": "flexion_diamante_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 67,
+    "nombre": "Flexión amplia con barra",
+    "musculo": "Pecho",
+    "imagen": "flexion_amplia_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "flexion_amplia_con_barra_inicio.webp",
+      "bajada": "flexion_amplia_con_barra_bajada.webp",
+      "subida": "flexion_amplia_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 68,
+    "nombre": "Flexión amplia con mancuernas",
+    "musculo": "Pecho",
+    "imagen": "flexion_amplia_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "flexion_amplia_con_mancuernas_inicio.webp",
+      "bajada": "flexion_amplia_con_mancuernas_bajada.webp",
+      "subida": "flexion_amplia_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 69,
+    "nombre": "Flexión amplia en máquina",
+    "musculo": "Pecho",
+    "imagen": "flexion_amplia_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "flexion_amplia_en_maquina_inicio.webp",
+      "bajada": "flexion_amplia_en_maquina_bajada.webp",
+      "subida": "flexion_amplia_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 70,
+    "nombre": "Pullover de pecho con barra",
+    "musculo": "Pecho",
+    "imagen": "pullover_de_pecho_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "pullover_de_pecho_con_barra_inicio.webp",
+      "bajada": "pullover_de_pecho_con_barra_bajada.webp",
+      "subida": "pullover_de_pecho_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 71,
+    "nombre": "Pullover de pecho con mancuernas",
+    "musculo": "Pecho",
+    "imagen": "pullover_de_pecho_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "pullover_de_pecho_con_mancuernas_inicio.webp",
+      "bajada": "pullover_de_pecho_con_mancuernas_bajada.webp",
+      "subida": "pullover_de_pecho_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 72,
+    "nombre": "Pullover de pecho en máquina",
+    "musculo": "Pecho",
+    "imagen": "pullover_de_pecho_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "pullover_de_pecho_en_maquina_inicio.webp",
+      "bajada": "pullover_de_pecho_en_maquina_bajada.webp",
+      "subida": "pullover_de_pecho_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 73,
+    "nombre": "Pec deck con barra",
+    "musculo": "Pecho",
+    "imagen": "pec_deck_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "pec_deck_con_barra_inicio.webp",
+      "bajada": "pec_deck_con_barra_bajada.webp",
+      "subida": "pec_deck_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 74,
+    "nombre": "Pec deck con mancuernas",
+    "musculo": "Pecho",
+    "imagen": "pec_deck_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "pec_deck_con_mancuernas_inicio.webp",
+      "bajada": "pec_deck_con_mancuernas_bajada.webp",
+      "subida": "pec_deck_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 75,
+    "nombre": "Pec deck en máquina",
+    "musculo": "Pecho",
+    "imagen": "pec_deck_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "pec_deck_en_maquina_inicio.webp",
+      "bajada": "pec_deck_en_maquina_bajada.webp",
+      "subida": "pec_deck_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 76,
+    "nombre": "Sentadilla trasera con barra",
+    "musculo": "Piernas",
+    "imagen": "sentadilla_trasera_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "sentadilla_trasera_con_barra_inicio.webp",
+      "bajada": "sentadilla_trasera_con_barra_bajada.webp",
+      "subida": "sentadilla_trasera_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 77,
+    "nombre": "Sentadilla trasera con mancuernas",
+    "musculo": "Piernas",
+    "imagen": "sentadilla_trasera_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "sentadilla_trasera_con_mancuernas_inicio.webp",
+      "bajada": "sentadilla_trasera_con_mancuernas_bajada.webp",
+      "subida": "sentadilla_trasera_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 78,
+    "nombre": "Sentadilla trasera en máquina",
+    "musculo": "Piernas",
+    "imagen": "sentadilla_trasera_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "sentadilla_trasera_en_maquina_inicio.webp",
+      "bajada": "sentadilla_trasera_en_maquina_bajada.webp",
+      "subida": "sentadilla_trasera_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 79,
+    "nombre": "Sentadilla frontal con barra",
+    "musculo": "Piernas",
+    "imagen": "sentadilla_frontal_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "sentadilla_frontal_con_barra_inicio.webp",
+      "bajada": "sentadilla_frontal_con_barra_bajada.webp",
+      "subida": "sentadilla_frontal_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 80,
+    "nombre": "Sentadilla frontal con mancuernas",
+    "musculo": "Piernas",
+    "imagen": "sentadilla_frontal_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "sentadilla_frontal_con_mancuernas_inicio.webp",
+      "bajada": "sentadilla_frontal_con_mancuernas_bajada.webp",
+      "subida": "sentadilla_frontal_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 81,
+    "nombre": "Sentadilla frontal en máquina",
+    "musculo": "Piernas",
+    "imagen": "sentadilla_frontal_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "sentadilla_frontal_en_maquina_inicio.webp",
+      "bajada": "sentadilla_frontal_en_maquina_bajada.webp",
+      "subida": "sentadilla_frontal_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 82,
+    "nombre": "Sentadilla goblet con barra",
+    "musculo": "Piernas",
+    "imagen": "sentadilla_goblet_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "sentadilla_goblet_con_barra_inicio.webp",
+      "bajada": "sentadilla_goblet_con_barra_bajada.webp",
+      "subida": "sentadilla_goblet_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 83,
+    "nombre": "Sentadilla goblet con mancuernas",
+    "musculo": "Piernas",
+    "imagen": "sentadilla_goblet_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "sentadilla_goblet_con_mancuernas_inicio.webp",
+      "bajada": "sentadilla_goblet_con_mancuernas_bajada.webp",
+      "subida": "sentadilla_goblet_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 84,
+    "nombre": "Sentadilla goblet en máquina",
+    "musculo": "Piernas",
+    "imagen": "sentadilla_goblet_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "sentadilla_goblet_en_maquina_inicio.webp",
+      "bajada": "sentadilla_goblet_en_maquina_bajada.webp",
+      "subida": "sentadilla_goblet_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 85,
+    "nombre": "Sentadilla sumo con barra",
+    "musculo": "Piernas",
+    "imagen": "sentadilla_sumo_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "sentadilla_sumo_con_barra_inicio.webp",
+      "bajada": "sentadilla_sumo_con_barra_bajada.webp",
+      "subida": "sentadilla_sumo_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 86,
+    "nombre": "Sentadilla sumo con mancuernas",
+    "musculo": "Piernas",
+    "imagen": "sentadilla_sumo_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "sentadilla_sumo_con_mancuernas_inicio.webp",
+      "bajada": "sentadilla_sumo_con_mancuernas_bajada.webp",
+      "subida": "sentadilla_sumo_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 87,
+    "nombre": "Sentadilla sumo en máquina",
+    "musculo": "Piernas",
+    "imagen": "sentadilla_sumo_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "sentadilla_sumo_en_maquina_inicio.webp",
+      "bajada": "sentadilla_sumo_en_maquina_bajada.webp",
+      "subida": "sentadilla_sumo_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 88,
+    "nombre": "Sentadilla búlgara con barra",
+    "musculo": "Piernas",
+    "imagen": "sentadilla_bulgara_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "sentadilla_bulgara_con_barra_inicio.webp",
+      "bajada": "sentadilla_bulgara_con_barra_bajada.webp",
+      "subida": "sentadilla_bulgara_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 89,
+    "nombre": "Sentadilla búlgara con mancuernas",
+    "musculo": "Piernas",
+    "imagen": "sentadilla_bulgara_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "sentadilla_bulgara_con_mancuernas_inicio.webp",
+      "bajada": "sentadilla_bulgara_con_mancuernas_bajada.webp",
+      "subida": "sentadilla_bulgara_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 90,
+    "nombre": "Sentadilla búlgara en máquina",
+    "musculo": "Piernas",
+    "imagen": "sentadilla_bulgara_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "sentadilla_bulgara_en_maquina_inicio.webp",
+      "bajada": "sentadilla_bulgara_en_maquina_bajada.webp",
+      "subida": "sentadilla_bulgara_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 91,
+    "nombre": "Sentadilla hack con barra",
+    "musculo": "Piernas",
+    "imagen": "sentadilla_hack_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "sentadilla_hack_con_barra_inicio.webp",
+      "bajada": "sentadilla_hack_con_barra_bajada.webp",
+      "subida": "sentadilla_hack_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 92,
+    "nombre": "Sentadilla hack con mancuernas",
+    "musculo": "Piernas",
+    "imagen": "sentadilla_hack_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "sentadilla_hack_con_mancuernas_inicio.webp",
+      "bajada": "sentadilla_hack_con_mancuernas_bajada.webp",
+      "subida": "sentadilla_hack_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 93,
+    "nombre": "Sentadilla hack en máquina",
+    "musculo": "Piernas",
+    "imagen": "sentadilla_hack_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "sentadilla_hack_en_maquina_inicio.webp",
+      "bajada": "sentadilla_hack_en_maquina_bajada.webp",
+      "subida": "sentadilla_hack_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 94,
+    "nombre": "Sentadilla sissy con barra",
+    "musculo": "Piernas",
+    "imagen": "sentadilla_sissy_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "sentadilla_sissy_con_barra_inicio.webp",
+      "bajada": "sentadilla_sissy_con_barra_bajada.webp",
+      "subida": "sentadilla_sissy_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 95,
+    "nombre": "Sentadilla sissy con mancuernas",
+    "musculo": "Piernas",
+    "imagen": "sentadilla_sissy_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "sentadilla_sissy_con_mancuernas_inicio.webp",
+      "bajada": "sentadilla_sissy_con_mancuernas_bajada.webp",
+      "subida": "sentadilla_sissy_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 96,
+    "nombre": "Sentadilla sissy en máquina",
+    "musculo": "Piernas",
+    "imagen": "sentadilla_sissy_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "sentadilla_sissy_en_maquina_inicio.webp",
+      "bajada": "sentadilla_sissy_en_maquina_bajada.webp",
+      "subida": "sentadilla_sissy_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 97,
+    "nombre": "Prensa de piernas con barra",
+    "musculo": "Piernas",
+    "imagen": "prensa_de_piernas_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "prensa_de_piernas_con_barra_inicio.webp",
+      "bajada": "prensa_de_piernas_con_barra_bajada.webp",
+      "subida": "prensa_de_piernas_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 98,
+    "nombre": "Prensa de piernas con mancuernas",
+    "musculo": "Piernas",
+    "imagen": "prensa_de_piernas_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "prensa_de_piernas_con_mancuernas_inicio.webp",
+      "bajada": "prensa_de_piernas_con_mancuernas_bajada.webp",
+      "subida": "prensa_de_piernas_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 99,
+    "nombre": "Prensa de piernas en máquina",
+    "musculo": "Piernas",
+    "imagen": "prensa_de_piernas_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "prensa_de_piernas_en_maquina_inicio.webp",
+      "bajada": "prensa_de_piernas_en_maquina_bajada.webp",
+      "subida": "prensa_de_piernas_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 100,
+    "nombre": "Prensa unilateral con barra",
+    "musculo": "Piernas",
+    "imagen": "prensa_unilateral_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "prensa_unilateral_con_barra_inicio.webp",
+      "bajada": "prensa_unilateral_con_barra_bajada.webp",
+      "subida": "prensa_unilateral_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 101,
+    "nombre": "Prensa unilateral con mancuernas",
+    "musculo": "Piernas",
+    "imagen": "prensa_unilateral_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "prensa_unilateral_con_mancuernas_inicio.webp",
+      "bajada": "prensa_unilateral_con_mancuernas_bajada.webp",
+      "subida": "prensa_unilateral_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 102,
+    "nombre": "Prensa unilateral en máquina",
+    "musculo": "Piernas",
+    "imagen": "prensa_unilateral_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "prensa_unilateral_en_maquina_inicio.webp",
+      "bajada": "prensa_unilateral_en_maquina_bajada.webp",
+      "subida": "prensa_unilateral_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 103,
+    "nombre": "Peso muerto rumano con barra",
+    "musculo": "Piernas",
+    "imagen": "peso_muerto_rumano_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "peso_muerto_rumano_con_barra_inicio.webp",
+      "bajada": "peso_muerto_rumano_con_barra_bajada.webp",
+      "subida": "peso_muerto_rumano_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 104,
+    "nombre": "Peso muerto rumano con mancuernas",
+    "musculo": "Piernas",
+    "imagen": "peso_muerto_rumano_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "peso_muerto_rumano_con_mancuernas_inicio.webp",
+      "bajada": "peso_muerto_rumano_con_mancuernas_bajada.webp",
+      "subida": "peso_muerto_rumano_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 105,
+    "nombre": "Peso muerto rumano en máquina",
+    "musculo": "Piernas",
+    "imagen": "peso_muerto_rumano_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "peso_muerto_rumano_en_maquina_inicio.webp",
+      "bajada": "peso_muerto_rumano_en_maquina_bajada.webp",
+      "subida": "peso_muerto_rumano_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 106,
+    "nombre": "Peso muerto sumo con barra",
+    "musculo": "Piernas",
+    "imagen": "peso_muerto_sumo_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "peso_muerto_sumo_con_barra_inicio.webp",
+      "bajada": "peso_muerto_sumo_con_barra_bajada.webp",
+      "subida": "peso_muerto_sumo_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 107,
+    "nombre": "Peso muerto sumo con mancuernas",
+    "musculo": "Piernas",
+    "imagen": "peso_muerto_sumo_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "peso_muerto_sumo_con_mancuernas_inicio.webp",
+      "bajada": "peso_muerto_sumo_con_mancuernas_bajada.webp",
+      "subida": "peso_muerto_sumo_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 108,
+    "nombre": "Peso muerto sumo en máquina",
+    "musculo": "Piernas",
+    "imagen": "peso_muerto_sumo_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "peso_muerto_sumo_en_maquina_inicio.webp",
+      "bajada": "peso_muerto_sumo_en_maquina_bajada.webp",
+      "subida": "peso_muerto_sumo_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 109,
+    "nombre": "Peso muerto piernas rígidas con barra",
+    "musculo": "Piernas",
+    "imagen": "peso_muerto_piernas_rigidas_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "peso_muerto_piernas_rigidas_con_barra_inicio.webp",
+      "bajada": "peso_muerto_piernas_rigidas_con_barra_bajada.webp",
+      "subida": "peso_muerto_piernas_rigidas_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 110,
+    "nombre": "Peso muerto piernas rígidas con mancuernas",
+    "musculo": "Piernas",
+    "imagen": "peso_muerto_piernas_rigidas_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "peso_muerto_piernas_rigidas_con_mancuernas_inicio.webp",
+      "bajada": "peso_muerto_piernas_rigidas_con_mancuernas_bajada.webp",
+      "subida": "peso_muerto_piernas_rigidas_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 111,
+    "nombre": "Peso muerto piernas rígidas en máquina",
+    "musculo": "Piernas",
+    "imagen": "peso_muerto_piernas_rigidas_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "peso_muerto_piernas_rigidas_en_maquina_inicio.webp",
+      "bajada": "peso_muerto_piernas_rigidas_en_maquina_bajada.webp",
+      "subida": "peso_muerto_piernas_rigidas_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 112,
+    "nombre": "Zancada frontal con barra",
+    "musculo": "Piernas",
+    "imagen": "zancada_frontal_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "zancada_frontal_con_barra_inicio.webp",
+      "bajada": "zancada_frontal_con_barra_bajada.webp",
+      "subida": "zancada_frontal_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 113,
+    "nombre": "Zancada frontal con mancuernas",
+    "musculo": "Piernas",
+    "imagen": "zancada_frontal_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "zancada_frontal_con_mancuernas_inicio.webp",
+      "bajada": "zancada_frontal_con_mancuernas_bajada.webp",
+      "subida": "zancada_frontal_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 114,
+    "nombre": "Zancada frontal en máquina",
+    "musculo": "Piernas",
+    "imagen": "zancada_frontal_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "zancada_frontal_en_maquina_inicio.webp",
+      "bajada": "zancada_frontal_en_maquina_bajada.webp",
+      "subida": "zancada_frontal_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 115,
+    "nombre": "Zancada inversa con barra",
+    "musculo": "Piernas",
+    "imagen": "zancada_inversa_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "zancada_inversa_con_barra_inicio.webp",
+      "bajada": "zancada_inversa_con_barra_bajada.webp",
+      "subida": "zancada_inversa_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 116,
+    "nombre": "Zancada inversa con mancuernas",
+    "musculo": "Piernas",
+    "imagen": "zancada_inversa_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "zancada_inversa_con_mancuernas_inicio.webp",
+      "bajada": "zancada_inversa_con_mancuernas_bajada.webp",
+      "subida": "zancada_inversa_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 117,
+    "nombre": "Zancada inversa en máquina",
+    "musculo": "Piernas",
+    "imagen": "zancada_inversa_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "zancada_inversa_en_maquina_inicio.webp",
+      "bajada": "zancada_inversa_en_maquina_bajada.webp",
+      "subida": "zancada_inversa_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 118,
+    "nombre": "Zancada lateral con barra",
+    "musculo": "Piernas",
+    "imagen": "zancada_lateral_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "zancada_lateral_con_barra_inicio.webp",
+      "bajada": "zancada_lateral_con_barra_bajada.webp",
+      "subida": "zancada_lateral_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 119,
+    "nombre": "Zancada lateral con mancuernas",
+    "musculo": "Piernas",
+    "imagen": "zancada_lateral_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "zancada_lateral_con_mancuernas_inicio.webp",
+      "bajada": "zancada_lateral_con_mancuernas_bajada.webp",
+      "subida": "zancada_lateral_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 120,
+    "nombre": "Zancada lateral en máquina",
+    "musculo": "Piernas",
+    "imagen": "zancada_lateral_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "zancada_lateral_en_maquina_inicio.webp",
+      "bajada": "zancada_lateral_en_maquina_bajada.webp",
+      "subida": "zancada_lateral_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 121,
+    "nombre": "Zancada caminando con barra",
+    "musculo": "Piernas",
+    "imagen": "zancada_caminando_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "zancada_caminando_con_barra_inicio.webp",
+      "bajada": "zancada_caminando_con_barra_bajada.webp",
+      "subida": "zancada_caminando_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 122,
+    "nombre": "Zancada caminando con mancuernas",
+    "musculo": "Piernas",
+    "imagen": "zancada_caminando_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "zancada_caminando_con_mancuernas_inicio.webp",
+      "bajada": "zancada_caminando_con_mancuernas_bajada.webp",
+      "subida": "zancada_caminando_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 123,
+    "nombre": "Zancada caminando en máquina",
+    "musculo": "Piernas",
+    "imagen": "zancada_caminando_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "zancada_caminando_en_maquina_inicio.webp",
+      "bajada": "zancada_caminando_en_maquina_bajada.webp",
+      "subida": "zancada_caminando_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 124,
+    "nombre": "Step up con barra",
+    "musculo": "Piernas",
+    "imagen": "step_up_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "step_up_con_barra_inicio.webp",
+      "bajada": "step_up_con_barra_bajada.webp",
+      "subida": "step_up_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 125,
+    "nombre": "Step up con mancuernas",
+    "musculo": "Piernas",
+    "imagen": "step_up_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "step_up_con_mancuernas_inicio.webp",
+      "bajada": "step_up_con_mancuernas_bajada.webp",
+      "subida": "step_up_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 126,
+    "nombre": "Step up en máquina",
+    "musculo": "Piernas",
+    "imagen": "step_up_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "step_up_en_maquina_inicio.webp",
+      "bajada": "step_up_en_maquina_bajada.webp",
+      "subida": "step_up_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 127,
+    "nombre": "Extensión de cuádriceps con barra",
+    "musculo": "Piernas",
+    "imagen": "extension_de_cuadriceps_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "extension_de_cuadriceps_con_barra_inicio.webp",
+      "bajada": "extension_de_cuadriceps_con_barra_bajada.webp",
+      "subida": "extension_de_cuadriceps_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 128,
+    "nombre": "Extensión de cuádriceps con mancuernas",
+    "musculo": "Piernas",
+    "imagen": "extension_de_cuadriceps_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "extension_de_cuadriceps_con_mancuernas_inicio.webp",
+      "bajada": "extension_de_cuadriceps_con_mancuernas_bajada.webp",
+      "subida": "extension_de_cuadriceps_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 129,
+    "nombre": "Extensión de cuádriceps en máquina",
+    "musculo": "Piernas",
+    "imagen": "extension_de_cuadriceps_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "extension_de_cuadriceps_en_maquina_inicio.webp",
+      "bajada": "extension_de_cuadriceps_en_maquina_bajada.webp",
+      "subida": "extension_de_cuadriceps_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 130,
+    "nombre": "Curl femoral sentado con barra",
+    "musculo": "Piernas",
+    "imagen": "curl_femoral_sentado_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "curl_femoral_sentado_con_barra_inicio.webp",
+      "bajada": "curl_femoral_sentado_con_barra_bajada.webp",
+      "subida": "curl_femoral_sentado_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 131,
+    "nombre": "Curl femoral sentado con mancuernas",
+    "musculo": "Piernas",
+    "imagen": "curl_femoral_sentado_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "curl_femoral_sentado_con_mancuernas_inicio.webp",
+      "bajada": "curl_femoral_sentado_con_mancuernas_bajada.webp",
+      "subida": "curl_femoral_sentado_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 132,
+    "nombre": "Curl femoral sentado en máquina",
+    "musculo": "Piernas",
+    "imagen": "curl_femoral_sentado_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "curl_femoral_sentado_en_maquina_inicio.webp",
+      "bajada": "curl_femoral_sentado_en_maquina_bajada.webp",
+      "subida": "curl_femoral_sentado_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 133,
+    "nombre": "Curl femoral tumbado con barra",
+    "musculo": "Piernas",
+    "imagen": "curl_femoral_tumbado_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "curl_femoral_tumbado_con_barra_inicio.webp",
+      "bajada": "curl_femoral_tumbado_con_barra_bajada.webp",
+      "subida": "curl_femoral_tumbado_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 134,
+    "nombre": "Curl femoral tumbado con mancuernas",
+    "musculo": "Piernas",
+    "imagen": "curl_femoral_tumbado_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "curl_femoral_tumbado_con_mancuernas_inicio.webp",
+      "bajada": "curl_femoral_tumbado_con_mancuernas_bajada.webp",
+      "subida": "curl_femoral_tumbado_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 135,
+    "nombre": "Curl femoral tumbado en máquina",
+    "musculo": "Piernas",
+    "imagen": "curl_femoral_tumbado_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "curl_femoral_tumbado_en_maquina_inicio.webp",
+      "bajada": "curl_femoral_tumbado_en_maquina_bajada.webp",
+      "subida": "curl_femoral_tumbado_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 136,
+    "nombre": "Curl femoral de pie con barra",
+    "musculo": "Piernas",
+    "imagen": "curl_femoral_de_pie_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "curl_femoral_de_pie_con_barra_inicio.webp",
+      "bajada": "curl_femoral_de_pie_con_barra_bajada.webp",
+      "subida": "curl_femoral_de_pie_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 137,
+    "nombre": "Curl femoral de pie con mancuernas",
+    "musculo": "Piernas",
+    "imagen": "curl_femoral_de_pie_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "curl_femoral_de_pie_con_mancuernas_inicio.webp",
+      "bajada": "curl_femoral_de_pie_con_mancuernas_bajada.webp",
+      "subida": "curl_femoral_de_pie_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 138,
+    "nombre": "Curl femoral de pie en máquina",
+    "musculo": "Piernas",
+    "imagen": "curl_femoral_de_pie_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "curl_femoral_de_pie_en_maquina_inicio.webp",
+      "bajada": "curl_femoral_de_pie_en_maquina_bajada.webp",
+      "subida": "curl_femoral_de_pie_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 139,
+    "nombre": "Hip thrust con barra",
+    "musculo": "Piernas",
+    "imagen": "hip_thrust_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "hip_thrust_con_barra_inicio.webp",
+      "bajada": "hip_thrust_con_barra_bajada.webp",
+      "subida": "hip_thrust_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 140,
+    "nombre": "Hip thrust con mancuernas",
+    "musculo": "Piernas",
+    "imagen": "hip_thrust_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "hip_thrust_con_mancuernas_inicio.webp",
+      "bajada": "hip_thrust_con_mancuernas_bajada.webp",
+      "subida": "hip_thrust_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 141,
+    "nombre": "Hip thrust en máquina",
+    "musculo": "Piernas",
+    "imagen": "hip_thrust_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "hip_thrust_en_maquina_inicio.webp",
+      "bajada": "hip_thrust_en_maquina_bajada.webp",
+      "subida": "hip_thrust_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 142,
+    "nombre": "Puente de glúteos con barra",
+    "musculo": "Piernas",
+    "imagen": "puente_de_gluteos_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "puente_de_gluteos_con_barra_inicio.webp",
+      "bajada": "puente_de_gluteos_con_barra_bajada.webp",
+      "subida": "puente_de_gluteos_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 143,
+    "nombre": "Puente de glúteos con mancuernas",
+    "musculo": "Piernas",
+    "imagen": "puente_de_gluteos_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "puente_de_gluteos_con_mancuernas_inicio.webp",
+      "bajada": "puente_de_gluteos_con_mancuernas_bajada.webp",
+      "subida": "puente_de_gluteos_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 144,
+    "nombre": "Puente de glúteos en máquina",
+    "musculo": "Piernas",
+    "imagen": "puente_de_gluteos_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "puente_de_gluteos_en_maquina_inicio.webp",
+      "bajada": "puente_de_gluteos_en_maquina_bajada.webp",
+      "subida": "puente_de_gluteos_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 145,
+    "nombre": "Abducción de cadera con barra",
+    "musculo": "Piernas",
+    "imagen": "abduccion_de_cadera_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "abduccion_de_cadera_con_barra_inicio.webp",
+      "bajada": "abduccion_de_cadera_con_barra_bajada.webp",
+      "subida": "abduccion_de_cadera_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 146,
+    "nombre": "Abducción de cadera con mancuernas",
+    "musculo": "Piernas",
+    "imagen": "abduccion_de_cadera_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "abduccion_de_cadera_con_mancuernas_inicio.webp",
+      "bajada": "abduccion_de_cadera_con_mancuernas_bajada.webp",
+      "subida": "abduccion_de_cadera_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 147,
+    "nombre": "Abducción de cadera en máquina",
+    "musculo": "Piernas",
+    "imagen": "abduccion_de_cadera_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "abduccion_de_cadera_en_maquina_inicio.webp",
+      "bajada": "abduccion_de_cadera_en_maquina_bajada.webp",
+      "subida": "abduccion_de_cadera_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 148,
+    "nombre": "Elevación de pantorrillas con barra",
+    "musculo": "Piernas",
+    "imagen": "elevacion_de_pantorrillas_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "elevacion_de_pantorrillas_con_barra_inicio.webp",
+      "bajada": "elevacion_de_pantorrillas_con_barra_bajada.webp",
+      "subida": "elevacion_de_pantorrillas_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 149,
+    "nombre": "Elevación de pantorrillas con mancuernas",
+    "musculo": "Piernas",
+    "imagen": "elevacion_de_pantorrillas_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "elevacion_de_pantorrillas_con_mancuernas_inicio.webp",
+      "bajada": "elevacion_de_pantorrillas_con_mancuernas_bajada.webp",
+      "subida": "elevacion_de_pantorrillas_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 150,
+    "nombre": "Elevación de pantorrillas en máquina",
+    "musculo": "Piernas",
+    "imagen": "elevacion_de_pantorrillas_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "elevacion_de_pantorrillas_en_maquina_inicio.webp",
+      "bajada": "elevacion_de_pantorrillas_en_maquina_bajada.webp",
+      "subida": "elevacion_de_pantorrillas_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "10-12"
+  },
+  {
+    "id": 151,
+    "nombre": "Press militar con barra",
+    "musculo": "Hombro",
+    "imagen": "press_militar_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "press_militar_con_barra_inicio.webp",
+      "bajada": "press_militar_con_barra_bajada.webp",
+      "subida": "press_militar_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 152,
+    "nombre": "Press militar con mancuernas",
+    "musculo": "Hombro",
+    "imagen": "press_militar_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "press_militar_con_mancuernas_inicio.webp",
+      "bajada": "press_militar_con_mancuernas_bajada.webp",
+      "subida": "press_militar_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 153,
+    "nombre": "Press militar en máquina",
+    "musculo": "Hombro",
+    "imagen": "press_militar_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "press_militar_en_maquina_inicio.webp",
+      "bajada": "press_militar_en_maquina_bajada.webp",
+      "subida": "press_militar_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 154,
+    "nombre": "Press Arnold con barra",
+    "musculo": "Hombro",
+    "imagen": "press_arnold_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "press_arnold_con_barra_inicio.webp",
+      "bajada": "press_arnold_con_barra_bajada.webp",
+      "subida": "press_arnold_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 155,
+    "nombre": "Press Arnold con mancuernas",
+    "musculo": "Hombro",
+    "imagen": "press_arnold_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "press_arnold_con_mancuernas_inicio.webp",
+      "bajada": "press_arnold_con_mancuernas_bajada.webp",
+      "subida": "press_arnold_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 156,
+    "nombre": "Press Arnold en máquina",
+    "musculo": "Hombro",
+    "imagen": "press_arnold_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "press_arnold_en_maquina_inicio.webp",
+      "bajada": "press_arnold_en_maquina_bajada.webp",
+      "subida": "press_arnold_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 157,
+    "nombre": "Press de hombro sentado con barra",
+    "musculo": "Hombro",
+    "imagen": "press_de_hombro_sentado_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "press_de_hombro_sentado_con_barra_inicio.webp",
+      "bajada": "press_de_hombro_sentado_con_barra_bajada.webp",
+      "subida": "press_de_hombro_sentado_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 158,
+    "nombre": "Press de hombro sentado con mancuernas",
+    "musculo": "Hombro",
+    "imagen": "press_de_hombro_sentado_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "press_de_hombro_sentado_con_mancuernas_inicio.webp",
+      "bajada": "press_de_hombro_sentado_con_mancuernas_bajada.webp",
+      "subida": "press_de_hombro_sentado_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 159,
+    "nombre": "Press de hombro sentado en máquina",
+    "musculo": "Hombro",
+    "imagen": "press_de_hombro_sentado_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "press_de_hombro_sentado_en_maquina_inicio.webp",
+      "bajada": "press_de_hombro_sentado_en_maquina_bajada.webp",
+      "subida": "press_de_hombro_sentado_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 160,
+    "nombre": "Press de hombro unilateral con barra",
+    "musculo": "Hombro",
+    "imagen": "press_de_hombro_unilateral_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "press_de_hombro_unilateral_con_barra_inicio.webp",
+      "bajada": "press_de_hombro_unilateral_con_barra_bajada.webp",
+      "subida": "press_de_hombro_unilateral_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 161,
+    "nombre": "Press de hombro unilateral con mancuernas",
+    "musculo": "Hombro",
+    "imagen": "press_de_hombro_unilateral_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "press_de_hombro_unilateral_con_mancuernas_inicio.webp",
+      "bajada": "press_de_hombro_unilateral_con_mancuernas_bajada.webp",
+      "subida": "press_de_hombro_unilateral_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 162,
+    "nombre": "Press de hombro unilateral en máquina",
+    "musculo": "Hombro",
+    "imagen": "press_de_hombro_unilateral_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "press_de_hombro_unilateral_en_maquina_inicio.webp",
+      "bajada": "press_de_hombro_unilateral_en_maquina_bajada.webp",
+      "subida": "press_de_hombro_unilateral_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 163,
+    "nombre": "Press tras nuca con barra",
+    "musculo": "Hombro",
+    "imagen": "press_tras_nuca_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "press_tras_nuca_con_barra_inicio.webp",
+      "bajada": "press_tras_nuca_con_barra_bajada.webp",
+      "subida": "press_tras_nuca_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 164,
+    "nombre": "Press tras nuca con mancuernas",
+    "musculo": "Hombro",
+    "imagen": "press_tras_nuca_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "press_tras_nuca_con_mancuernas_inicio.webp",
+      "bajada": "press_tras_nuca_con_mancuernas_bajada.webp",
+      "subida": "press_tras_nuca_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 165,
+    "nombre": "Press tras nuca en máquina",
+    "musculo": "Hombro",
+    "imagen": "press_tras_nuca_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "press_tras_nuca_en_maquina_inicio.webp",
+      "bajada": "press_tras_nuca_en_maquina_bajada.webp",
+      "subida": "press_tras_nuca_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 166,
+    "nombre": "Press landmine con barra",
+    "musculo": "Hombro",
+    "imagen": "press_landmine_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "press_landmine_con_barra_inicio.webp",
+      "bajada": "press_landmine_con_barra_bajada.webp",
+      "subida": "press_landmine_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 167,
+    "nombre": "Press landmine con mancuernas",
+    "musculo": "Hombro",
+    "imagen": "press_landmine_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "press_landmine_con_mancuernas_inicio.webp",
+      "bajada": "press_landmine_con_mancuernas_bajada.webp",
+      "subida": "press_landmine_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 168,
+    "nombre": "Press landmine en máquina",
+    "musculo": "Hombro",
+    "imagen": "press_landmine_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "press_landmine_en_maquina_inicio.webp",
+      "bajada": "press_landmine_en_maquina_bajada.webp",
+      "subida": "press_landmine_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 169,
+    "nombre": "Elevación lateral con barra",
+    "musculo": "Hombro",
+    "imagen": "elevacion_lateral_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "elevacion_lateral_con_barra_inicio.webp",
+      "bajada": "elevacion_lateral_con_barra_bajada.webp",
+      "subida": "elevacion_lateral_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 170,
+    "nombre": "Elevación lateral con mancuernas",
+    "musculo": "Hombro",
+    "imagen": "elevacion_lateral_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "elevacion_lateral_con_mancuernas_inicio.webp",
+      "bajada": "elevacion_lateral_con_mancuernas_bajada.webp",
+      "subida": "elevacion_lateral_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 171,
+    "nombre": "Elevación lateral en máquina",
+    "musculo": "Hombro",
+    "imagen": "elevacion_lateral_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "elevacion_lateral_en_maquina_inicio.webp",
+      "bajada": "elevacion_lateral_en_maquina_bajada.webp",
+      "subida": "elevacion_lateral_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 172,
+    "nombre": "Elevación lateral inclinada con barra",
+    "musculo": "Hombro",
+    "imagen": "elevacion_lateral_inclinada_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "elevacion_lateral_inclinada_con_barra_inicio.webp",
+      "bajada": "elevacion_lateral_inclinada_con_barra_bajada.webp",
+      "subida": "elevacion_lateral_inclinada_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 173,
+    "nombre": "Elevación lateral inclinada con mancuernas",
+    "musculo": "Hombro",
+    "imagen": "elevacion_lateral_inclinada_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "elevacion_lateral_inclinada_con_mancuernas_inicio.webp",
+      "bajada": "elevacion_lateral_inclinada_con_mancuernas_bajada.webp",
+      "subida": "elevacion_lateral_inclinada_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 174,
+    "nombre": "Elevación lateral inclinada en máquina",
+    "musculo": "Hombro",
+    "imagen": "elevacion_lateral_inclinada_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "elevacion_lateral_inclinada_en_maquina_inicio.webp",
+      "bajada": "elevacion_lateral_inclinada_en_maquina_bajada.webp",
+      "subida": "elevacion_lateral_inclinada_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 175,
+    "nombre": "Elevación lateral unilateral con barra",
+    "musculo": "Hombro",
+    "imagen": "elevacion_lateral_unilateral_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "elevacion_lateral_unilateral_con_barra_inicio.webp",
+      "bajada": "elevacion_lateral_unilateral_con_barra_bajada.webp",
+      "subida": "elevacion_lateral_unilateral_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 176,
+    "nombre": "Elevación lateral unilateral con mancuernas",
+    "musculo": "Hombro",
+    "imagen": "elevacion_lateral_unilateral_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "elevacion_lateral_unilateral_con_mancuernas_inicio.webp",
+      "bajada": "elevacion_lateral_unilateral_con_mancuernas_bajada.webp",
+      "subida": "elevacion_lateral_unilateral_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 177,
+    "nombre": "Elevación lateral unilateral en máquina",
+    "musculo": "Hombro",
+    "imagen": "elevacion_lateral_unilateral_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "elevacion_lateral_unilateral_en_maquina_inicio.webp",
+      "bajada": "elevacion_lateral_unilateral_en_maquina_bajada.webp",
+      "subida": "elevacion_lateral_unilateral_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 178,
+    "nombre": "Elevación frontal con barra",
+    "musculo": "Hombro",
+    "imagen": "elevacion_frontal_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "elevacion_frontal_con_barra_inicio.webp",
+      "bajada": "elevacion_frontal_con_barra_bajada.webp",
+      "subida": "elevacion_frontal_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 179,
+    "nombre": "Elevación frontal con mancuernas",
+    "musculo": "Hombro",
+    "imagen": "elevacion_frontal_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "elevacion_frontal_con_mancuernas_inicio.webp",
+      "bajada": "elevacion_frontal_con_mancuernas_bajada.webp",
+      "subida": "elevacion_frontal_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 180,
+    "nombre": "Elevación frontal en máquina",
+    "musculo": "Hombro",
+    "imagen": "elevacion_frontal_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "elevacion_frontal_en_maquina_inicio.webp",
+      "bajada": "elevacion_frontal_en_maquina_bajada.webp",
+      "subida": "elevacion_frontal_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 181,
+    "nombre": "Elevación frontal alternada con barra",
+    "musculo": "Hombro",
+    "imagen": "elevacion_frontal_alternada_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "elevacion_frontal_alternada_con_barra_inicio.webp",
+      "bajada": "elevacion_frontal_alternada_con_barra_bajada.webp",
+      "subida": "elevacion_frontal_alternada_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 182,
+    "nombre": "Elevación frontal alternada con mancuernas",
+    "musculo": "Hombro",
+    "imagen": "elevacion_frontal_alternada_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "elevacion_frontal_alternada_con_mancuernas_inicio.webp",
+      "bajada": "elevacion_frontal_alternada_con_mancuernas_bajada.webp",
+      "subida": "elevacion_frontal_alternada_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 183,
+    "nombre": "Elevación frontal alternada en máquina",
+    "musculo": "Hombro",
+    "imagen": "elevacion_frontal_alternada_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "elevacion_frontal_alternada_en_maquina_inicio.webp",
+      "bajada": "elevacion_frontal_alternada_en_maquina_bajada.webp",
+      "subida": "elevacion_frontal_alternada_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 184,
+    "nombre": "Elevación posterior con barra",
+    "musculo": "Hombro",
+    "imagen": "elevacion_posterior_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "elevacion_posterior_con_barra_inicio.webp",
+      "bajada": "elevacion_posterior_con_barra_bajada.webp",
+      "subida": "elevacion_posterior_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 185,
+    "nombre": "Elevación posterior con mancuernas",
+    "musculo": "Hombro",
+    "imagen": "elevacion_posterior_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "elevacion_posterior_con_mancuernas_inicio.webp",
+      "bajada": "elevacion_posterior_con_mancuernas_bajada.webp",
+      "subida": "elevacion_posterior_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 186,
+    "nombre": "Elevación posterior en máquina",
+    "musculo": "Hombro",
+    "imagen": "elevacion_posterior_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "elevacion_posterior_en_maquina_inicio.webp",
+      "bajada": "elevacion_posterior_en_maquina_bajada.webp",
+      "subida": "elevacion_posterior_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 187,
+    "nombre": "Pájaro inclinado con barra",
+    "musculo": "Hombro",
+    "imagen": "pajaro_inclinado_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "pajaro_inclinado_con_barra_inicio.webp",
+      "bajada": "pajaro_inclinado_con_barra_bajada.webp",
+      "subida": "pajaro_inclinado_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 188,
+    "nombre": "Pájaro inclinado con mancuernas",
+    "musculo": "Hombro",
+    "imagen": "pajaro_inclinado_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "pajaro_inclinado_con_mancuernas_inicio.webp",
+      "bajada": "pajaro_inclinado_con_mancuernas_bajada.webp",
+      "subida": "pajaro_inclinado_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 189,
+    "nombre": "Pájaro inclinado en máquina",
+    "musculo": "Hombro",
+    "imagen": "pajaro_inclinado_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "pajaro_inclinado_en_maquina_inicio.webp",
+      "bajada": "pajaro_inclinado_en_maquina_bajada.webp",
+      "subida": "pajaro_inclinado_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 190,
+    "nombre": "Pájaro sentado con barra",
+    "musculo": "Hombro",
+    "imagen": "pajaro_sentado_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "pajaro_sentado_con_barra_inicio.webp",
+      "bajada": "pajaro_sentado_con_barra_bajada.webp",
+      "subida": "pajaro_sentado_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 191,
+    "nombre": "Pájaro sentado con mancuernas",
+    "musculo": "Hombro",
+    "imagen": "pajaro_sentado_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "pajaro_sentado_con_mancuernas_inicio.webp",
+      "bajada": "pajaro_sentado_con_mancuernas_bajada.webp",
+      "subida": "pajaro_sentado_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 192,
+    "nombre": "Pájaro sentado en máquina",
+    "musculo": "Hombro",
+    "imagen": "pajaro_sentado_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "pajaro_sentado_en_maquina_inicio.webp",
+      "bajada": "pajaro_sentado_en_maquina_bajada.webp",
+      "subida": "pajaro_sentado_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 193,
+    "nombre": "Reverse fly con barra",
+    "musculo": "Hombro",
+    "imagen": "reverse_fly_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "reverse_fly_con_barra_inicio.webp",
+      "bajada": "reverse_fly_con_barra_bajada.webp",
+      "subida": "reverse_fly_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 194,
+    "nombre": "Reverse fly con mancuernas",
+    "musculo": "Hombro",
+    "imagen": "reverse_fly_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "reverse_fly_con_mancuernas_inicio.webp",
+      "bajada": "reverse_fly_con_mancuernas_bajada.webp",
+      "subida": "reverse_fly_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 195,
+    "nombre": "Reverse fly en máquina",
+    "musculo": "Hombro",
+    "imagen": "reverse_fly_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "reverse_fly_en_maquina_inicio.webp",
+      "bajada": "reverse_fly_en_maquina_bajada.webp",
+      "subida": "reverse_fly_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 196,
+    "nombre": "Face pull con barra",
+    "musculo": "Hombro",
+    "imagen": "face_pull_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "face_pull_con_barra_inicio.webp",
+      "bajada": "face_pull_con_barra_bajada.webp",
+      "subida": "face_pull_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 197,
+    "nombre": "Face pull con mancuernas",
+    "musculo": "Hombro",
+    "imagen": "face_pull_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "face_pull_con_mancuernas_inicio.webp",
+      "bajada": "face_pull_con_mancuernas_bajada.webp",
+      "subida": "face_pull_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 198,
+    "nombre": "Face pull en máquina",
+    "musculo": "Hombro",
+    "imagen": "face_pull_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "face_pull_en_maquina_inicio.webp",
+      "bajada": "face_pull_en_maquina_bajada.webp",
+      "subida": "face_pull_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 199,
+    "nombre": "Remo al mentón con barra",
+    "musculo": "Hombro",
+    "imagen": "remo_al_menton_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_al_menton_con_barra_inicio.webp",
+      "bajada": "remo_al_menton_con_barra_bajada.webp",
+      "subida": "remo_al_menton_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 200,
+    "nombre": "Remo al mentón con mancuernas",
+    "musculo": "Hombro",
+    "imagen": "remo_al_menton_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_al_menton_con_mancuernas_inicio.webp",
+      "bajada": "remo_al_menton_con_mancuernas_bajada.webp",
+      "subida": "remo_al_menton_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 201,
+    "nombre": "Remo al mentón en máquina",
+    "musculo": "Hombro",
+    "imagen": "remo_al_menton_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_al_menton_en_maquina_inicio.webp",
+      "bajada": "remo_al_menton_en_maquina_bajada.webp",
+      "subida": "remo_al_menton_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 202,
+    "nombre": "Remo alto con barra",
+    "musculo": "Hombro",
+    "imagen": "remo_alto_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_alto_con_barra_inicio.webp",
+      "bajada": "remo_alto_con_barra_bajada.webp",
+      "subida": "remo_alto_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 203,
+    "nombre": "Remo alto con mancuernas",
+    "musculo": "Hombro",
+    "imagen": "remo_alto_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_alto_con_mancuernas_inicio.webp",
+      "bajada": "remo_alto_con_mancuernas_bajada.webp",
+      "subida": "remo_alto_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 204,
+    "nombre": "Remo alto en máquina",
+    "musculo": "Hombro",
+    "imagen": "remo_alto_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_alto_en_maquina_inicio.webp",
+      "bajada": "remo_alto_en_maquina_bajada.webp",
+      "subida": "remo_alto_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 205,
+    "nombre": "Cuban press con barra",
+    "musculo": "Hombro",
+    "imagen": "cuban_press_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "cuban_press_con_barra_inicio.webp",
+      "bajada": "cuban_press_con_barra_bajada.webp",
+      "subida": "cuban_press_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 206,
+    "nombre": "Cuban press con mancuernas",
+    "musculo": "Hombro",
+    "imagen": "cuban_press_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "cuban_press_con_mancuernas_inicio.webp",
+      "bajada": "cuban_press_con_mancuernas_bajada.webp",
+      "subida": "cuban_press_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 207,
+    "nombre": "Cuban press en máquina",
+    "musculo": "Hombro",
+    "imagen": "cuban_press_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "cuban_press_en_maquina_inicio.webp",
+      "bajada": "cuban_press_en_maquina_bajada.webp",
+      "subida": "cuban_press_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 208,
+    "nombre": "Rotación externa con barra",
+    "musculo": "Hombro",
+    "imagen": "rotacion_externa_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "rotacion_externa_con_barra_inicio.webp",
+      "bajada": "rotacion_externa_con_barra_bajada.webp",
+      "subida": "rotacion_externa_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 209,
+    "nombre": "Rotación externa con mancuernas",
+    "musculo": "Hombro",
+    "imagen": "rotacion_externa_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "rotacion_externa_con_mancuernas_inicio.webp",
+      "bajada": "rotacion_externa_con_mancuernas_bajada.webp",
+      "subida": "rotacion_externa_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 210,
+    "nombre": "Rotación externa en máquina",
+    "musculo": "Hombro",
+    "imagen": "rotacion_externa_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "rotacion_externa_en_maquina_inicio.webp",
+      "bajada": "rotacion_externa_en_maquina_bajada.webp",
+      "subida": "rotacion_externa_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 211,
+    "nombre": "Rotación interna con barra",
+    "musculo": "Hombro",
+    "imagen": "rotacion_interna_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "rotacion_interna_con_barra_inicio.webp",
+      "bajada": "rotacion_interna_con_barra_bajada.webp",
+      "subida": "rotacion_interna_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 212,
+    "nombre": "Rotación interna con mancuernas",
+    "musculo": "Hombro",
+    "imagen": "rotacion_interna_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "rotacion_interna_con_mancuernas_inicio.webp",
+      "bajada": "rotacion_interna_con_mancuernas_bajada.webp",
+      "subida": "rotacion_interna_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 213,
+    "nombre": "Rotación interna en máquina",
+    "musculo": "Hombro",
+    "imagen": "rotacion_interna_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "rotacion_interna_en_maquina_inicio.webp",
+      "bajada": "rotacion_interna_en_maquina_bajada.webp",
+      "subida": "rotacion_interna_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 214,
+    "nombre": "Y raise con barra",
+    "musculo": "Hombro",
+    "imagen": "y_raise_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "y_raise_con_barra_inicio.webp",
+      "bajada": "y_raise_con_barra_bajada.webp",
+      "subida": "y_raise_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 215,
+    "nombre": "Y raise con mancuernas",
+    "musculo": "Hombro",
+    "imagen": "y_raise_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "y_raise_con_mancuernas_inicio.webp",
+      "bajada": "y_raise_con_mancuernas_bajada.webp",
+      "subida": "y_raise_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 216,
+    "nombre": "Y raise en máquina",
+    "musculo": "Hombro",
+    "imagen": "y_raise_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "y_raise_en_maquina_inicio.webp",
+      "bajada": "y_raise_en_maquina_bajada.webp",
+      "subida": "y_raise_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 217,
+    "nombre": "T raise con barra",
+    "musculo": "Hombro",
+    "imagen": "t_raise_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "t_raise_con_barra_inicio.webp",
+      "bajada": "t_raise_con_barra_bajada.webp",
+      "subida": "t_raise_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 218,
+    "nombre": "T raise con mancuernas",
+    "musculo": "Hombro",
+    "imagen": "t_raise_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "t_raise_con_mancuernas_inicio.webp",
+      "bajada": "t_raise_con_mancuernas_bajada.webp",
+      "subida": "t_raise_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 219,
+    "nombre": "T raise en máquina",
+    "musculo": "Hombro",
+    "imagen": "t_raise_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "t_raise_en_maquina_inicio.webp",
+      "bajada": "t_raise_en_maquina_bajada.webp",
+      "subida": "t_raise_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 220,
+    "nombre": "Encogimiento sobre cabeza con barra",
+    "musculo": "Hombro",
+    "imagen": "encogimiento_sobre_cabeza_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "encogimiento_sobre_cabeza_con_barra_inicio.webp",
+      "bajada": "encogimiento_sobre_cabeza_con_barra_bajada.webp",
+      "subida": "encogimiento_sobre_cabeza_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 221,
+    "nombre": "Encogimiento sobre cabeza con mancuernas",
+    "musculo": "Hombro",
+    "imagen": "encogimiento_sobre_cabeza_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "encogimiento_sobre_cabeza_con_mancuernas_inicio.webp",
+      "bajada": "encogimiento_sobre_cabeza_con_mancuernas_bajada.webp",
+      "subida": "encogimiento_sobre_cabeza_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 222,
+    "nombre": "Encogimiento sobre cabeza en máquina",
+    "musculo": "Hombro",
+    "imagen": "encogimiento_sobre_cabeza_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "encogimiento_sobre_cabeza_en_maquina_inicio.webp",
+      "bajada": "encogimiento_sobre_cabeza_en_maquina_bajada.webp",
+      "subida": "encogimiento_sobre_cabeza_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 223,
+    "nombre": "Plancha con toque de hombro con barra",
+    "musculo": "Hombro",
+    "imagen": "plancha_con_toque_de_hombro_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "plancha_con_toque_de_hombro_con_barra_inicio.webp",
+      "bajada": "plancha_con_toque_de_hombro_con_barra_bajada.webp",
+      "subida": "plancha_con_toque_de_hombro_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 224,
+    "nombre": "Plancha con toque de hombro con mancuernas",
+    "musculo": "Hombro",
+    "imagen": "plancha_con_toque_de_hombro_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "plancha_con_toque_de_hombro_con_mancuernas_inicio.webp",
+      "bajada": "plancha_con_toque_de_hombro_con_mancuernas_bajada.webp",
+      "subida": "plancha_con_toque_de_hombro_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 225,
+    "nombre": "Plancha con toque de hombro en máquina",
+    "musculo": "Hombro",
+    "imagen": "plancha_con_toque_de_hombro_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "plancha_con_toque_de_hombro_en_maquina_inicio.webp",
+      "bajada": "plancha_con_toque_de_hombro_en_maquina_bajada.webp",
+      "subida": "plancha_con_toque_de_hombro_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 226,
+    "nombre": "Dominada pronada con barra",
+    "musculo": "Espalda",
+    "imagen": "dominada_pronada_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "dominada_pronada_con_barra_inicio.webp",
+      "bajada": "dominada_pronada_con_barra_bajada.webp",
+      "subida": "dominada_pronada_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 227,
+    "nombre": "Dominada pronada con mancuernas",
+    "musculo": "Espalda",
+    "imagen": "dominada_pronada_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "dominada_pronada_con_mancuernas_inicio.webp",
+      "bajada": "dominada_pronada_con_mancuernas_bajada.webp",
+      "subida": "dominada_pronada_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 228,
+    "nombre": "Dominada pronada en máquina",
+    "musculo": "Espalda",
+    "imagen": "dominada_pronada_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "dominada_pronada_en_maquina_inicio.webp",
+      "bajada": "dominada_pronada_en_maquina_bajada.webp",
+      "subida": "dominada_pronada_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 229,
+    "nombre": "Dominada supina con barra",
+    "musculo": "Espalda",
+    "imagen": "dominada_supina_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "dominada_supina_con_barra_inicio.webp",
+      "bajada": "dominada_supina_con_barra_bajada.webp",
+      "subida": "dominada_supina_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 230,
+    "nombre": "Dominada supina con mancuernas",
+    "musculo": "Espalda",
+    "imagen": "dominada_supina_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "dominada_supina_con_mancuernas_inicio.webp",
+      "bajada": "dominada_supina_con_mancuernas_bajada.webp",
+      "subida": "dominada_supina_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 231,
+    "nombre": "Dominada supina en máquina",
+    "musculo": "Espalda",
+    "imagen": "dominada_supina_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "dominada_supina_en_maquina_inicio.webp",
+      "bajada": "dominada_supina_en_maquina_bajada.webp",
+      "subida": "dominada_supina_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 232,
+    "nombre": "Dominada neutra con barra",
+    "musculo": "Espalda",
+    "imagen": "dominada_neutra_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "dominada_neutra_con_barra_inicio.webp",
+      "bajada": "dominada_neutra_con_barra_bajada.webp",
+      "subida": "dominada_neutra_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 233,
+    "nombre": "Dominada neutra con mancuernas",
+    "musculo": "Espalda",
+    "imagen": "dominada_neutra_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "dominada_neutra_con_mancuernas_inicio.webp",
+      "bajada": "dominada_neutra_con_mancuernas_bajada.webp",
+      "subida": "dominada_neutra_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 234,
+    "nombre": "Dominada neutra en máquina",
+    "musculo": "Espalda",
+    "imagen": "dominada_neutra_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "dominada_neutra_en_maquina_inicio.webp",
+      "bajada": "dominada_neutra_en_maquina_bajada.webp",
+      "subida": "dominada_neutra_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 235,
+    "nombre": "Dominada asistida con barra",
+    "musculo": "Espalda",
+    "imagen": "dominada_asistida_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "dominada_asistida_con_barra_inicio.webp",
+      "bajada": "dominada_asistida_con_barra_bajada.webp",
+      "subida": "dominada_asistida_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 236,
+    "nombre": "Dominada asistida con mancuernas",
+    "musculo": "Espalda",
+    "imagen": "dominada_asistida_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "dominada_asistida_con_mancuernas_inicio.webp",
+      "bajada": "dominada_asistida_con_mancuernas_bajada.webp",
+      "subida": "dominada_asistida_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 237,
+    "nombre": "Dominada asistida en máquina",
+    "musculo": "Espalda",
+    "imagen": "dominada_asistida_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "dominada_asistida_en_maquina_inicio.webp",
+      "bajada": "dominada_asistida_en_maquina_bajada.webp",
+      "subida": "dominada_asistida_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 238,
+    "nombre": "Jalón al pecho con barra",
+    "musculo": "Espalda",
+    "imagen": "jalon_al_pecho_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "jalon_al_pecho_con_barra_inicio.webp",
+      "bajada": "jalon_al_pecho_con_barra_bajada.webp",
+      "subida": "jalon_al_pecho_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 239,
+    "nombre": "Jalón al pecho con mancuernas",
+    "musculo": "Espalda",
+    "imagen": "jalon_al_pecho_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "jalon_al_pecho_con_mancuernas_inicio.webp",
+      "bajada": "jalon_al_pecho_con_mancuernas_bajada.webp",
+      "subida": "jalon_al_pecho_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 240,
+    "nombre": "Jalón al pecho en máquina",
+    "musculo": "Espalda",
+    "imagen": "jalon_al_pecho_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "jalon_al_pecho_en_maquina_inicio.webp",
+      "bajada": "jalon_al_pecho_en_maquina_bajada.webp",
+      "subida": "jalon_al_pecho_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 241,
+    "nombre": "Jalón tras nuca con barra",
+    "musculo": "Espalda",
+    "imagen": "jalon_tras_nuca_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "jalon_tras_nuca_con_barra_inicio.webp",
+      "bajada": "jalon_tras_nuca_con_barra_bajada.webp",
+      "subida": "jalon_tras_nuca_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 242,
+    "nombre": "Jalón tras nuca con mancuernas",
+    "musculo": "Espalda",
+    "imagen": "jalon_tras_nuca_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "jalon_tras_nuca_con_mancuernas_inicio.webp",
+      "bajada": "jalon_tras_nuca_con_mancuernas_bajada.webp",
+      "subida": "jalon_tras_nuca_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 243,
+    "nombre": "Jalón tras nuca en máquina",
+    "musculo": "Espalda",
+    "imagen": "jalon_tras_nuca_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "jalon_tras_nuca_en_maquina_inicio.webp",
+      "bajada": "jalon_tras_nuca_en_maquina_bajada.webp",
+      "subida": "jalon_tras_nuca_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 244,
+    "nombre": "Jalón agarre cerrado con barra",
+    "musculo": "Espalda",
+    "imagen": "jalon_agarre_cerrado_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "jalon_agarre_cerrado_con_barra_inicio.webp",
+      "bajada": "jalon_agarre_cerrado_con_barra_bajada.webp",
+      "subida": "jalon_agarre_cerrado_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 245,
+    "nombre": "Jalón agarre cerrado con mancuernas",
+    "musculo": "Espalda",
+    "imagen": "jalon_agarre_cerrado_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "jalon_agarre_cerrado_con_mancuernas_inicio.webp",
+      "bajada": "jalon_agarre_cerrado_con_mancuernas_bajada.webp",
+      "subida": "jalon_agarre_cerrado_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 246,
+    "nombre": "Jalón agarre cerrado en máquina",
+    "musculo": "Espalda",
+    "imagen": "jalon_agarre_cerrado_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "jalon_agarre_cerrado_en_maquina_inicio.webp",
+      "bajada": "jalon_agarre_cerrado_en_maquina_bajada.webp",
+      "subida": "jalon_agarre_cerrado_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 247,
+    "nombre": "Jalón unilateral con barra",
+    "musculo": "Espalda",
+    "imagen": "jalon_unilateral_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "jalon_unilateral_con_barra_inicio.webp",
+      "bajada": "jalon_unilateral_con_barra_bajada.webp",
+      "subida": "jalon_unilateral_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 248,
+    "nombre": "Jalón unilateral con mancuernas",
+    "musculo": "Espalda",
+    "imagen": "jalon_unilateral_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "jalon_unilateral_con_mancuernas_inicio.webp",
+      "bajada": "jalon_unilateral_con_mancuernas_bajada.webp",
+      "subida": "jalon_unilateral_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 249,
+    "nombre": "Jalón unilateral en máquina",
+    "musculo": "Espalda",
+    "imagen": "jalon_unilateral_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "jalon_unilateral_en_maquina_inicio.webp",
+      "bajada": "jalon_unilateral_en_maquina_bajada.webp",
+      "subida": "jalon_unilateral_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 250,
+    "nombre": "Remo con barra con barra",
+    "musculo": "Espalda",
+    "imagen": "remo_con_barra_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_con_barra_con_barra_inicio.webp",
+      "bajada": "remo_con_barra_con_barra_bajada.webp",
+      "subida": "remo_con_barra_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 251,
+    "nombre": "Remo con barra con mancuernas",
+    "musculo": "Espalda",
+    "imagen": "remo_con_barra_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_con_barra_con_mancuernas_inicio.webp",
+      "bajada": "remo_con_barra_con_mancuernas_bajada.webp",
+      "subida": "remo_con_barra_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 252,
+    "nombre": "Remo con barra en máquina",
+    "musculo": "Espalda",
+    "imagen": "remo_con_barra_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_con_barra_en_maquina_inicio.webp",
+      "bajada": "remo_con_barra_en_maquina_bajada.webp",
+      "subida": "remo_con_barra_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 253,
+    "nombre": "Remo Pendlay con barra",
+    "musculo": "Espalda",
+    "imagen": "remo_pendlay_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_pendlay_con_barra_inicio.webp",
+      "bajada": "remo_pendlay_con_barra_bajada.webp",
+      "subida": "remo_pendlay_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 254,
+    "nombre": "Remo Pendlay con mancuernas",
+    "musculo": "Espalda",
+    "imagen": "remo_pendlay_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_pendlay_con_mancuernas_inicio.webp",
+      "bajada": "remo_pendlay_con_mancuernas_bajada.webp",
+      "subida": "remo_pendlay_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 255,
+    "nombre": "Remo Pendlay en máquina",
+    "musculo": "Espalda",
+    "imagen": "remo_pendlay_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_pendlay_en_maquina_inicio.webp",
+      "bajada": "remo_pendlay_en_maquina_bajada.webp",
+      "subida": "remo_pendlay_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 256,
+    "nombre": "Remo T con barra",
+    "musculo": "Espalda",
+    "imagen": "remo_t_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_t_con_barra_inicio.webp",
+      "bajada": "remo_t_con_barra_bajada.webp",
+      "subida": "remo_t_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 257,
+    "nombre": "Remo T con mancuernas",
+    "musculo": "Espalda",
+    "imagen": "remo_t_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_t_con_mancuernas_inicio.webp",
+      "bajada": "remo_t_con_mancuernas_bajada.webp",
+      "subida": "remo_t_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 258,
+    "nombre": "Remo T en máquina",
+    "musculo": "Espalda",
+    "imagen": "remo_t_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_t_en_maquina_inicio.webp",
+      "bajada": "remo_t_en_maquina_bajada.webp",
+      "subida": "remo_t_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 259,
+    "nombre": "Remo sentado con barra",
+    "musculo": "Espalda",
+    "imagen": "remo_sentado_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_sentado_con_barra_inicio.webp",
+      "bajada": "remo_sentado_con_barra_bajada.webp",
+      "subida": "remo_sentado_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 260,
+    "nombre": "Remo sentado con mancuernas",
+    "musculo": "Espalda",
+    "imagen": "remo_sentado_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_sentado_con_mancuernas_inicio.webp",
+      "bajada": "remo_sentado_con_mancuernas_bajada.webp",
+      "subida": "remo_sentado_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 261,
+    "nombre": "Remo sentado en máquina",
+    "musculo": "Espalda",
+    "imagen": "remo_sentado_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_sentado_en_maquina_inicio.webp",
+      "bajada": "remo_sentado_en_maquina_bajada.webp",
+      "subida": "remo_sentado_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 262,
+    "nombre": "Remo unilateral con barra",
+    "musculo": "Espalda",
+    "imagen": "remo_unilateral_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_unilateral_con_barra_inicio.webp",
+      "bajada": "remo_unilateral_con_barra_bajada.webp",
+      "subida": "remo_unilateral_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 263,
+    "nombre": "Remo unilateral con mancuernas",
+    "musculo": "Espalda",
+    "imagen": "remo_unilateral_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_unilateral_con_mancuernas_inicio.webp",
+      "bajada": "remo_unilateral_con_mancuernas_bajada.webp",
+      "subida": "remo_unilateral_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 264,
+    "nombre": "Remo unilateral en máquina",
+    "musculo": "Espalda",
+    "imagen": "remo_unilateral_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_unilateral_en_maquina_inicio.webp",
+      "bajada": "remo_unilateral_en_maquina_bajada.webp",
+      "subida": "remo_unilateral_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 265,
+    "nombre": "Remo invertido con barra",
+    "musculo": "Espalda",
+    "imagen": "remo_invertido_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_invertido_con_barra_inicio.webp",
+      "bajada": "remo_invertido_con_barra_bajada.webp",
+      "subida": "remo_invertido_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 266,
+    "nombre": "Remo invertido con mancuernas",
+    "musculo": "Espalda",
+    "imagen": "remo_invertido_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_invertido_con_mancuernas_inicio.webp",
+      "bajada": "remo_invertido_con_mancuernas_bajada.webp",
+      "subida": "remo_invertido_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 267,
+    "nombre": "Remo invertido en máquina",
+    "musculo": "Espalda",
+    "imagen": "remo_invertido_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_invertido_en_maquina_inicio.webp",
+      "bajada": "remo_invertido_en_maquina_bajada.webp",
+      "subida": "remo_invertido_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 268,
+    "nombre": "Remo Meadows con barra",
+    "musculo": "Espalda",
+    "imagen": "remo_meadows_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_meadows_con_barra_inicio.webp",
+      "bajada": "remo_meadows_con_barra_bajada.webp",
+      "subida": "remo_meadows_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 269,
+    "nombre": "Remo Meadows con mancuernas",
+    "musculo": "Espalda",
+    "imagen": "remo_meadows_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_meadows_con_mancuernas_inicio.webp",
+      "bajada": "remo_meadows_con_mancuernas_bajada.webp",
+      "subida": "remo_meadows_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 270,
+    "nombre": "Remo Meadows en máquina",
+    "musculo": "Espalda",
+    "imagen": "remo_meadows_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_meadows_en_maquina_inicio.webp",
+      "bajada": "remo_meadows_en_maquina_bajada.webp",
+      "subida": "remo_meadows_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 271,
+    "nombre": "Remo pecho apoyado con barra",
+    "musculo": "Espalda",
+    "imagen": "remo_pecho_apoyado_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_pecho_apoyado_con_barra_inicio.webp",
+      "bajada": "remo_pecho_apoyado_con_barra_bajada.webp",
+      "subida": "remo_pecho_apoyado_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 272,
+    "nombre": "Remo pecho apoyado con mancuernas",
+    "musculo": "Espalda",
+    "imagen": "remo_pecho_apoyado_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_pecho_apoyado_con_mancuernas_inicio.webp",
+      "bajada": "remo_pecho_apoyado_con_mancuernas_bajada.webp",
+      "subida": "remo_pecho_apoyado_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 273,
+    "nombre": "Remo pecho apoyado en máquina",
+    "musculo": "Espalda",
+    "imagen": "remo_pecho_apoyado_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_pecho_apoyado_en_maquina_inicio.webp",
+      "bajada": "remo_pecho_apoyado_en_maquina_bajada.webp",
+      "subida": "remo_pecho_apoyado_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 274,
+    "nombre": "Pullover en polea con barra",
+    "musculo": "Espalda",
+    "imagen": "pullover_en_polea_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "pullover_en_polea_con_barra_inicio.webp",
+      "bajada": "pullover_en_polea_con_barra_bajada.webp",
+      "subida": "pullover_en_polea_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 275,
+    "nombre": "Pullover en polea con mancuernas",
+    "musculo": "Espalda",
+    "imagen": "pullover_en_polea_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "pullover_en_polea_con_mancuernas_inicio.webp",
+      "bajada": "pullover_en_polea_con_mancuernas_bajada.webp",
+      "subida": "pullover_en_polea_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 276,
+    "nombre": "Pullover en polea en máquina",
+    "musculo": "Espalda",
+    "imagen": "pullover_en_polea_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "pullover_en_polea_en_maquina_inicio.webp",
+      "bajada": "pullover_en_polea_en_maquina_bajada.webp",
+      "subida": "pullover_en_polea_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 277,
+    "nombre": "Pullover tumbado con barra",
+    "musculo": "Espalda",
+    "imagen": "pullover_tumbado_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "pullover_tumbado_con_barra_inicio.webp",
+      "bajada": "pullover_tumbado_con_barra_bajada.webp",
+      "subida": "pullover_tumbado_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 278,
+    "nombre": "Pullover tumbado con mancuernas",
+    "musculo": "Espalda",
+    "imagen": "pullover_tumbado_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "pullover_tumbado_con_mancuernas_inicio.webp",
+      "bajada": "pullover_tumbado_con_mancuernas_bajada.webp",
+      "subida": "pullover_tumbado_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 279,
+    "nombre": "Pullover tumbado en máquina",
+    "musculo": "Espalda",
+    "imagen": "pullover_tumbado_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "pullover_tumbado_en_maquina_inicio.webp",
+      "bajada": "pullover_tumbado_en_maquina_bajada.webp",
+      "subida": "pullover_tumbado_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 280,
+    "nombre": "Peso muerto convencional con barra",
+    "musculo": "Espalda",
+    "imagen": "peso_muerto_convencional_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "peso_muerto_convencional_con_barra_inicio.webp",
+      "bajada": "peso_muerto_convencional_con_barra_bajada.webp",
+      "subida": "peso_muerto_convencional_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 281,
+    "nombre": "Peso muerto convencional con mancuernas",
+    "musculo": "Espalda",
+    "imagen": "peso_muerto_convencional_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "peso_muerto_convencional_con_mancuernas_inicio.webp",
+      "bajada": "peso_muerto_convencional_con_mancuernas_bajada.webp",
+      "subida": "peso_muerto_convencional_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 282,
+    "nombre": "Peso muerto convencional en máquina",
+    "musculo": "Espalda",
+    "imagen": "peso_muerto_convencional_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "peso_muerto_convencional_en_maquina_inicio.webp",
+      "bajada": "peso_muerto_convencional_en_maquina_bajada.webp",
+      "subida": "peso_muerto_convencional_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 283,
+    "nombre": "Buenos días con barra",
+    "musculo": "Espalda",
+    "imagen": "buenos_dias_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "buenos_dias_con_barra_inicio.webp",
+      "bajada": "buenos_dias_con_barra_bajada.webp",
+      "subida": "buenos_dias_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 284,
+    "nombre": "Buenos días con mancuernas",
+    "musculo": "Espalda",
+    "imagen": "buenos_dias_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "buenos_dias_con_mancuernas_inicio.webp",
+      "bajada": "buenos_dias_con_mancuernas_bajada.webp",
+      "subida": "buenos_dias_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 285,
+    "nombre": "Buenos días en máquina",
+    "musculo": "Espalda",
+    "imagen": "buenos_dias_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "buenos_dias_en_maquina_inicio.webp",
+      "bajada": "buenos_dias_en_maquina_bajada.webp",
+      "subida": "buenos_dias_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 286,
+    "nombre": "Hiperextensión lumbar con barra",
+    "musculo": "Espalda",
+    "imagen": "hiperextension_lumbar_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "hiperextension_lumbar_con_barra_inicio.webp",
+      "bajada": "hiperextension_lumbar_con_barra_bajada.webp",
+      "subida": "hiperextension_lumbar_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 287,
+    "nombre": "Hiperextensión lumbar con mancuernas",
+    "musculo": "Espalda",
+    "imagen": "hiperextension_lumbar_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "hiperextension_lumbar_con_mancuernas_inicio.webp",
+      "bajada": "hiperextension_lumbar_con_mancuernas_bajada.webp",
+      "subida": "hiperextension_lumbar_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 288,
+    "nombre": "Hiperextensión lumbar en máquina",
+    "musculo": "Espalda",
+    "imagen": "hiperextension_lumbar_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "hiperextension_lumbar_en_maquina_inicio.webp",
+      "bajada": "hiperextension_lumbar_en_maquina_bajada.webp",
+      "subida": "hiperextension_lumbar_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 289,
+    "nombre": "Extensión lumbar con barra",
+    "musculo": "Espalda",
+    "imagen": "extension_lumbar_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "extension_lumbar_con_barra_inicio.webp",
+      "bajada": "extension_lumbar_con_barra_bajada.webp",
+      "subida": "extension_lumbar_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 290,
+    "nombre": "Extensión lumbar con mancuernas",
+    "musculo": "Espalda",
+    "imagen": "extension_lumbar_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "extension_lumbar_con_mancuernas_inicio.webp",
+      "bajada": "extension_lumbar_con_mancuernas_bajada.webp",
+      "subida": "extension_lumbar_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 291,
+    "nombre": "Extensión lumbar en máquina",
+    "musculo": "Espalda",
+    "imagen": "extension_lumbar_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "extension_lumbar_en_maquina_inicio.webp",
+      "bajada": "extension_lumbar_en_maquina_bajada.webp",
+      "subida": "extension_lumbar_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 292,
+    "nombre": "Encogimiento escapular con barra",
+    "musculo": "Espalda",
+    "imagen": "encogimiento_escapular_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "encogimiento_escapular_con_barra_inicio.webp",
+      "bajada": "encogimiento_escapular_con_barra_bajada.webp",
+      "subida": "encogimiento_escapular_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 293,
+    "nombre": "Encogimiento escapular con mancuernas",
+    "musculo": "Espalda",
+    "imagen": "encogimiento_escapular_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "encogimiento_escapular_con_mancuernas_inicio.webp",
+      "bajada": "encogimiento_escapular_con_mancuernas_bajada.webp",
+      "subida": "encogimiento_escapular_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 294,
+    "nombre": "Encogimiento escapular en máquina",
+    "musculo": "Espalda",
+    "imagen": "encogimiento_escapular_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "encogimiento_escapular_en_maquina_inicio.webp",
+      "bajada": "encogimiento_escapular_en_maquina_bajada.webp",
+      "subida": "encogimiento_escapular_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 295,
+    "nombre": "Rack pull con barra",
+    "musculo": "Espalda",
+    "imagen": "rack_pull_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "rack_pull_con_barra_inicio.webp",
+      "bajada": "rack_pull_con_barra_bajada.webp",
+      "subida": "rack_pull_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 296,
+    "nombre": "Rack pull con mancuernas",
+    "musculo": "Espalda",
+    "imagen": "rack_pull_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "rack_pull_con_mancuernas_inicio.webp",
+      "bajada": "rack_pull_con_mancuernas_bajada.webp",
+      "subida": "rack_pull_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 297,
+    "nombre": "Rack pull en máquina",
+    "musculo": "Espalda",
+    "imagen": "rack_pull_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "rack_pull_en_maquina_inicio.webp",
+      "bajada": "rack_pull_en_maquina_bajada.webp",
+      "subida": "rack_pull_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 298,
+    "nombre": "Superman con barra",
+    "musculo": "Espalda",
+    "imagen": "superman_con_barra_inicio.webp",
+    "imagenes": {
+      "inicio": "superman_con_barra_inicio.webp",
+      "bajada": "superman_con_barra_bajada.webp",
+      "subida": "superman_con_barra_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 299,
+    "nombre": "Superman con mancuernas",
+    "musculo": "Espalda",
+    "imagen": "superman_con_mancuernas_inicio.webp",
+    "imagenes": {
+      "inicio": "superman_con_mancuernas_inicio.webp",
+      "bajada": "superman_con_mancuernas_bajada.webp",
+      "subida": "superman_con_mancuernas_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 300,
+    "nombre": "Superman en máquina",
+    "musculo": "Espalda",
+    "imagen": "superman_en_maquina_inicio.webp",
+    "imagenes": {
+      "inicio": "superman_en_maquina_inicio.webp",
+      "bajada": "superman_en_maquina_bajada.webp",
+      "subida": "superman_en_maquina_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12"
+  },
+  {
+    "id": 301,
+    "nombre": "ABS ROTACION",
+    "musculo": "Espalda",
+    "imagen": "abs_rotacion_inicio.webp",
+    "imagenes": {
+      "inicio": "abs_rotacion_inicio.webp",
+      "bajada": "abs_rotacion_bajada.webp",
+      "subida": "abs_rotacion_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 302,
+    "nombre": "BANCO ROMANO",
+    "musculo": "Espalda",
+    "imagen": "banco_romano_inicio.webp",
+    "imagenes": {
+      "inicio": "banco_romano_inicio.webp",
+      "bajada": "banco_romano_bajada.webp",
+      "subida": "banco_romano_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 303,
+    "nombre": "BANCO SCOTT",
+    "musculo": "Hombro",
+    "imagen": "banco_scott_inicio.webp",
+    "imagenes": {
+      "inicio": "banco_scott_inicio.webp",
+      "bajada": "banco_scott_bajada.webp",
+      "subida": "banco_scott_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 304,
+    "nombre": "BICEPS 45",
+    "musculo": "Hombro",
+    "imagen": "biceps_45_inicio.webp",
+    "imagenes": {
+      "inicio": "biceps_45_inicio.webp",
+      "bajada": "biceps_45_bajada.webp",
+      "subida": "biceps_45_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 305,
+    "nombre": "BICEPS 45 C/M",
+    "musculo": "Hombro",
+    "imagen": "biceps_45_c_m_inicio.webp",
+    "imagenes": {
+      "inicio": "biceps_45_c_m_inicio.webp",
+      "bajada": "biceps_45_c_m_bajada.webp",
+      "subida": "biceps_45_c_m_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 306,
+    "nombre": "BICEPS CON BARRA EN POLEA",
+    "musculo": "Hombro",
+    "imagen": "biceps_con_barra_en_polea_inicio.webp",
+    "imagenes": {
+      "inicio": "biceps_con_barra_en_polea_inicio.webp",
+      "bajada": "biceps_con_barra_en_polea_bajada.webp",
+      "subida": "biceps_con_barra_en_polea_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 307,
+    "nombre": "BICEPS CON BARRA EN POLEA  (DROP SET",
+    "musculo": "Hombro",
+    "imagen": "biceps_con_barra_en_polea_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "biceps_con_barra_en_polea_drop_set_inicio.webp",
+      "bajada": "biceps_con_barra_en_polea_drop_set_bajada.webp",
+      "subida": "biceps_con_barra_en_polea_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 308,
+    "nombre": "BICEPS CON BARRA Z",
+    "musculo": "Hombro",
+    "imagen": "biceps_con_barra_z_inicio.webp",
+    "imagenes": {
+      "inicio": "biceps_con_barra_z_inicio.webp",
+      "bajada": "biceps_con_barra_z_bajada.webp",
+      "subida": "biceps_con_barra_z_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 309,
+    "nombre": "BICEPS MARTILLO",
+    "musculo": "Hombro",
+    "imagen": "biceps_martillo_inicio.webp",
+    "imagenes": {
+      "inicio": "biceps_martillo_inicio.webp",
+      "bajada": "biceps_martillo_bajada.webp",
+      "subida": "biceps_martillo_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 310,
+    "nombre": "BICEPS MARTILLO (DROP SET",
+    "musculo": "Hombro",
+    "imagen": "biceps_martillo_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "biceps_martillo_drop_set_inicio.webp",
+      "bajada": "biceps_martillo_drop_set_bajada.webp",
+      "subida": "biceps_martillo_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 311,
+    "nombre": "BICEPS ROTACION",
+    "musculo": "Hombro",
+    "imagen": "biceps_rotacion_inicio.webp",
+    "imagenes": {
+      "inicio": "biceps_rotacion_inicio.webp",
+      "bajada": "biceps_rotacion_bajada.webp",
+      "subida": "biceps_rotacion_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 312,
+    "nombre": "CHEST PRESS",
+    "musculo": "Pecho",
+    "imagen": "chest_press_inicio.webp",
+    "imagenes": {
+      "inicio": "chest_press_inicio.webp",
+      "bajada": "chest_press_bajada.webp",
+      "subida": "chest_press_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 313,
+    "nombre": "CHEST PRESS (DROP SET",
+    "musculo": "Pecho",
+    "imagen": "chest_press_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "chest_press_drop_set_inicio.webp",
+      "bajada": "chest_press_drop_set_bajada.webp",
+      "subida": "chest_press_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 314,
+    "nombre": "CROSS OVER ALTO",
+    "musculo": "Pecho",
+    "imagen": "cross_over_alto_inicio.webp",
+    "imagenes": {
+      "inicio": "cross_over_alto_inicio.webp",
+      "bajada": "cross_over_alto_bajada.webp",
+      "subida": "cross_over_alto_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 315,
+    "nombre": "CROSS OVER ALTO (DROP SET",
+    "musculo": "Pecho",
+    "imagen": "cross_over_alto_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "cross_over_alto_drop_set_inicio.webp",
+      "bajada": "cross_over_alto_drop_set_bajada.webp",
+      "subida": "cross_over_alto_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 316,
+    "nombre": "CROSS OVER MEDIO (DROP SET",
+    "musculo": "Pecho",
+    "imagen": "cross_over_medio_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "cross_over_medio_drop_set_inicio.webp",
+      "bajada": "cross_over_medio_drop_set_bajada.webp",
+      "subida": "cross_over_medio_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 317,
+    "nombre": "CRUNCH",
+    "musculo": "Espalda",
+    "imagen": "crunch_inicio.webp",
+    "imagenes": {
+      "inicio": "crunch_inicio.webp",
+      "bajada": "crunch_bajada.webp",
+      "subida": "crunch_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 318,
+    "nombre": "DEAD BUG",
+    "musculo": "Espalda",
+    "imagen": "dead_bug_inicio.webp",
+    "imagenes": {
+      "inicio": "dead_bug_inicio.webp",
+      "bajada": "dead_bug_bajada.webp",
+      "subida": "dead_bug_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 319,
+    "nombre": "ESTOCADA BULGARA",
+    "musculo": "Piernas",
+    "imagen": "estocada_bulgara_inicio.webp",
+    "imagenes": {
+      "inicio": "estocada_bulgara_inicio.webp",
+      "bajada": "estocada_bulgara_bajada.webp",
+      "subida": "estocada_bulgara_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 320,
+    "nombre": "ESTOCADA BULGARA D/C",
+    "musculo": "Piernas",
+    "imagen": "estocada_bulgara_d_c_inicio.webp",
+    "imagenes": {
+      "inicio": "estocada_bulgara_d_c_inicio.webp",
+      "bajada": "estocada_bulgara_d_c_bajada.webp",
+      "subida": "estocada_bulgara_d_c_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 321,
+    "nombre": "ESTOCADA C/M",
+    "musculo": "Piernas",
+    "imagen": "estocada_c_m_inicio.webp",
+    "imagenes": {
+      "inicio": "estocada_c_m_inicio.webp",
+      "bajada": "estocada_c_m_bajada.webp",
+      "subida": "estocada_c_m_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 322,
+    "nombre": "ESTOCADA D/C",
+    "musculo": "Piernas",
+    "imagen": "estocada_d_c_inicio.webp",
+    "imagenes": {
+      "inicio": "estocada_d_c_inicio.webp",
+      "bajada": "estocada_d_c_bajada.webp",
+      "subida": "estocada_d_c_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 323,
+    "nombre": "EXCENTRICO EN RODILLO",
+    "musculo": "Piernas",
+    "imagen": "excentrico_en_rodillo_inicio.webp",
+    "imagenes": {
+      "inicio": "excentrico_en_rodillo_inicio.webp",
+      "bajada": "excentrico_en_rodillo_bajada.webp",
+      "subida": "excentrico_en_rodillo_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 324,
+    "nombre": "HIIT",
+    "musculo": "Piernas",
+    "imagen": "hiit_inicio.webp",
+    "imagenes": {
+      "inicio": "hiit_inicio.webp",
+      "bajada": "hiit_bajada.webp",
+      "subida": "hiit_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 325,
+    "nombre": "HIP THRUST UNILATERAL",
+    "musculo": "Piernas",
+    "imagen": "hip_thrust_unilateral_inicio.webp",
+    "imagenes": {
+      "inicio": "hip_thrust_unilateral_inicio.webp",
+      "bajada": "hip_thrust_unilateral_bajada.webp",
+      "subida": "hip_thrust_unilateral_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 326,
+    "nombre": "LAT PULL DOWN",
+    "musculo": "Espalda",
+    "imagen": "lat_pull_down_inicio.webp",
+    "imagenes": {
+      "inicio": "lat_pull_down_inicio.webp",
+      "bajada": "lat_pull_down_bajada.webp",
+      "subida": "lat_pull_down_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 327,
+    "nombre": "LAT PULL DOWN (DROP SET",
+    "musculo": "Espalda",
+    "imagen": "lat_pull_down_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "lat_pull_down_drop_set_inicio.webp",
+      "bajada": "lat_pull_down_drop_set_bajada.webp",
+      "subida": "lat_pull_down_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 328,
+    "nombre": "LEG CURL",
+    "musculo": "Piernas",
+    "imagen": "leg_curl_inicio.webp",
+    "imagenes": {
+      "inicio": "leg_curl_inicio.webp",
+      "bajada": "leg_curl_bajada.webp",
+      "subida": "leg_curl_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 329,
+    "nombre": "LEG CURL (DROP SET",
+    "musculo": "Piernas",
+    "imagen": "leg_curl_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "leg_curl_drop_set_inicio.webp",
+      "bajada": "leg_curl_drop_set_bajada.webp",
+      "subida": "leg_curl_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 330,
+    "nombre": "LEG EXTENSION",
+    "musculo": "Piernas",
+    "imagen": "leg_extension_inicio.webp",
+    "imagenes": {
+      "inicio": "leg_extension_inicio.webp",
+      "bajada": "leg_extension_bajada.webp",
+      "subida": "leg_extension_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 331,
+    "nombre": "LEG EXTENSION (DROP SET",
+    "musculo": "Piernas",
+    "imagen": "leg_extension_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "leg_extension_drop_set_inicio.webp",
+      "bajada": "leg_extension_drop_set_bajada.webp",
+      "subida": "leg_extension_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 332,
+    "nombre": "MAQUINA ABDUCCION",
+    "musculo": "Piernas",
+    "imagen": "maquina_abduccion_inicio.webp",
+    "imagenes": {
+      "inicio": "maquina_abduccion_inicio.webp",
+      "bajada": "maquina_abduccion_bajada.webp",
+      "subida": "maquina_abduccion_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 333,
+    "nombre": "MAQUINA ABDUCCION (DROP SET",
+    "musculo": "Piernas",
+    "imagen": "maquina_abduccion_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "maquina_abduccion_drop_set_inicio.webp",
+      "bajada": "maquina_abduccion_drop_set_bajada.webp",
+      "subida": "maquina_abduccion_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 334,
+    "nombre": "MAQUINA ADUCTOR",
+    "musculo": "Piernas",
+    "imagen": "maquina_aductor_inicio.webp",
+    "imagenes": {
+      "inicio": "maquina_aductor_inicio.webp",
+      "bajada": "maquina_aductor_bajada.webp",
+      "subida": "maquina_aductor_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 335,
+    "nombre": "MAQUINA ADUCTOR (DROP SET",
+    "musculo": "Piernas",
+    "imagen": "maquina_aductor_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "maquina_aductor_drop_set_inicio.webp",
+      "bajada": "maquina_aductor_drop_set_bajada.webp",
+      "subida": "maquina_aductor_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 336,
+    "nombre": "PALLOF PRESS",
+    "musculo": "Espalda",
+    "imagen": "pallof_press_inicio.webp",
+    "imagenes": {
+      "inicio": "pallof_press_inicio.webp",
+      "bajada": "pallof_press_bajada.webp",
+      "subida": "pallof_press_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 337,
+    "nombre": "PATADA DE TRICEPS C/M",
+    "musculo": "Hombro",
+    "imagen": "patada_de_triceps_c_m_inicio.webp",
+    "imagenes": {
+      "inicio": "patada_de_triceps_c_m_inicio.webp",
+      "bajada": "patada_de_triceps_c_m_bajada.webp",
+      "subida": "patada_de_triceps_c_m_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 338,
+    "nombre": "PLANCHA C/M",
+    "musculo": "Espalda",
+    "imagen": "plancha_c_m_inicio.webp",
+    "imagenes": {
+      "inicio": "plancha_c_m_inicio.webp",
+      "bajada": "plancha_c_m_bajada.webp",
+      "subida": "plancha_c_m_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 339,
+    "nombre": "PRENSA 45",
+    "musculo": "Piernas",
+    "imagen": "prensa_45_inicio.webp",
+    "imagenes": {
+      "inicio": "prensa_45_inicio.webp",
+      "bajada": "prensa_45_bajada.webp",
+      "subida": "prensa_45_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 340,
+    "nombre": "PRESS BANCA EN SMITH",
+    "musculo": "Pecho",
+    "imagen": "press_banca_en_smith_inicio.webp",
+    "imagenes": {
+      "inicio": "press_banca_en_smith_inicio.webp",
+      "bajada": "press_banca_en_smith_bajada.webp",
+      "subida": "press_banca_en_smith_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 341,
+    "nombre": "PRESS BANCA EN SMITH (DROP SET",
+    "musculo": "Pecho",
+    "imagen": "press_banca_en_smith_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "press_banca_en_smith_drop_set_inicio.webp",
+      "bajada": "press_banca_en_smith_drop_set_bajada.webp",
+      "subida": "press_banca_en_smith_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 342,
+    "nombre": "PRESS HOMBRO C/M",
+    "musculo": "Hombro",
+    "imagen": "press_hombro_c_m_inicio.webp",
+    "imagenes": {
+      "inicio": "press_hombro_c_m_inicio.webp",
+      "bajada": "press_hombro_c_m_bajada.webp",
+      "subida": "press_hombro_c_m_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 343,
+    "nombre": "PRESS HOMBRO C/M SENTADO",
+    "musculo": "Hombro",
+    "imagen": "press_hombro_c_m_sentado_inicio.webp",
+    "imagenes": {
+      "inicio": "press_hombro_c_m_sentado_inicio.webp",
+      "bajada": "press_hombro_c_m_sentado_bajada.webp",
+      "subida": "press_hombro_c_m_sentado_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 344,
+    "nombre": "PRESS HOMBRO EN SMITH",
+    "musculo": "Hombro",
+    "imagen": "press_hombro_en_smith_inicio.webp",
+    "imagenes": {
+      "inicio": "press_hombro_en_smith_inicio.webp",
+      "bajada": "press_hombro_en_smith_bajada.webp",
+      "subida": "press_hombro_en_smith_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 345,
+    "nombre": "PRESS INCLINADO C/M",
+    "musculo": "Pecho",
+    "imagen": "press_inclinado_c_m_inicio.webp",
+    "imagenes": {
+      "inicio": "press_inclinado_c_m_inicio.webp",
+      "bajada": "press_inclinado_c_m_bajada.webp",
+      "subida": "press_inclinado_c_m_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 346,
+    "nombre": "PULL DOWN NEUTRO",
+    "musculo": "Espalda",
+    "imagen": "pull_down_neutro_inicio.webp",
+    "imagenes": {
+      "inicio": "pull_down_neutro_inicio.webp",
+      "bajada": "pull_down_neutro_bajada.webp",
+      "subida": "pull_down_neutro_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 347,
+    "nombre": "REMO EN PRONO BANCO T",
+    "musculo": "Espalda",
+    "imagen": "remo_en_prono_banco_t_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_en_prono_banco_t_inicio.webp",
+      "bajada": "remo_en_prono_banco_t_bajada.webp",
+      "subida": "remo_en_prono_banco_t_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 348,
+    "nombre": "REMO NEUTRO BANCO T",
+    "musculo": "Espalda",
+    "imagen": "remo_neutro_banco_t_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_neutro_banco_t_inicio.webp",
+      "bajada": "remo_neutro_banco_t_bajada.webp",
+      "subida": "remo_neutro_banco_t_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 349,
+    "nombre": "REMO SENTADO EN POLEA",
+    "musculo": "Espalda",
+    "imagen": "remo_sentado_en_polea_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_sentado_en_polea_inicio.webp",
+      "bajada": "remo_sentado_en_polea_bajada.webp",
+      "subida": "remo_sentado_en_polea_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 350,
+    "nombre": "REMO SENTADO EN POLEA  (DROP SET",
+    "musculo": "Espalda",
+    "imagen": "remo_sentado_en_polea_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_sentado_en_polea_drop_set_inicio.webp",
+      "bajada": "remo_sentado_en_polea_drop_set_bajada.webp",
+      "subida": "remo_sentado_en_polea_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 351,
+    "nombre": "REMO UNILATERAL EN POLEA",
+    "musculo": "Espalda",
+    "imagen": "remo_unilateral_en_polea_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_unilateral_en_polea_inicio.webp",
+      "bajada": "remo_unilateral_en_polea_bajada.webp",
+      "subida": "remo_unilateral_en_polea_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 352,
+    "nombre": "SENTADILLA EN SMITH",
+    "musculo": "Piernas",
+    "imagen": "sentadilla_en_smith_inicio.webp",
+    "imagenes": {
+      "inicio": "sentadilla_en_smith_inicio.webp",
+      "bajada": "sentadilla_en_smith_bajada.webp",
+      "subida": "sentadilla_en_smith_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 353,
+    "nombre": "SENTADILLA EN SMITH (DROP SET",
+    "musculo": "Piernas",
+    "imagen": "sentadilla_en_smith_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "sentadilla_en_smith_drop_set_inicio.webp",
+      "bajada": "sentadilla_en_smith_drop_set_bajada.webp",
+      "subida": "sentadilla_en_smith_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 354,
+    "nombre": "SHOULDER PRESS",
+    "musculo": "Hombro",
+    "imagen": "shoulder_press_inicio.webp",
+    "imagenes": {
+      "inicio": "shoulder_press_inicio.webp",
+      "bajada": "shoulder_press_bajada.webp",
+      "subida": "shoulder_press_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 355,
+    "nombre": "SHOULDER PRESS (DROP SET",
+    "musculo": "Hombro",
+    "imagen": "shoulder_press_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "shoulder_press_drop_set_inicio.webp",
+      "bajada": "shoulder_press_drop_set_bajada.webp",
+      "subida": "shoulder_press_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 356,
+    "nombre": "TRICEPS CUERDA",
+    "musculo": "Hombro",
+    "imagen": "triceps_cuerda_inicio.webp",
+    "imagenes": {
+      "inicio": "triceps_cuerda_inicio.webp",
+      "bajada": "triceps_cuerda_bajada.webp",
+      "subida": "triceps_cuerda_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 357,
+    "nombre": "TRICEPS CUERDA (DROP SET",
+    "musculo": "Hombro",
+    "imagen": "triceps_cuerda_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "triceps_cuerda_drop_set_inicio.webp",
+      "bajada": "triceps_cuerda_drop_set_bajada.webp",
+      "subida": "triceps_cuerda_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 358,
+    "nombre": "TRICEPS CUERDA SOBRE LA CABEZA",
+    "musculo": "Hombro",
+    "imagen": "triceps_cuerda_sobre_la_cabeza_inicio.webp",
+    "imagenes": {
+      "inicio": "triceps_cuerda_sobre_la_cabeza_inicio.webp",
+      "bajada": "triceps_cuerda_sobre_la_cabeza_bajada.webp",
+      "subida": "triceps_cuerda_sobre_la_cabeza_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 359,
+    "nombre": "TRICEPS CUERDA SOBRE LA CABEZA (DROP SET",
+    "musculo": "Hombro",
+    "imagen": "triceps_cuerda_sobre_la_cabeza_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "triceps_cuerda_sobre_la_cabeza_drop_set_inicio.webp",
+      "bajada": "triceps_cuerda_sobre_la_cabeza_drop_set_bajada.webp",
+      "subida": "triceps_cuerda_sobre_la_cabeza_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 360,
+    "nombre": "TRICEPS CUERDA TRAS NUCA",
+    "musculo": "Hombro",
+    "imagen": "triceps_cuerda_tras_nuca_inicio.webp",
+    "imagenes": {
+      "inicio": "triceps_cuerda_tras_nuca_inicio.webp",
+      "bajada": "triceps_cuerda_tras_nuca_bajada.webp",
+      "subida": "triceps_cuerda_tras_nuca_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 361,
+    "nombre": "TRICEPS UNILATERAL EN POLEA",
+    "musculo": "Hombro",
+    "imagen": "triceps_unilateral_en_polea_inicio.webp",
+    "imagenes": {
+      "inicio": "triceps_unilateral_en_polea_inicio.webp",
+      "bajada": "triceps_unilateral_en_polea_bajada.webp",
+      "subida": "triceps_unilateral_en_polea_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 362,
+    "nombre": "VUELO LATERAL UNILATERAL EN POLEA",
+    "musculo": "Hombro",
+    "imagen": "vuelo_lateral_unilateral_en_polea_inicio.webp",
+    "imagenes": {
+      "inicio": "vuelo_lateral_unilateral_en_polea_inicio.webp",
+      "bajada": "vuelo_lateral_unilateral_en_polea_bajada.webp",
+      "subida": "vuelo_lateral_unilateral_en_polea_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 363,
+    "nombre": "VUELOS LATERALES",
+    "musculo": "Hombro",
+    "imagen": "vuelos_laterales_inicio.webp",
+    "imagenes": {
+      "inicio": "vuelos_laterales_inicio.webp",
+      "bajada": "vuelos_laterales_bajada.webp",
+      "subida": "vuelos_laterales_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 364,
+    "nombre": "VUELOS LATERALES (DROP SET",
+    "musculo": "Hombro",
+    "imagen": "vuelos_laterales_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "vuelos_laterales_drop_set_inicio.webp",
+      "bajada": "vuelos_laterales_drop_set_bajada.webp",
+      "subida": "vuelos_laterales_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 365,
+    "nombre": "VUELOS LATERALES EN POLEA",
+    "musculo": "Hombro",
+    "imagen": "vuelos_laterales_en_polea_inicio.webp",
+    "imagenes": {
+      "inicio": "vuelos_laterales_en_polea_inicio.webp",
+      "bajada": "vuelos_laterales_en_polea_bajada.webp",
+      "subida": "vuelos_laterales_en_polea_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 366,
+    "nombre": "VUELOS LATERALES SENTADO",
+    "musculo": "Hombro",
+    "imagen": "vuelos_laterales_sentado_inicio.webp",
+    "imagenes": {
+      "inicio": "vuelos_laterales_sentado_inicio.webp",
+      "bajada": "vuelos_laterales_sentado_bajada.webp",
+      "subida": "vuelos_laterales_sentado_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 367,
+    "nombre": "VUELOS LATERALES SENTADO (DROP SET",
+    "musculo": "Hombro",
+    "imagen": "vuelos_laterales_sentado_drop_set_inicio.webp",
+    "imagenes": {
+      "inicio": "vuelos_laterales_sentado_drop_set_inicio.webp",
+      "bajada": "vuelos_laterales_sentado_drop_set_bajada.webp",
+      "subida": "vuelos_laterales_sentado_drop_set_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 368,
+    "nombre": "VUELOS POSTERIOR EN POLEA",
+    "musculo": "Hombro",
+    "imagen": "vuelos_posterior_en_polea_inicio.webp",
+    "imagenes": {
+      "inicio": "vuelos_posterior_en_polea_inicio.webp",
+      "bajada": "vuelos_posterior_en_polea_bajada.webp",
+      "subida": "vuelos_posterior_en_polea_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 369,
+    "nombre": "FACE PULL",
+    "musculo": "Espalda",
+    "imagen": "face_pull_inicio.webp",
+    "imagenes": {
+      "inicio": "face_pull_inicio.webp",
+      "bajada": "face_pull_bajada.webp",
+      "subida": "face_pull_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 370,
+    "nombre": "HIP THRUST",
+    "musculo": "Piernas",
+    "imagen": "hip_thrust_inicio.webp",
+    "imagenes": {
+      "inicio": "hip_thrust_inicio.webp",
+      "bajada": "hip_thrust_bajada.webp",
+      "subida": "hip_thrust_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 371,
+    "nombre": "PESO MUERTO CONVENCIONAL",
+    "musculo": "Espalda",
+    "imagen": "peso_muerto_convencional_inicio.webp",
+    "imagenes": {
+      "inicio": "peso_muerto_convencional_inicio.webp",
+      "bajada": "peso_muerto_convencional_bajada.webp",
+      "subida": "peso_muerto_convencional_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 372,
+    "nombre": "PESO MUERTO RUMANO",
+    "musculo": "Espalda",
+    "imagen": "peso_muerto_rumano_inicio.webp",
+    "imagenes": {
+      "inicio": "peso_muerto_rumano_inicio.webp",
+      "bajada": "peso_muerto_rumano_bajada.webp",
+      "subida": "peso_muerto_rumano_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 373,
+    "nombre": "PRESS BANCA",
+    "musculo": "Pecho",
+    "imagen": "press_banca_inicio.webp",
+    "imagenes": {
+      "inicio": "press_banca_inicio.webp",
+      "bajada": "press_banca_bajada.webp",
+      "subida": "press_banca_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 374,
+    "nombre": "REMO CON BARRA EN SUPINO",
+    "musculo": "Espalda",
+    "imagen": "remo_con_barra_en_supino_inicio.webp",
+    "imagenes": {
+      "inicio": "remo_con_barra_en_supino_inicio.webp",
+      "bajada": "remo_con_barra_en_supino_bajada.webp",
+      "subida": "remo_con_barra_en_supino_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  },
+  {
+    "id": 375,
+    "nombre": "SENTADILLA",
+    "musculo": "Piernas",
+    "imagen": "sentadilla_inicio.webp",
+    "imagenes": {
+      "inicio": "sentadilla_inicio.webp",
+      "bajada": "sentadilla_bajada.webp",
+      "subida": "sentadilla_subida.webp"
+    },
+    "series": "4",
+    "repeticiones": "8-12",
+    "origen": "Firebase"
+  }
+]

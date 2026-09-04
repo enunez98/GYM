@@ -4,6 +4,7 @@ import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/info_row.dart';
 import '../../../core/widgets/metric_card.dart';
 import '../../../core/widgets/status_chip.dart';
+import '../../../core/widgets/responsive_action_button.dart';
 import '../../../services/demo_student_profile_service.dart';
 import '../../../services/session_store.dart';
 import '../../../services/student_attendance_service.dart';
@@ -16,8 +17,12 @@ class StudentHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (MediaQuery.sizeOf(context).width >= 900) {
+      return _WebStudentHome(onStartWorkout: onStartWorkout);
+    }
+
     return Container(
-      color: const Color(0xFF00111F),
+      color: const Color(0xFF111214),
       child: SafeArea(
         child: Column(
           children: [
@@ -45,6 +50,458 @@ class StudentHomeScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _WebStudentHome extends StatelessWidget {
+  final VoidCallback onStartWorkout;
+
+  const _WebStudentHome({required this.onStartWorkout});
+
+  @override
+  Widget build(BuildContext context) {
+    final user = SessionStore.currentUser;
+    final profile = DemoStudentProfileService.getByUserId(user?.id);
+    final attendance = StudentAttendanceService.getSummary(profile);
+    final assignedSession = StudentRoutineService.getCurrentSession(profile);
+    final totalSessions = StudentRoutineService.getTotalSessionsForCurrentWeek(
+      profile,
+    );
+    final currentSessionNumber = StudentRoutineService.getCurrentSessionNumber(
+      profile,
+    );
+    final weekFinished = StudentRoutineService.isCurrentWeekFinished(profile);
+    final hasAssignedRoutine = assignedSession != null;
+    final userName = profile?.name ?? user?.name ?? 'Alumno';
+    final plan = profile?.plan ?? 'Plan no asignado';
+    final sessionTitle = weekFinished
+        ? 'Semana completada'
+        : hasAssignedRoutine
+        ? assignedSession.title
+        : 'Sesión pendiente';
+    final sessionSubtitle = weekFinished
+        ? 'Todas las sesiones de esta semana fueron completadas'
+        : hasAssignedRoutine
+        ? 'Sesión $currentSessionNumber de $totalSessions · ${assignedSession.exercises.length} ejercicios'
+        : 'Aún no hay rutina asignada para este plan';
+
+    return ColoredBox(
+      color: const Color(0xFF111214),
+      child: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
+              child: Row(
+                children: [
+                  const CircleAvatar(
+                    radius: 24,
+                    backgroundColor: Color(0xFF59D52D),
+                    child: Icon(Icons.person, color: Color(0xFF07111D)),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Hola, $userName 👋',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 23,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Plan: $plan',
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  StatusChip(
+                    text: profile?.status ?? 'Activo',
+                    background: const Color(0xFF16422A),
+                    textColor: const Color(0xFFD8FFE6),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color: Color(0xFFF3F5F6),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+                ),
+                child: ListView(
+                  padding: const EdgeInsets.fromLTRB(28, 28, 28, 40),
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _WebAttendanceMetric(
+                            icon: Icons.fitness_center_rounded,
+                            title: 'Asistencia semanal',
+                            value: attendance.weeklyText,
+                            percent: attendance.weeklyPercent,
+                          ),
+                        ),
+                        const SizedBox(width: 18),
+                        Expanded(
+                          child: _WebAttendanceMetric(
+                            icon: Icons.fitness_center_rounded,
+                            title: 'Asistencia mensual',
+                            value: attendance.monthlyText,
+                            percent: attendance.monthlyPercent,
+                          ),
+                        ),
+                        const SizedBox(width: 18),
+                        Expanded(
+                          child: _WebAttendanceMetric(
+                            icon: Icons.event_available_outlined,
+                            title: 'Días restantes',
+                            value: '${attendance.daysRemaining}',
+                            suffix: 'días',
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    AppCard(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 26,
+                        vertical: 22,
+                      ),
+                      webContentMaxWidth: double.infinity,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: _WebAttendanceStatus(
+                              icon: Icons.check_circle_outline,
+                              value: attendance.weeklyCompleted,
+                              label: 'Completadas',
+                            ),
+                          ),
+                          const _WebVerticalDivider(),
+                          Expanded(
+                            child: _WebAttendanceStatus(
+                              icon: Icons.skip_next_outlined,
+                              value: attendance.weeklySkipped,
+                              label: 'Omitidas',
+                            ),
+                          ),
+                          const _WebVerticalDivider(),
+                          Expanded(
+                            child: _WebAttendanceStatus(
+                              icon: Icons.pending_actions_outlined,
+                              value: attendance.pendingSessions,
+                              label: 'Pendientes',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    AppCard(
+                      padding: const EdgeInsets.fromLTRB(28, 30, 28, 28),
+                      webContentMaxWidth: double.infinity,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 3,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'PRÓXIMA CLASE',
+                                  style: TextStyle(
+                                    color: Color(0xFF25303A),
+                                    fontSize: 13,
+                                    letterSpacing: .8,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                Text(
+                                  sessionTitle,
+                                  style: const TextStyle(
+                                    color: Color(0xFF07111D),
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.call_made_rounded,
+                                      color: Color(0xFF616B76),
+                                      size: 20,
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: Text(
+                                        sessionSubtitle,
+                                        style: const TextStyle(
+                                          color: Color(0xFF616B76),
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 18),
+                                StatusChip(
+                                  text: weekFinished
+                                      ? 'Semana lista'
+                                      : hasAssignedRoutine
+                                      ? 'Rutina asignada'
+                                      : 'Sin rutina',
+                                  background: weekFinished || hasAssignedRoutine
+                                      ? const Color(0xFFEDF9E8)
+                                      : const Color(0xFFFFF2D9),
+                                  textColor: weekFinished || hasAssignedRoutine
+                                      ? const Color(0xFF4AC51F)
+                                      : const Color(0xFFD98200),
+                                ),
+                                const SizedBox(height: 22),
+                                SizedBox(
+                                  width: 360,
+                                  height: 56,
+                                  child: ElevatedButton.icon(
+                                    onPressed: hasAssignedRoutine
+                                        ? onStartWorkout
+                                        : null,
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color(0xFF71E000),
+                                      foregroundColor: const Color(0xFF07111D),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(13),
+                                      ),
+                                    ),
+                                    iconAlignment: IconAlignment.end,
+                                    icon: const Icon(Icons.play_arrow_rounded),
+                                    label: const Text(
+                                      'Comenzar entrenamiento',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 28),
+                          const Expanded(
+                            flex: 2,
+                            child: _WorkoutIllustration(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _WebAttendanceMetric extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String value;
+  final int? percent;
+  final String? suffix;
+
+  const _WebAttendanceMetric({
+    required this.icon,
+    required this.title,
+    required this.value,
+    this.percent,
+    this.suffix,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      constraints: const BoxConstraints(minHeight: 158),
+      padding: const EdgeInsets.fromLTRB(24, 24, 24, 20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: const Color(0xFFE7EAEC)),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x0D000000),
+            blurRadius: 14,
+            offset: Offset(0, 7),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 62,
+            height: 62,
+            decoration: BoxDecoration(
+              color: const Color(0xFFEDF9E8),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Icon(icon, color: const Color(0xFF4AC51F), size: 29),
+          ),
+          const SizedBox(width: 22),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: Color(0xFF616B76),
+                    fontSize: 15,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    color: Color(0xFF07111D),
+                    fontSize: 30,
+                    height: 1,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                if (percent != null) ...[
+                  const SizedBox(height: 18),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: LinearProgressIndicator(
+                            value: percent!.clamp(0, 100) / 100,
+                            minHeight: 10,
+                            backgroundColor: const Color(0xFFF0F2F3),
+                            valueColor: const AlwaysStoppedAnimation(
+                              Color(0xFF59D52D),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 14),
+                      Text(
+                        '$percent%',
+                        style: const TextStyle(
+                          color: Color(0xFF4AC51F),
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                ] else ...[
+                  const SizedBox(height: 13),
+                  Text(
+                    suffix ?? '',
+                    style: const TextStyle(
+                      color: Color(0xFF4AC51F),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _WebAttendanceStatus extends StatelessWidget {
+  final IconData icon;
+  final int value;
+  final String label;
+
+  const _WebAttendanceStatus({
+    required this.icon,
+    required this.value,
+    required this.label,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: 58,
+          height: 58,
+          decoration: BoxDecoration(
+            color: const Color(0xFFEDF9E8),
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: Icon(icon, color: const Color(0xFF4AC51F), size: 27),
+        ),
+        const SizedBox(width: 20),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '$value',
+              style: const TextStyle(
+                color: Color(0xFF3FB52A),
+                fontSize: 24,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            Text(
+              label,
+              style: const TextStyle(color: Color(0xFF616B76), fontSize: 15),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _WebVerticalDivider extends StatelessWidget {
+  const _WebVerticalDivider();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(width: 1, height: 76, color: const Color(0xFFE7EAEC));
+  }
+}
+
+class _WorkoutIllustration extends StatelessWidget {
+  const _WorkoutIllustration();
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 260,
+      child: Image.asset(
+        'assets/images/student_home_workout.png',
+        fit: BoxFit.contain,
+        filterQuality: FilterQuality.high,
+        semanticLabel:
+            'Ilustración de implementos y planificación de entrenamiento',
       ),
     );
   }
@@ -334,28 +791,36 @@ class _NextWorkoutCard extends StatelessWidget {
                 : const Color(0xFFD98200),
           ),
           const SizedBox(height: 18),
-          SizedBox(
-            width: double.infinity,
-            height: 52,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF59D52D),
-                foregroundColor: const Color(0xFF111214),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
-                ),
-              ),
-              onPressed: hasAssignedRoutine ? onStartWorkout : null,
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Comenzar entrenamiento',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ResponsiveActionButton(
+            child: SizedBox(
+              height: 52,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF59D52D),
+                  foregroundColor: const Color(0xFF111214),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
                   ),
-                  SizedBox(width: 10),
-                  Icon(Icons.play_arrow),
-                ],
+                ),
+                onPressed: hasAssignedRoutine ? onStartWorkout : null,
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        'Comenzar entrenamiento',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Icon(Icons.play_arrow),
+                  ],
+                ),
               ),
             ),
           ),

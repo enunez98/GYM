@@ -1,0 +1,392 @@
+{
+  "rutinasFirebase": 2,
+  "ejerciciosUnicosFirebase": 77,
+  "coincidencias": [
+    {
+      "excel": "ABS ROTACION",
+      "catalogo": "ABS ROTACION",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "BANCO ROMANO",
+      "catalogo": "BANCO ROMANO",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "BANCO SCOTT",
+      "catalogo": "BANCO SCOTT",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "BICEPS 45",
+      "catalogo": "BICEPS 45",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "BICEPS 45 C/M",
+      "catalogo": "BICEPS 45 C/M",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "BICEPS CON BARRA EN POLEA",
+      "catalogo": "BICEPS CON BARRA EN POLEA",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "BICEPS CON BARRA EN POLEA  (DROP SET",
+      "catalogo": "BICEPS CON BARRA EN POLEA  (DROP SET",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "BICEPS CON BARRA Z",
+      "catalogo": "BICEPS CON BARRA Z",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "BICEPS MARTILLO",
+      "catalogo": "BICEPS MARTILLO",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "BICEPS MARTILLO (DROP SET",
+      "catalogo": "BICEPS MARTILLO (DROP SET",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "BICEPS ROTACION",
+      "catalogo": "BICEPS ROTACION",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "CHEST PRESS",
+      "catalogo": "CHEST PRESS",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "CHEST PRESS (DROP SET",
+      "catalogo": "CHEST PRESS (DROP SET",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "CROSS OVER ALTO",
+      "catalogo": "CROSS OVER ALTO",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "CROSS OVER ALTO (DROP SET",
+      "catalogo": "CROSS OVER ALTO (DROP SET",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "CROSS OVER MEDIO (DROP SET",
+      "catalogo": "CROSS OVER MEDIO (DROP SET",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "CRUNCH",
+      "catalogo": "CRUNCH",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "DEAD BUG",
+      "catalogo": "DEAD BUG",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "ESTOCADA BULGARA",
+      "catalogo": "ESTOCADA BULGARA",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "ESTOCADA BULGARA D/C",
+      "catalogo": "ESTOCADA BULGARA D/C",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "ESTOCADA C/M",
+      "catalogo": "ESTOCADA C/M",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "ESTOCADA D/C",
+      "catalogo": "ESTOCADA D/C",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "EXCENTRICO EN RODILLO",
+      "catalogo": "EXCENTRICO EN RODILLO",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "FACE PULL",
+      "catalogo": "FACE PULL",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "HIIT",
+      "catalogo": "HIIT",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "HIP THRUST",
+      "catalogo": "HIP THRUST",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "HIP THRUST UNILATERAL",
+      "catalogo": "HIP THRUST UNILATERAL",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "LAT PULL DOWN",
+      "catalogo": "LAT PULL DOWN",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "LAT PULL DOWN (DROP SET",
+      "catalogo": "LAT PULL DOWN (DROP SET",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "LAT PULL DOWN  (DROP SET",
+      "catalogo": "LAT PULL DOWN (DROP SET",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "LEG CURL",
+      "catalogo": "LEG CURL",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "LEG CURL (DROP SET",
+      "catalogo": "LEG CURL (DROP SET",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "LEG EXTENSION",
+      "catalogo": "LEG EXTENSION",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "LEG EXTENSION (DROP SET",
+      "catalogo": "LEG EXTENSION (DROP SET",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "MAQUINA ABDUCCION",
+      "catalogo": "MAQUINA ABDUCCION",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "MAQUINA ABDUCCION (DROP SET",
+      "catalogo": "MAQUINA ABDUCCION (DROP SET",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "MAQUINA ADUCTOR",
+      "catalogo": "MAQUINA ADUCTOR",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "MAQUINA ADUCTOR (DROP SET",
+      "catalogo": "MAQUINA ADUCTOR (DROP SET",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "PALLOF PRESS",
+      "catalogo": "PALLOF PRESS",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "PATADA DE TRICEPS C/M",
+      "catalogo": "PATADA DE TRICEPS C/M",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "PESO MUERTO CONVENCIONAL",
+      "catalogo": "PESO MUERTO CONVENCIONAL",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "PESO MUERTO RUMANO",
+      "catalogo": "PESO MUERTO RUMANO",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "PLANCHA C/M",
+      "catalogo": "PLANCHA C/M",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "PRENSA 45",
+      "catalogo": "PRENSA 45",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "PRESS BANCA",
+      "catalogo": "PRESS BANCA",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "PRESS BANCA EN SMITH",
+      "catalogo": "PRESS BANCA EN SMITH",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "PRESS BANCA EN SMITH (DROP SET",
+      "catalogo": "PRESS BANCA EN SMITH (DROP SET",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "PRESS HOMBRO C/M",
+      "catalogo": "PRESS HOMBRO C/M",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "PRESS HOMBRO C/M SENTADO",
+      "catalogo": "PRESS HOMBRO C/M SENTADO",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "PRESS HOMBRO EN SMITH",
+      "catalogo": "PRESS HOMBRO EN SMITH",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "PRESS INCLINADO C/M",
+      "catalogo": "PRESS INCLINADO C/M",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "PULL DOWN NEUTRO",
+      "catalogo": "PULL DOWN NEUTRO",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "REMO CON BARRA EN SUPINO",
+      "catalogo": "REMO CON BARRA EN SUPINO",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "REMO EN PRONO BANCO T",
+      "catalogo": "REMO EN PRONO BANCO T",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "REMO NEUTRO BANCO T",
+      "catalogo": "REMO NEUTRO BANCO T",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "REMO SENTADO EN POLEA",
+      "catalogo": "REMO SENTADO EN POLEA",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "REMO SENTADO EN POLEA  (DROP SET",
+      "catalogo": "REMO SENTADO EN POLEA  (DROP SET",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "REMO SENTADO EN POLEA (DROP SET",
+      "catalogo": "REMO SENTADO EN POLEA  (DROP SET",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "REMO UNILATERAL EN POLEA",
+      "catalogo": "REMO UNILATERAL EN POLEA",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "SENTADILLA",
+      "catalogo": "SENTADILLA",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "SENTADILLA EN SMITH",
+      "catalogo": "SENTADILLA EN SMITH",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "SENTADILLA EN SMITH (DROP SET",
+      "catalogo": "SENTADILLA EN SMITH (DROP SET",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "SHOULDER PRESS",
+      "catalogo": "SHOULDER PRESS",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "SHOULDER PRESS (DROP SET",
+      "catalogo": "SHOULDER PRESS (DROP SET",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "TRICEPS CUERDA",
+      "catalogo": "TRICEPS CUERDA",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "TRICEPS CUERDA (DROP SET",
+      "catalogo": "TRICEPS CUERDA (DROP SET",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "TRICEPS CUERDA SOBRE LA CABEZA",
+      "catalogo": "TRICEPS CUERDA SOBRE LA CABEZA",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "TRICEPS CUERDA SOBRE LA CABEZA (DROP SET",
+      "catalogo": "TRICEPS CUERDA SOBRE LA CABEZA (DROP SET",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "TRICEPS CUERDA TRAS NUCA",
+      "catalogo": "TRICEPS CUERDA TRAS NUCA",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "TRICEPS UNILATERAL EN POLEA",
+      "catalogo": "TRICEPS UNILATERAL EN POLEA",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "VUELO LATERAL UNILATERAL EN POLEA",
+      "catalogo": "VUELO LATERAL UNILATERAL EN POLEA",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "VUELOS LATERALES",
+      "catalogo": "VUELOS LATERALES",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "VUELOS LATERALES (DROP SET",
+      "catalogo": "VUELOS LATERALES (DROP SET",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "VUELOS LATERALES EN POLEA",
+      "catalogo": "VUELOS LATERALES EN POLEA",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "VUELOS LATERALES SENTADO",
+      "catalogo": "VUELOS LATERALES SENTADO",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "VUELOS LATERALES SENTADO (DROP SET",
+      "catalogo": "VUELOS LATERALES SENTADO (DROP SET",
+      "tipo": "exacta"
+    },
+    {
+      "excel": "VUELOS POSTERIOR EN POLEA",
+      "catalogo": "VUELOS POSTERIOR EN POLEA",
+      "tipo": "exacta"
+    }
+  ],
+  "faltantes": []
+}

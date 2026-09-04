@@ -1,3 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+
 import '../models/app_user.dart';
 
 class SessionStore {
@@ -11,7 +14,10 @@ class SessionStore {
     currentUser = user;
   }
 
-  static void signOut() {
+  static Future<void> signOut() async {
+    if (Firebase.apps.isNotEmpty) {
+      await FirebaseAuth.instance.signOut();
+    }
     currentUser = null;
   }
 }
