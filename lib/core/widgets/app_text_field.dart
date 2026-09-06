@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'responsive_form_field.dart';
 
@@ -11,6 +12,9 @@ class AppTextField extends StatelessWidget {
   final bool readOnly;
   final VoidCallback? onTap;
   final Widget? suffix;
+  final List<TextInputFormatter>? inputFormatters;
+  final int? maxLength;
+  final ValueChanged<String>? onChanged;
 
   const AppTextField({
     super.key,
@@ -22,6 +26,9 @@ class AppTextField extends StatelessWidget {
     this.readOnly = false,
     this.onTap,
     this.suffix,
+    this.inputFormatters,
+    this.maxLength,
+    this.onChanged,
   });
 
   @override
@@ -32,9 +39,13 @@ class AppTextField extends StatelessWidget {
         keyboardType: keyboardType,
         readOnly: readOnly,
         onTap: onTap,
+        inputFormatters: inputFormatters,
+        maxLength: maxLength,
+        onChanged: onChanged,
         decoration: InputDecoration(
           labelText: label,
           hintText: hint,
+          counterText: maxLength == null ? null : '',
           prefixIcon: Icon(icon),
           suffixIcon: suffix == null
               ? null

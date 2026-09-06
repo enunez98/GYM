@@ -1,4 +1,6 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/exercise_motion_preview.dart';
@@ -24,6 +26,7 @@ class WorkoutScreen extends StatefulWidget {
 
 class _WorkoutScreenState extends State<WorkoutScreen> {
   final Map<String, TextEditingController> _workoutControllers = {};
+  bool _isSaving = false;
 
   String _controllerKey({
     required String type,
@@ -53,6 +56,46 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
 
   int _parseReps(String value) {
     return int.tryParse(value.trim()) ?? 0;
+  }
+
+  String? _workoutValidationError(DemoRoutineSession session) {
+    var hasAtLeastOneSet = false;
+    for (
+      var exerciseIndex = 0;
+      exerciseIndex < session.exercises.length;
+      exerciseIndex++
+    ) {
+      final exercise = session.exercises[exerciseIndex];
+      final totalSeries = exercise.series <= 0 ? 1 : exercise.series;
+      for (var seriesNumber = 1; seriesNumber <= totalSeries; seriesNumber++) {
+        final kgText = _controllerFor(
+          type: 'kg',
+          exerciseIndex: exerciseIndex,
+          seriesNumber: seriesNumber,
+        ).text.trim();
+        final repsText = _controllerFor(
+          type: 'reps',
+          exerciseIndex: exerciseIndex,
+          seriesNumber: seriesNumber,
+        ).text.trim();
+        if (kgText.isEmpty && repsText.isEmpty) continue;
+
+        hasAtLeastOneSet = true;
+        final kg = kgText.isEmpty
+            ? 0.0
+            : double.tryParse(kgText.replaceAll(',', '.'));
+        if (kg == null || !kg.isFinite || kg < 0 || kg > 2000) {
+          return '${exercise.name}, serie $seriesNumber: usa un peso entre 0 y 2000 kg';
+        }
+        final reps = int.tryParse(repsText);
+        if (reps == null || reps <= 0 || reps > 3600) {
+          return '${exercise.name}, serie $seriesNumber: ingresa repeticiones o segundos entre 1 y 3600';
+        }
+      }
+    }
+    return hasAtLeastOneSet
+        ? null
+        : 'Ingresa al menos una serie con repeticiones o segundos';
   }
 
   void _clearWorkoutInputs() {
@@ -101,7 +144,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
           ).text,
         );
 
-        if (kg > 0 || reps > 0) {
+        if (reps > 0) {
           setLogs.add(
             WorkoutSetLog(setNumber: seriesNumber, kg: kg, reps: reps),
           );
@@ -135,16 +178,25 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
     );
   }
 
-  void _saveWorkout({
+  Future<void> _saveWorkout({
     required AppUser? user,
     required StudentProfile? profile,
     required DemoRoutineSession? assignedSession,
     required int totalSessions,
-  }) {
+  }) async {
+    if (_isSaving) return;
     if (assignedSession == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('No hay sesión asignada para guardar')),
       );
+      return;
+    }
+
+    final validationError = _workoutValidationError(assignedSession);
+    if (validationError != null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(validationError)));
       return;
     }
 
@@ -163,10 +215,34 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
       return;
     }
 
-    WorkoutHistoryStore.add(log);
-    StudentWorkoutProgressStore.completeCurrentSession(profile, totalSessions);
-    _clearWorkoutInputs();
-    setState(() {});
+    setState(() => _isSaving = true);
+    try {
+      if (Firebase.apps.isEmpty) {
+        WorkoutHistoryStore.add(log);
+        StudentWorkoutProgressStore.completeCurrentSession(
+          profile,
+          totalSessions,
+        );
+      } else {
+        if (profile == null) throw StateError('Perfil de alumno no disponible');
+        await WorkoutHistoryStore.addAndAdvance(
+          log: log,
+          profile: profile,
+          totalSessions: totalSessions,
+          completed: true,
+        );
+      }
+      _clearWorkoutInputs();
+      if (!mounted) return;
+      setState(() => _isSaving = false);
+    } catch (error) {
+      if (!mounted) return;
+      setState(() => _isSaving = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No se pudo guardar el entrenamiento')),
+      );
+      return;
+    }
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -177,12 +253,13 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
     );
   }
 
-  void _skipWorkout({
+  Future<void> _skipWorkout({
     required AppUser? user,
     required StudentProfile? profile,
     required DemoRoutineSession? assignedSession,
     required int totalSessions,
-  }) {
+  }) async {
+    if (_isSaving) return;
     if (assignedSession == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('No hay sesión asignada para omitir')),
@@ -204,10 +281,31 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
       exercises: const [],
     );
 
-    WorkoutHistoryStore.add(log);
-    StudentWorkoutProgressStore.skipCurrentSession(profile, totalSessions);
-    _clearWorkoutInputs();
-    setState(() {});
+    setState(() => _isSaving = true);
+    try {
+      if (Firebase.apps.isEmpty) {
+        WorkoutHistoryStore.add(log);
+        StudentWorkoutProgressStore.skipCurrentSession(profile, totalSessions);
+      } else {
+        if (profile == null) throw StateError('Perfil de alumno no disponible');
+        await WorkoutHistoryStore.addAndAdvance(
+          log: log,
+          profile: profile,
+          totalSessions: totalSessions,
+          completed: false,
+        );
+      }
+      _clearWorkoutInputs();
+      if (!mounted) return;
+      setState(() => _isSaving = false);
+    } catch (error) {
+      if (!mounted) return;
+      setState(() => _isSaving = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No se pudo omitir la sesión')),
+      );
+      return;
+    }
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -378,7 +476,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                               borderRadius: BorderRadius.circular(14),
                             ),
                           ),
-                          onPressed: hasAssignedWorkout
+                          onPressed: hasAssignedWorkout && !_isSaving
                               ? () {
                                   _saveWorkout(
                                     user: user,
@@ -410,7 +508,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                               borderRadius: BorderRadius.circular(14),
                             ),
                           ),
-                          onPressed: hasAssignedWorkout
+                          onPressed: hasAssignedWorkout && !_isSaving
                               ? () {
                                   _skipWorkout(
                                     user: user,
@@ -727,7 +825,8 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                                       width: double.infinity,
                                       height: 48,
                                       child: ElevatedButton.icon(
-                                        onPressed: hasAssignedWorkout
+                                        onPressed:
+                                            hasAssignedWorkout && !_isSaving
                                             ? () => _saveWorkout(
                                                 user: user,
                                                 profile: profile,
@@ -747,7 +846,8 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                                       width: double.infinity,
                                       height: 46,
                                       child: OutlinedButton(
-                                        onPressed: hasAssignedWorkout
+                                        onPressed:
+                                            hasAssignedWorkout && !_isSaving
                                             ? () => _skipWorkout(
                                                 user: user,
                                                 profile: profile,
@@ -776,6 +876,13 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
       ),
     );
   }
+}
+
+String _metricLabel(String target) {
+  final normalized = target.toLowerCase();
+  if (normalized.contains('seg') || normalized.contains('min')) return 'seg';
+  if (normalized.contains('metro') || normalized.contains(' km')) return 'm';
+  return 'reps';
 }
 
 class _WebPlanFact extends StatelessWidget {
@@ -895,6 +1002,7 @@ class _WebWorkoutExerciseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final totalSeries = exercise.series <= 0 ? 1 : exercise.series;
+    final metricLabel = _metricLabel(exercise.reps);
     return AppCard(
       padding: const EdgeInsets.all(20),
       webContentMaxWidth: double.infinity,
@@ -938,7 +1046,7 @@ class _WebWorkoutExerciseCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Objetivo · ${exercise.reps} repeticiones',
+                  'Objetivo · ${exercise.reps}',
                   style: const TextStyle(color: Color(0xFF616B76)),
                 ),
                 const SizedBox(height: 18),
@@ -954,7 +1062,7 @@ class _WebWorkoutExerciseCard extends StatelessWidget {
                       const SizedBox(width: 10),
                       Expanded(
                         child: Text(
-                          'Completa $totalSeries series de ${exercise.reps} reps',
+                          'Completa $totalSeries series de ${exercise.reps}',
                           style: const TextStyle(fontWeight: FontWeight.w600),
                         ),
                       ),
@@ -1017,6 +1125,11 @@ class _WebWorkoutExerciseCard extends StatelessWidget {
                             keyboardType: const TextInputType.numberWithOptions(
                               decimal: true,
                             ),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                RegExp(r'^\d{0,4}([.,]\d{0,2})?'),
+                              ),
+                            ],
                             decoration: const InputDecoration(
                               hintText: 'kg',
                               isDense: true,
@@ -1029,8 +1142,12 @@ class _WebWorkoutExerciseCard extends StatelessWidget {
                             controller: repsControllerFor(seriesNumber),
                             textAlign: TextAlign.center,
                             keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                              hintText: 'reps',
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                              LengthLimitingTextInputFormatter(4),
+                            ],
+                            decoration: InputDecoration(
+                              hintText: metricLabel,
                               isDense: true,
                             ),
                           ),
@@ -1070,6 +1187,7 @@ class _ImportedWorkoutExerciseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final totalSeries = exercise.series <= 0 ? 1 : exercise.series;
+    final metricLabel = _metricLabel(exercise.reps);
 
     return AppCard(
       child: Column(
@@ -1120,12 +1238,12 @@ class _ImportedWorkoutExerciseCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          const Row(
+          Row(
             children: [
               Expanded(
                 child: Text(
                   'Serie',
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Color(0xFF616B76),
                     fontWeight: FontWeight.bold,
                   ),
@@ -1136,7 +1254,7 @@ class _ImportedWorkoutExerciseCard extends StatelessWidget {
                 child: Text(
                   'kg',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Color(0xFF616B76),
                     fontWeight: FontWeight.bold,
                   ),
@@ -1146,9 +1264,9 @@ class _ImportedWorkoutExerciseCard extends StatelessWidget {
               SizedBox(
                 width: 76,
                 child: Text(
-                  'reps',
+                  metricLabel,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Color(0xFF616B76),
                     fontWeight: FontWeight.bold,
                   ),
@@ -1175,6 +1293,11 @@ class _ImportedWorkoutExerciseCard extends StatelessWidget {
                       keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
                       ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(
+                          RegExp(r'^\d{0,4}([.,]\d{0,2})?'),
+                        ),
+                      ],
                       decoration: InputDecoration(
                         hintText: 'kg',
                         isDense: true,
@@ -1193,8 +1316,12 @@ class _ImportedWorkoutExerciseCard extends StatelessWidget {
                       controller: repsControllerFor(seriesNumber),
                       textAlign: TextAlign.center,
                       keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(4),
+                      ],
                       decoration: InputDecoration(
-                        hintText: 'reps',
+                        hintText: metricLabel,
                         isDense: true,
                         filled: true,
                         fillColor: const Color(0xFFF6F7F7),

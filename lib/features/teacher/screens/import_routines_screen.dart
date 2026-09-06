@@ -12,6 +12,7 @@ import '../../../core/widgets/responsive_action_button.dart';
 import '../../../core/widgets/responsive_form_field.dart';
 import '../../../core/widgets/info_row.dart';
 import '../../../models/routine_models.dart';
+import '../../../services/exercise_catalog_service.dart';
 import '../../../services/imported_routine_store.dart';
 import '../../../services/routine_persistence_service.dart';
 
@@ -37,12 +38,31 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
   List<String> detectedColumns = [];
   List<List<String>> previewRows = [];
   List<String> missingColumns = [];
+  List<String> dataErrors = [];
   int detectedWeeks = 0;
   int detectedSessions = 0;
   int detectedExercises = 0;
   List<DemoRoutineSession> extractedRoutinePreview = [];
   bool isImporting = false;
   bool showTechnicalValidationDetails = false;
+  Set<String> catalogExerciseNames = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _loadExerciseCatalog();
+  }
+
+  Future<void> _loadExerciseCatalog() async {
+    try {
+      final names = (await ExerciseCatalogService.loadNames())
+          .map(normalizeText)
+          .toSet();
+      if (mounted) setState(() => catalogExerciseNames = names);
+    } catch (error) {
+      debugPrint('No se pudo cargar el catálogo de ejercicios: $error');
+    }
+  }
 
   void closeScreen() {
     final onClose = widget.onClose;
@@ -134,8 +154,14 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
 
   void readExcelPreview(Uint8List bytes) {
     try {
+      if (bytes.lengthInBytes > 10 * 1024 * 1024) {
+        throw const FormatException('El archivo supera el máximo de 10 MB');
+      }
       final workbook = xls.Excel.decodeBytes(bytes);
       final sheetNames = workbook.tables.keys.toList();
+      if (sheetNames.length > 50) {
+        throw const FormatException('El archivo contiene demasiadas hojas');
+      }
       if (sheetNames.isEmpty) {
         setState(() {
           detectedSheetName = '-';
@@ -177,6 +203,10 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
         return;
       }
       final rows = sheet.rows;
+      if (rows.length > 5000) {
+        throw const FormatException('La hoja supera el máximo de 5.000 filas');
+      }
+      final parsingErrors = <String>[];
       final sessionHeaderRows = <int>[];
       for (int rowIndex = 0; rowIndex < rows.length; rowIndex++) {
         final row = rows[rowIndex];
@@ -247,6 +277,7 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
           final sessionName = 'Sesión ${sessionColumn.number}';
           final exerciseCol = sessionColumn.start;
           final exercises = <DemoRoutineExercise>[];
+          final exerciseNames = <String>{};
           for (int rowIndex = startRow + 2; rowIndex < endRow; rowIndex++) {
             final row = rows[rowIndex];
             if (exerciseCol >= row.length) continue;
@@ -263,11 +294,37 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
             final parsedSeries = int.tryParse(
               seriesText.replaceAll('.0', '').trim(),
             );
+            if (parsedSeries == null || parsedSeries < 1 || parsedSeries > 20) {
+              parsingErrors.add(
+                'Semana $weekNumber, $sessionName, $exerciseName: series inválidas',
+              );
+              continue;
+            }
+            if (volumeText.isEmpty || volumeText.length > 30) {
+              parsingErrors.add(
+                'Semana $weekNumber, $sessionName, $exerciseName: repeticiones inválidas',
+              );
+              continue;
+            }
+            final normalizedExercise = normalizeText(exerciseName);
+            if (catalogExerciseNames.isNotEmpty &&
+                !catalogExerciseNames.contains(normalizedExercise)) {
+              parsingErrors.add(
+                'Semana $weekNumber, $sessionName: $exerciseName no existe en el catálogo',
+              );
+              continue;
+            }
+            if (!exerciseNames.add(normalizedExercise)) {
+              parsingErrors.add(
+                'Semana $weekNumber, $sessionName: ejercicio duplicado $exerciseName',
+              );
+              continue;
+            }
             exercises.add(
               DemoRoutineExercise(
                 name: exerciseName,
-                series: parsedSeries ?? 1,
-                reps: volumeText.isNotEmpty ? volumeText : 'Por definir',
+                series: parsedSeries,
+                reps: volumeText,
               ),
             );
           }
@@ -316,6 +373,7 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
         ];
         previewRows = preview;
         missingColumns = [];
+        dataErrors = parsingErrors;
         detectedWeeks = sessionHeaderRows.length;
         detectedSessions = parsedSessions.length;
         detectedExercises = totalExercises;
@@ -330,6 +388,7 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
         detectedColumns = [];
         previewRows = [];
         missingColumns = [];
+        dataErrors = [];
         detectedWeeks = 0;
         detectedSessions = 0;
         detectedExercises = 0;
@@ -398,12 +457,18 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
     }
     if (!mounted) return;
 
+    if (catalogExerciseNames.isEmpty) {
+      await _loadExerciseCatalog();
+      if (!mounted) return;
+    }
+
     setState(() {
       selectedFileName = fileName;
       selectedFileBytes = bytes;
       fileSelected = true;
       fileValidated = false;
       missingColumns = [];
+      dataErrors = [];
     });
 
     readExcelPreview(bytes);
@@ -428,6 +493,12 @@ class _ImportRoutinesScreenState extends State<ImportRoutinesScreen> {
     }
     if (detectedWeeks == 0 || detectedSessions == 0 || detectedExercises == 0) {
       return 'No se detectaron semanas, sesiones o ejercicios válidos en el Excel.';
+    }
+    if (detectedWeeks > 52 || detectedExercises > 2000) {
+      return 'El Excel supera el máximo de 52 semanas o 2.000 ejercicios.';
+    }
+    if (dataErrors.isNotEmpty) {
+      return '${dataErrors.first}${dataErrors.length > 1 ? ' (y ${dataErrors.length - 1} errores más)' : ''}.';
     }
     final sessionsToImport = _sessionsForSelectedPlan();
     if (sessionsToImport.isEmpty) {

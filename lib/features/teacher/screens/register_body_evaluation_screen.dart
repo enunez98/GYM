@@ -2,7 +2,9 @@ import 'dart:math' as math;
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
+import '../../../core/validation/app_validators.dart';
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/app_select_field.dart';
 import '../../../core/widgets/app_text_field.dart';
@@ -100,7 +102,7 @@ class _RegisterBodyEvaluationScreenState
   }
 
   double parseDouble(String value) {
-    return double.tryParse(value.replaceAll(',', '.').trim()) ?? 0;
+    return AppValidators.parseDecimal(value) ?? 0;
   }
 
   int parseInt(String value) {
@@ -108,16 +110,7 @@ class _RegisterBodyEvaluationScreenState
   }
 
   DateTime parseDate(String value) {
-    final parts = value.trim().split(RegExp(r'[-/]'));
-    if (parts.length == 3) {
-      final day = int.tryParse(parts[0]);
-      final month = int.tryParse(parts[1]);
-      final year = int.tryParse(parts[2]);
-      if (day != null && month != null && year != null) {
-        return DateTime(year, month, day);
-      }
-    }
-    return DateTime.now();
+    return AppValidators.parseStrictDate(value) ?? DateTime.now();
   }
 
   void recalculateFromWeightAndHeight() {
@@ -306,6 +299,11 @@ class _RegisterBodyEvaluationScreenState
     final bodyFatPercent = parseDouble(bodyFatController.text);
     final muscleMass = parseDouble(muscleMassController.text);
     final bodyScore = parseInt(scoreController.text);
+    final waterPercent = parseDouble(waterController.text);
+    final visceralFat = parseInt(visceralFatController.text);
+    final skeletalMuscle = parseDouble(skeletalMuscleController.text);
+    final metabolism = parseInt(metabolismController.text);
+    final evaluationDate = AppValidators.parseStrictDate(dateController.text);
 
     if (selectedStudent == null ||
         dateController.text.trim().isEmpty ||
@@ -323,6 +321,58 @@ class _RegisterBodyEvaluationScreenState
       );
       return;
     }
+    if (evaluationDate == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Ingresa una fecha válida (dd-mm-aaaa)')),
+      );
+      return;
+    }
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    if (evaluationDate.isAfter(today)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('La evaluación no puede tener fecha futura'),
+        ),
+      );
+      return;
+    }
+    if (weight < 20 || weight > 400) {
+      _showValidationMessage('El peso debe estar entre 20 y 400 kg');
+      return;
+    }
+    if (height < 80 || height > 250) {
+      _showValidationMessage('La estatura debe estar entre 80 y 250 cm');
+      return;
+    }
+    if (bodyFatPercent < 1 || bodyFatPercent > 75) {
+      _showValidationMessage('La grasa corporal debe estar entre 1% y 75%');
+      return;
+    }
+    if (muscleMass > weight) {
+      _showValidationMessage('La masa muscular no puede superar el peso');
+      return;
+    }
+    if (skeletalMuscle < 0 || skeletalMuscle > muscleMass) {
+      _showValidationMessage(
+        'El músculo esquelético no puede superar la masa muscular',
+      );
+      return;
+    }
+    if (waterPercent < 20 || waterPercent > 80) {
+      _showValidationMessage('El agua corporal debe estar entre 20% y 80%');
+      return;
+    }
+    if (visceralFat < 1 || visceralFat > 60) {
+      _showValidationMessage('La grasa visceral debe estar entre 1 y 60');
+      return;
+    }
+    if (metabolism < 500 || metabolism > 10000) {
+      _showValidationMessage(
+        'El metabolismo debe estar entre 500 y 10.000 kcal',
+      );
+      return;
+    }
 
     final student = selectedStudent;
     if (student == null) {
@@ -332,31 +382,30 @@ class _RegisterBodyEvaluationScreenState
       return;
     }
     final bodyFatKg = parseDouble(fatKgController.text);
-    final waterPercent = parseDouble(waterController.text);
     final evaluation = BodyEvaluation(
       id: 'body_${DateTime.now().microsecondsSinceEpoch}',
       userId: student.userId,
       studentProfileId: student.id,
       studentName: student.name,
-      createdAt: parseDate(dateController.text),
+      createdAt: evaluationDate,
       bodyScore: bodyScore,
       weightKg: weight,
       heightCm: parseDouble(heightController.text),
       bodyFatKg: bodyFatKg,
       bodyFatPercent: bodyFatPercent,
       muscleMassKg: muscleMass,
-      skeletalMuscleKg: parseDouble(skeletalMuscleController.text),
+      skeletalMuscleKg: skeletalMuscle,
       proteinKg: 0,
       bodyWaterKg: weight * waterPercent / 100,
       bodyWaterPercent: waterPercent,
       bmi: parseDouble(imcController.text),
       fatFreeMassKg: weight - bodyFatKg,
       subcutaneousFatPercent: 0,
-      visceralFat: parseInt(visceralFatController.text),
+      visceralFat: visceralFat,
       smi: 0,
       bodyAge: 0,
       whr: 0,
-      basalMetabolicRate: parseInt(metabolismController.text),
+      basalMetabolicRate: metabolism,
       targetWeightKg: parseDouble(targetWeightController.text),
       weightControlKg: parseDouble(weightControlController.text),
       fatControlKg: parseDouble(fatControlController.text),
@@ -382,6 +431,12 @@ class _RegisterBodyEvaluationScreenState
       setState(() => isSaving = false);
       await showSaveResult(success: false);
     }
+  }
+
+  void _showValidationMessage(String message) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   Widget _buildWebEvaluationPanels() {
@@ -720,6 +775,12 @@ class _RegisterBodyEvaluationScreenState
                               icon: Icons.calendar_month,
                               hint: 'dd-mm-aaaa',
                               readOnly: false,
+                              maxLength: 10,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                  RegExp(r'[0-9\-/]'),
+                                ),
+                              ],
                             ),
                           ),
                           const SizedBox(height: 12),
@@ -729,7 +790,7 @@ class _RegisterBodyEvaluationScreenState
                             icon: Icons.score,
                             hint: 'Ej: 72',
                             keyboardType: TextInputType.number,
-                            readOnly: false,
+                            readOnly: true,
                             suffix:
                                 isWebLayout &&
                                     parseInt(scoreController.text) > 0

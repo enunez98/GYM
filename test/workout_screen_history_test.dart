@@ -96,4 +96,47 @@ void main() {
     expect(StudentWorkoutProgressStore.isWeekFinished(profile, 2), isTrue);
     expect(find.text('Semana completada'), findsOneWidget);
   });
+
+  testWidgets('allows zero kg when repetitions are valid', (tester) async {
+    tester.view.physicalSize = const Size(1440, 1000);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      const MaterialApp(home: Scaffold(body: WorkoutScreen())),
+    );
+    await tester.enterText(find.byType(TextField).at(0), '0');
+    await tester.enterText(find.byType(TextField).at(1), '12');
+    final saveButton = find.text('Guardar entrenamiento');
+    await tester.ensureVisible(saveButton);
+    await tester.tap(saveButton);
+    await tester.pump();
+
+    expect(WorkoutHistoryStore.allLogs, hasLength(1));
+    expect(WorkoutHistoryStore.allLogs.single.totalSets, 1);
+    expect(WorkoutHistoryStore.allLogs.single.totalVolume, 0);
+  });
+
+  testWidgets('rejects a set with weight but no repetitions', (tester) async {
+    tester.view.physicalSize = const Size(1440, 1000);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      const MaterialApp(home: Scaffold(body: WorkoutScreen())),
+    );
+    await tester.enterText(find.byType(TextField).at(0), '50');
+    final saveButton = find.text('Guardar entrenamiento');
+    await tester.ensureVisible(saveButton);
+    await tester.tap(saveButton);
+    await tester.pump();
+
+    expect(WorkoutHistoryStore.allLogs, isEmpty);
+    expect(
+      find.textContaining('ingresa repeticiones o segundos'),
+      findsOneWidget,
+    );
+  });
 }

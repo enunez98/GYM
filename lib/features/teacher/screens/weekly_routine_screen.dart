@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +10,7 @@ import '../../../core/widgets/responsive_action_button.dart';
 import '../../../core/widgets/responsive_form_field.dart';
 import '../../../core/widgets/status_chip.dart';
 import '../../../models/routine_models.dart';
+import '../../../services/exercise_catalog_service.dart';
 import '../../../services/imported_routine_store.dart';
 import '../../../services/routine_persistence_service.dart';
 
@@ -867,6 +866,15 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
     );
 
     if (exercise == null || !mounted) return;
+    final duplicate = session.exercises.any(
+      (item) => item.name.toLowerCase() == exercise.name.toLowerCase(),
+    );
+    if (duplicate) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Ese ejercicio ya está en la sesión')),
+      );
+      return;
+    }
     setState(() {
       session.exercises.add(exercise);
       hasUnsavedChanges = true;
@@ -885,6 +893,17 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
       ),
     );
     if (exercise == null || !mounted) return;
+    final duplicate = session.exercises.asMap().entries.any(
+      (entry) =>
+          entry.key != index &&
+          entry.value.name.toLowerCase() == exercise.name.toLowerCase(),
+    );
+    if (duplicate) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Ese ejercicio ya está en la sesión')),
+      );
+      return;
+    }
     setState(() {
       session.exercises[index] = exercise;
       hasUnsavedChanges = true;
@@ -923,6 +942,12 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
         ? activeSessions
         : routines[plan] ?? const <DemoRoutineSession>[];
     if (plan == null || sessions.isEmpty || isSavingRoutine) return;
+    if (sessions.any((session) => session.exercises.isEmpty)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No puedes guardar sesiones vacías')),
+      );
+      return;
+    }
 
     setState(() => isSavingRoutine = true);
     try {
@@ -1005,36 +1030,19 @@ class _AddExerciseDialogState extends State<_AddExerciseDialog> {
   }
 
   Future<void> _loadExerciseCatalog() async {
-    final source = await rootBundle.loadString('assets/data/exercises.json');
-    final items = jsonDecode(source) as List<dynamic>;
-    final names =
-        items
-            .whereType<Map>()
-            .where((rawItem) {
-              final images = rawItem['imagenes'];
-              return images is Map &&
-                  images.values.whereType<String>().any(
-                    (image) => image.isNotEmpty,
-                  );
-            })
-            .map((rawItem) {
-              final item = Map<String, dynamic>.from(rawItem);
-              return (item['nombre'] as String? ??
-                      item['name'] as String? ??
-                      '')
-                  .trim();
-            })
-            .where((name) => name.isNotEmpty)
-            .toSet()
-            .toList()
-          ..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
-
-    if (!mounted) return;
-    setState(() {
-      catalogExerciseNames = names;
-      selectedExerciseName = _catalogMatch();
-      isLoadingCatalog = false;
-    });
+    try {
+      final names = await ExerciseCatalogService.loadNames(requireImages: true);
+      if (!mounted) return;
+      setState(() {
+        catalogExerciseNames = names;
+        selectedExerciseName = _catalogMatch();
+        isLoadingCatalog = false;
+      });
+    } catch (error) {
+      debugPrint('No se pudo cargar el catálogo de ejercicios: $error');
+      if (!mounted) return;
+      setState(() => isLoadingCatalog = false);
+    }
   }
 
   String _normalize(String value) {
@@ -1192,6 +1200,7 @@ class _AddExerciseDialogState extends State<_AddExerciseDialog> {
                       key: const Key('exercise_series_field'),
                       controller: seriesController,
                       keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       decoration: const InputDecoration(
                         labelText: 'Series',
                         hintText: 'Ej: 3',
@@ -1200,8 +1209,8 @@ class _AddExerciseDialogState extends State<_AddExerciseDialog> {
                       ),
                       validator: (value) {
                         final series = int.tryParse(value?.trim() ?? '');
-                        return series == null || series <= 0
-                            ? 'Ingresa una cantidad válida'
+                        return series == null || series <= 0 || series > 20
+                            ? 'Usa entre 1 y 20 series'
                             : null;
                       },
                     ),
@@ -1217,9 +1226,18 @@ class _AddExerciseDialogState extends State<_AddExerciseDialog> {
                         prefixIcon: Icon(Icons.repeat),
                         border: OutlineInputBorder(),
                       ),
-                      validator: (value) => (value?.trim().isEmpty ?? true)
-                          ? 'Completa las repeticiones'
-                          : null,
+                      validator: (value) {
+                        final text = value?.trim() ?? '';
+                        if (text.isEmpty) return 'Completa las repeticiones';
+                        if (text.length > 30) return 'Máximo 30 caracteres';
+                        if (!RegExp(
+                          r'\d|amrap|fallo',
+                          caseSensitive: false,
+                        ).hasMatch(text)) {
+                          return 'Usa reps, segundos, AMRAP o al fallo';
+                        }
+                        return null;
+                      },
                     ),
                   ),
                 ],
@@ -1234,9 +1252,14 @@ class _AddExerciseDialogState extends State<_AddExerciseDialog> {
                   prefixIcon: Icon(Icons.timer_outlined),
                   border: OutlineInputBorder(),
                 ),
-                validator: (value) => (value?.trim().isEmpty ?? true)
-                    ? 'Completa el descanso'
-                    : null,
+                validator: (value) {
+                  final text = value?.trim() ?? '';
+                  if (text.isEmpty) return 'Completa el descanso';
+                  if (text.length > 30 || !RegExp(r'\d').hasMatch(text)) {
+                    return 'Indica un descanso válido, por ejemplo 60 seg';
+                  }
+                  return null;
+                },
               ),
             ],
           ),

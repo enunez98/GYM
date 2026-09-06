@@ -7,6 +7,9 @@ import '../../services/firebase_auth_service.dart';
 import '../../services/routine_assignment_store.dart';
 import '../../services/session_store.dart';
 import '../../services/student_profile_store.dart';
+import '../../services/student_workout_progress_store.dart';
+import '../../services/workout_history_store.dart';
+import '../../core/validation/app_validators.dart';
 import '../student/screens/home_shell.dart';
 import '../teacher/screens/teacher_dashboard_screen.dart';
 
@@ -40,13 +43,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> login() async {
     final email = emailController.text.trim();
-    final password = passwordController.text.trim();
+    final password = passwordController.text;
 
     if (email.isEmpty || password.isEmpty) {
       _showMessage('Ingresa correo y contraseña');
       return;
     }
-    if (!email.contains('@')) {
+    if (!AppValidators.isValidEmail(email)) {
       _showMessage('Ingresa un correo válido');
       return;
     }
@@ -57,14 +60,21 @@ class _LoginScreenState extends State<LoginScreen> {
       final user = await FirebaseAuthService.login(
         email: email,
         password: password,
+        rememberMe: rememberMe,
       );
       if (user.role == UserRole.admin) {
         await StudentProfileStore.loadFromFirestore();
         await RoutineAssignmentStore.loadAllFromFirestore();
+        await WorkoutHistoryStore.loadAllFromFirestore();
       } else {
         await StudentProfileStore.loadForUser(user.id);
-        await BodyEvaluationStore.loadForUser(user.id);
-        await RoutineAssignmentStore.loadForUser(user.id);
+        final profile = StudentProfileStore.getByUserId(user.id);
+        await Future.wait([
+          BodyEvaluationStore.loadForUser(user.id),
+          RoutineAssignmentStore.loadForUser(user.id),
+          WorkoutHistoryStore.loadForUser(user.id),
+          StudentWorkoutProgressStore.loadForProfile(profile),
+        ]);
       }
       SessionStore.signIn(user);
 
@@ -84,6 +94,25 @@ class _LoginScreenState extends State<LoginScreen> {
     } catch (_) {
       if (!mounted) return;
       _showMessage('No se pudo iniciar sesión');
+    } finally {
+      if (mounted) setState(() => isLoading = false);
+    }
+  }
+
+  Future<void> recoverPassword() async {
+    final email = emailController.text.trim();
+    if (!AppValidators.isValidEmail(email)) {
+      _showMessage('Ingresa un correo válido para recuperar tu contraseña');
+      return;
+    }
+    setState(() => isLoading = true);
+    try {
+      await FirebaseAuthService.sendPasswordReset(email);
+      if (!mounted) return;
+      _showMessage('Revisa tu correo para restablecer la contraseña');
+    } on AuthException catch (error) {
+      if (!mounted) return;
+      _showMessage(error.message);
     } finally {
       if (mounted) setState(() => isLoading = false);
     }
@@ -152,6 +181,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   obscurePassword: obscurePassword,
                                   rememberMe: rememberMe,
                                   onLogin: login,
+                                  onForgotPassword: recoverPassword,
                                   onTogglePassword: () => setState(
                                     () => obscurePassword = !obscurePassword,
                                   ),
@@ -311,6 +341,7 @@ class _LoginPanel extends StatelessWidget {
     required this.obscurePassword,
     required this.rememberMe,
     required this.onLogin,
+    required this.onForgotPassword,
     required this.onTogglePassword,
     required this.onRememberChanged,
   });
@@ -322,6 +353,7 @@ class _LoginPanel extends StatelessWidget {
   final bool obscurePassword;
   final bool rememberMe;
   final VoidCallback onLogin;
+  final VoidCallback onForgotPassword;
   final VoidCallback onTogglePassword;
   final ValueChanged<bool?> onRememberChanged;
 
@@ -409,7 +441,7 @@ class _LoginPanel extends StatelessWidget {
                       child: Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
-                          onPressed: () => _comingSoon(context),
+                          onPressed: isLoading ? null : onForgotPassword,
                           style: TextButton.styleFrom(
                             foregroundColor: _energyGreen,
                             padding: EdgeInsets.zero,

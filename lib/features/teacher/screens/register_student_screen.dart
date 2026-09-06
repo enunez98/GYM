@@ -1,6 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 
+import '../../../core/validation/app_validators.dart';
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/app_select_field.dart';
 import '../../../core/widgets/app_text_field.dart';
@@ -30,13 +34,13 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
   final rutController = TextEditingController();
   final emailController = TextEditingController();
   final phoneController = TextEditingController(text: '+569');
-  final startDateController = TextEditingController(text: '04-07-2026');
+  final startDateController = TextEditingController();
   final endDateController = TextEditingController();
 
   String? selectedPlan;
   String? selectedContractPeriod;
   String? selectedPaymentMethod;
-  bool webDatesInitialized = false;
+  bool datesInitialized = false;
   bool isSaving = false;
 
   String get selectedPlanPrice {
@@ -84,18 +88,8 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
     }
   }
 
-  DateTime parseFormDate(String value) {
-    final parts = value.trim().split('-');
-    if (parts.length == 3) {
-      final day = int.tryParse(parts[0]);
-      final month = int.tryParse(parts[1]);
-      final year = int.tryParse(parts[2]);
-      if (day != null && month != null && year != null) {
-        return DateTime(year, month, day);
-      }
-    }
-    return DateTime.now();
-  }
+  DateTime parseFormDate(String value) =>
+      AppValidators.parseStrictDate(value) ?? DateTime.now();
 
   int get contractMonths {
     return switch (selectedContractPeriod) {
@@ -131,13 +125,20 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
     endDateController.text = formatDate(addMonths(startDate, contractMonths));
   }
 
-  void initializeWebDates() {
-    if (webDatesInitialized) return;
+  void initializeDates() {
+    if (datesInitialized) return;
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     startDateController.text = formatDate(today);
     updateEndDateFromDuration();
-    webDatesInitialized = true;
+    datesInitialized = true;
+  }
+
+  String generateTemporaryPassword() {
+    const chars =
+        'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#%';
+    final random = Random.secure();
+    return List.generate(14, (_) => chars[random.nextInt(chars.length)]).join();
   }
 
   Future<void> selectDate(
@@ -195,7 +196,7 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
         ),
         content: Text(
           success
-              ? 'El alumno se ha registrado correctamente.'
+              ? 'El alumno se ha registrado correctamente.${detail == null ? '' : '\n\n$detail'}'
               : 'No se ha podido registrar el alumno.${detail == null ? ' Inténtalo nuevamente.' : '\n\n$detail'}',
           textAlign: TextAlign.center,
         ),
@@ -211,23 +212,36 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
   }
 
   Future<void> saveStudent() async {
+    if (isSaving) return;
     final name = nameController.text.trim();
     final lastName = lastNameController.text.trim();
-    final phone = phoneController.text.trim();
+    final phone = AppValidators.normalizeChileanPhone(phoneController.text);
     final email = emailController.text.trim().toLowerCase();
     final startDate = startDateController.text.trim();
     final endDate = endDateController.text.trim();
 
-    if (name.isEmpty || lastName.isEmpty) {
-      showMessage('Completa nombre y apellido');
+    if (!AppValidators.isValidPersonName(name) ||
+        !AppValidators.isValidPersonName(lastName)) {
+      showMessage('Nombre y apellido deben tener entre 2 y 60 letras');
       return;
     }
-    if (phone.length < 9) {
-      showMessage('Ingresa un teléfono válido');
+    if (!AppValidators.isValidChileanMobile(phone)) {
+      showMessage('Ingresa un teléfono móvil chileno válido (+569XXXXXXXX)');
       return;
     }
-    if (!email.contains('@') || !email.contains('.')) {
+    if (!AppValidators.isValidEmail(email)) {
       showMessage('Ingresa un correo válido');
+      return;
+    }
+
+    final parsedStartDate = AppValidators.parseStrictDate(startDate);
+    final parsedEndDate = AppValidators.parseStrictDate(endDate);
+    if (parsedStartDate == null || parsedEndDate == null) {
+      showMessage('Las fechas deben tener formato dd-mm-aaaa');
+      return;
+    }
+    if (parsedEndDate.isBefore(parsedStartDate)) {
+      showMessage('La fecha de vencimiento no puede ser anterior al inicio');
       return;
     }
     final plan = selectedPlan;
@@ -258,9 +272,34 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
     }
 
     final fullName = '$name $lastName'.trim();
-    setState(() => isSaving = true);
+    final weeklyTarget = weeklyTargetFromPlan(plan);
+    StudentProfile profileFor(AppUser user) => StudentProfile(
+      id: user.id,
+      userId: user.id,
+      name: fullName,
+      rut: normalizedRut,
+      phone: phone,
+      email: email,
+      plan: plan,
+      contractPeriod: contractPeriod,
+      paymentMethod: paymentMethod,
+      status: 'Activo',
+      startDate: startDate,
+      endDate: endDate,
+      daysRemaining: calculateDaysRemaining(endDate),
+      weeklyAttendanceCompleted: 0,
+      weeklyAttendanceTarget: weeklyTarget,
+      monthlyAttendanceCompleted: 0,
+      monthlyAttendanceTarget: weeklyTarget * 4,
+      bodyScore: 0,
+      currentWeekLabel: 'Semana 1 - Ordinario',
+      currentWeekDates: '-',
+      createdAtEpoch: DateTime.now().millisecondsSinceEpoch,
+    );
 
+    setState(() => isSaving = true);
     late final AppUser user;
+    late final StudentProfile profile;
     try {
       if (Firebase.apps.isEmpty) {
         final timestamp = DateTime.now().microsecondsSinceEpoch;
@@ -271,12 +310,18 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
           role: UserRole.student,
         );
         DemoAuthService.registerUser(user: user, password: '1234');
+        profile = profileFor(user);
+        StudentProfileStore.add(profile);
       } else {
         user = await FirebaseAuthService.registerStudent(
           rut: normalizedRut,
           email: email,
           name: fullName,
-          password: '123456',
+          password: generateTemporaryPassword(),
+          persistProfile: (createdUser) async {
+            profile = profileFor(createdUser);
+            await StudentProfileStore.addToFirestore(profile);
+          },
         );
       }
     } on AuthException catch (error) {
@@ -285,59 +330,31 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
       await showRegistrationResult(success: false, detail: error.message);
       return;
     } catch (error) {
-      debugPrint('Error al crear la cuenta del alumno: $error');
+      debugPrint('Error al crear la cuenta y ficha del alumno: $error');
       if (!mounted) return;
       setState(() => isSaving = false);
       await showRegistrationResult(success: false);
       return;
     }
 
-    final weeklyTarget = weeklyTargetFromPlan(plan);
     try {
-      final profile = StudentProfile(
-        id: user.id,
-        userId: user.id,
-        name: fullName,
-        rut: normalizedRut,
-        phone: phone,
-        email: email,
-        plan: plan,
-        contractPeriod: contractPeriod,
-        paymentMethod: paymentMethod,
-        status: 'Activo',
-        startDate: startDate,
-        endDate: endDate,
-        daysRemaining: calculateDaysRemaining(endDate),
-        weeklyAttendanceCompleted: 0,
-        weeklyAttendanceTarget: weeklyTarget,
-        monthlyAttendanceCompleted: 0,
-        monthlyAttendanceTarget: weeklyTarget * 4,
-        bodyScore: 0,
-        currentWeekLabel: 'Semana 1 - Ordinario',
-        currentWeekDates: '-',
-        createdAtEpoch: DateTime.now().millisecondsSinceEpoch,
-      );
       if (Firebase.apps.isEmpty) {
-        StudentProfileStore.add(profile);
         RoutinePersistenceService.assignActiveRoutineLocally(profile);
       } else {
-        await StudentProfileStore.addToFirestore(profile);
         await RoutinePersistenceService.assignActiveRoutineToStudent(profile);
       }
     } catch (error) {
-      debugPrint('Error al guardar la ficha del alumno: $error');
-      if (!mounted) return;
-      setState(() => isSaving = false);
-      await showRegistrationResult(
-        success: false,
-        detail: 'La cuenta fue creada, pero no se pudo guardar la ficha.',
-      );
-      return;
+      debugPrint('No se pudo asignar una rutina inicial: $error');
     }
 
     if (!mounted) return;
     setState(() => isSaving = false);
-    await showRegistrationResult(success: true);
+    await showRegistrationResult(
+      success: true,
+      detail: Firebase.apps.isEmpty
+          ? 'Modo local: contraseña temporal 1234.'
+          : 'Enviamos al correo del alumno un enlace para definir su contraseña.',
+    );
     if (!mounted) return;
     closeScreen();
   }
@@ -418,7 +435,7 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
   @override
   Widget build(BuildContext context) {
     final isWebLayout = MediaQuery.sizeOf(context).width >= 900;
-    if (isWebLayout) initializeWebDates();
+    initializeDates();
 
     return Scaffold(
       backgroundColor: widget.embedded
@@ -465,12 +482,24 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
                               label: 'Nombre',
                               icon: Icons.person_outline,
                               hint: 'Ej: Felipe',
+                              maxLength: 60,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                  RegExp(r"[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' -]"),
+                                ),
+                              ],
                             ),
                             second: AppTextField(
                               controller: lastNameController,
                               label: 'Apellido',
                               icon: Icons.person_outline,
                               hint: 'Ej: Durán',
+                              maxLength: 60,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                  RegExp(r"[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' -]"),
+                                ),
+                              ],
                             ),
                           ),
                           const SizedBox(height: 12),
@@ -481,6 +510,12 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
                               label: 'RUT',
                               icon: Icons.badge_outlined,
                               hint: 'Ej: 12.345.678-5',
+                              maxLength: 12,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                  RegExp(r'[0-9kK.\-]'),
+                                ),
+                              ],
                             ),
                             second: AppTextField(
                               controller: phoneController,
@@ -488,6 +523,12 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
                               icon: Icons.phone_outlined,
                               hint: '+569XXXXXXXX',
                               keyboardType: TextInputType.phone,
+                              maxLength: 16,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                  RegExp(r'[0-9+ ()-]'),
+                                ),
+                              ],
                             ),
                           ),
                           const SizedBox(height: 12),
@@ -497,6 +538,7 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
                             icon: Icons.email_outlined,
                             hint: 'nombre@correo.cl',
                             keyboardType: TextInputType.emailAddress,
+                            maxLength: 254,
                           ),
                         ],
                       ),

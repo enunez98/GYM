@@ -142,7 +142,12 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Mensual'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Seleccionar método de pago'));
+    await tester.scrollUntilVisible(
+      find.text('Seleccionar método de pago'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.tap(find.byType(AppSelectField).at(2), warnIfMissed: false);
     await tester.pumpAndSettle();
     await tester.tap(find.text('Efectivo'));
     await tester.pumpAndSettle();
@@ -158,7 +163,7 @@ void main() {
 
     expect(find.text('Alumno registrado'), findsOneWidget);
     expect(
-      find.text('El alumno se ha registrado correctamente.'),
+      find.textContaining('El alumno se ha registrado correctamente.'),
       findsOneWidget,
     );
     await tester.tap(find.text('Aceptar'));
@@ -187,7 +192,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('12.345.678-5'), findsNothing);
     expect(find.text('123456785'), findsOneWidget);
-    expect(find.text('+569 9876 5432'), findsOneWidget);
+    expect(find.text('+56998765432'), findsOneWidget);
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     expect(find.text(formattedDate(today)), findsOneWidget);
@@ -221,7 +226,12 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Mensual'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Seleccionar método de pago'));
+    await tester.scrollUntilVisible(
+      find.text('Seleccionar método de pago'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.tap(find.byType(AppSelectField).at(2), warnIfMissed: false);
     await tester.pumpAndSettle();
     await tester.tap(find.text('Efectivo'));
     await tester.pumpAndSettle();
@@ -313,7 +323,12 @@ void main() {
       tester.widget<TextField>(fields.at(6)).controller?.text,
       formattedDate(dateAfterMonths(today, 3)),
     );
-    await tester.tap(find.text('Seleccionar método de pago'));
+    await tester.scrollUntilVisible(
+      find.text('Seleccionar método de pago'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.tap(find.byType(AppSelectField).at(2), warnIfMissed: false);
     await tester.pumpAndSettle();
     expect(find.text('Transferencia'), findsOneWidget);
     expect(find.text('Tarjeta débito/crédito'), findsOneWidget);
@@ -323,7 +338,12 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Transferencia'), findsOneWidget);
 
-    await tester.tap(find.text('Seleccionar plan'));
+    await tester.scrollUntilVisible(
+      find.text('Seleccionar plan'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.tap(find.byType(AppSelectField).first);
     await tester.pumpAndSettle();
     await tester.tap(find.text('Plan 2 sesiones').last);
     await tester.pumpAndSettle();
@@ -357,7 +377,12 @@ void main() {
     await tester.tap(find.text('Cancelar'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Seleccionar plan'));
+    await tester.scrollUntilVisible(
+      find.text('Seleccionar plan'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.tap(find.byType(AppSelectField).first, warnIfMissed: false);
     await tester.pumpAndSettle();
     await tester.tap(find.text('Plan 4 sesiones').last);
     await tester.pumpAndSettle();

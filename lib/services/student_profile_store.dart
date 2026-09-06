@@ -58,10 +58,23 @@ class StudentProfileStore {
   }
 
   static Future<void> addToFirestore(StudentProfile profile) async {
-    await FirebaseFirestore.instance
-        .collection('students')
-        .doc(profile.id)
-        .set(profile.toFirestore());
+    final firestore = FirebaseFirestore.instance;
+    final studentReference = firestore.collection('students').doc(profile.id);
+    final rutReference = firestore
+        .collection('studentRuts')
+        .doc(_normalizeRut(profile.rut));
+    await firestore.runTransaction((transaction) async {
+      final existingRut = await transaction.get(rutReference);
+      if (existingRut.exists) {
+        throw StateError('Ya existe un alumno con ese RUT');
+      }
+      transaction.set(studentReference, profile.toFirestore());
+      transaction.set(rutReference, {
+        'userId': profile.userId,
+        'studentProfileId': profile.id,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    });
     _profiles.add(profile);
   }
 

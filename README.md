@@ -4,8 +4,8 @@ Aplicación Flutter para gestionar alumnos, rutinas y seguimiento de un gimnasio
 
 Actualmente incluye:
 
-- Login por RUT y contraseña, con roles de alumno y administrador.
-- Registro local de alumnos y perfiles.
+- Login por correo y contraseña con Firebase Auth y roles de alumno y administrador.
+- Registro de alumnos y perfiles en Firestore.
 - Importación de planificaciones desde Excel.
 - Asignación de rutinas a alumnos específicos.
 - Avance de sesiones completadas u omitidas.
@@ -14,16 +14,16 @@ Actualmente incluye:
 - Registro y visualización de evaluaciones corporales.
 
 > [!IMPORTANT]
-> La aplicación todavía usa almacenamiento temporal en memoria. Los alumnos,
-> asignaciones, entrenamientos y evaluaciones creados durante una ejecución se
-> pierden al reiniciar la app. Firebase aún no está conectado.
+> Firebase Auth y Firestore están conectados. El modo local se conserva para
+> pruebas automatizadas, pero la aplicación real persiste alumnos, rutinas,
+> asignaciones, evaluaciones, entrenamientos y avance semanal en Firestore.
 
 ## Rama de desarrollo
 
 El desarrollo activo se realiza en:
 
 ```text
-refactor/ordenar-estructura
+integracion/sgutierrez
 ```
 
 No hacer merge a `main` sin una validación y autorización previas.
@@ -206,24 +206,15 @@ arranque con `flutter run -d chrome`.
 El proyecto conserva algunos avisos informativos de APIs obsoletas en código
 heredado; no deben existir errores ni advertencias nuevas.
 
-## Usuarios demo
+## Acceso y usuarios de prueba
 
-Alumno:
+La aplicación real inicia sesión con correo y contraseña de Firebase. No se
+documentan contraseñas reales en el repositorio. Al registrar un alumno se crea
+una contraseña aleatoria y Firebase envía un enlace al correo registrado para
+que el alumno defina la suya.
 
-```text
-RUT: 11.111.111-1
-Contraseña: 1234
-```
-
-Administrador:
-
-```text
-RUT: 22.222.222-2
-Contraseña: 1234
-```
-
-Los alumnos creados por el administrador durante la ejecución pueden iniciar
-sesión con el RUT registrado y la contraseña temporal `1234`.
+Los usuarios y contraseñas `1234` definidos en `DemoAuthService` existen solo
+para el modo local y las pruebas automatizadas.
 
 ## Flujo básico de prueba
 
@@ -325,7 +316,7 @@ flutter test
 git status
 git add .
 git commit -m "mensaje del cambio"
-git push origin refactor/ordenar-estructura
+git push origin integracion/sgutierrez
 ```
 
 No subir archivos `.env`, claves privadas, tokens, credenciales reales ni
@@ -333,8 +324,6 @@ archivos de configuración que contengan secretos.
 
 ## Próximos pasos
 
-- Mostrar el historial de entrenamientos de cada alumno en el panel admin.
-- Editar los datos de alumnos registrados.
-- Conectar Firebase Auth y Firestore.
-- Persistir perfiles, rutinas, entrenamientos y evaluaciones.
-- Preparar el despliegue web cuando la lógica local esté cerrada.
+- Agregar pruebas integrales de permisos con Firebase Emulator.
+- Implementar recuperación de contraseña y verificación de correo.
+- Preparar el despliegue web cuando la validación funcional esté cerrada.

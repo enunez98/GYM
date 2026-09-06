@@ -4,8 +4,19 @@ import 'package:gym_app/core/widgets/app_select_field.dart';
 import 'package:gym_app/core/widgets/exercise_motion_preview.dart';
 import 'package:gym_app/features/teacher/screens/teacher_dashboard_screen.dart';
 import 'package:gym_app/features/teacher/screens/students_list_screen.dart';
+import 'package:gym_app/services/exercise_catalog_service.dart';
 
 void main() {
+  setUp(() {
+    ExerciseCatalogService.testExerciseNames = const [
+      'Press banca plano con barra',
+    ];
+  });
+
+  tearDown(() {
+    ExerciseCatalogService.testExerciseNames = null;
+  });
+
   Widget appAtSize(Size size) {
     return MediaQuery(
       data: MediaQueryData(size: size),
@@ -157,10 +168,7 @@ void main() {
 
     await tester.tap(find.text('Agregar ejercicio').first);
     await tester.pumpAndSettle();
-    await tester.runAsync(
-      () => Future<void>.delayed(const Duration(milliseconds: 100)),
-    );
-    await tester.pump();
+    expect(find.text('Cargando ejercicios...'), findsNothing);
     expect(find.byType(AlertDialog), findsOneWidget);
 
     final nameField = find.byKey(const Key('exercise_search_field'));
@@ -175,7 +183,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Selecciona un ejercicio de la lista'), findsOneWidget);
-    expect(find.text('Ingresa una cantidad válida'), findsOneWidget);
+    expect(find.text('Usa entre 1 y 20 series'), findsOneWidget);
     expect(find.text('Completa las repeticiones'), findsOneWidget);
     expect(find.text('Completa el descanso'), findsOneWidget);
 
@@ -216,10 +224,6 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Editar'));
     await tester.pumpAndSettle();
-    await tester.runAsync(
-      () => Future<void>.delayed(const Duration(milliseconds: 100)),
-    );
-    await tester.pump();
     expect(find.textContaining('Editar ejercicio'), findsOneWidget);
     await tester.enterText(find.byKey(const Key('exercise_series_field')), '5');
     await tester.tap(find.text('Guardar cambios'));

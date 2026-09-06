@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../models/student_profile.dart';
 
 class StudentWorkoutProgress {
@@ -40,6 +42,29 @@ class StudentWorkoutProgress {
           skippedSessionIndexes ?? this.skippedSessionIndexes,
     );
   }
+
+  Map<String, Object?> toFirestore(StudentProfile profile) => {
+    'userId': profile.userId,
+    'studentProfileId': profile.id,
+    'weekLabel': profile.currentWeekLabel,
+    'currentSessionIndex': currentSessionIndex,
+    'completedSessionIndexes': completedSessionIndexes.toList()..sort(),
+    'skippedSessionIndexes': skippedSessionIndexes.toList()..sort(),
+    'updatedAt': FieldValue.serverTimestamp(),
+  };
+
+  factory StudentWorkoutProgress.fromFirestore(Map<String, dynamic> data) {
+    Set<int> indexes(String key) => (data[key] as List<dynamic>? ?? const [])
+        .whereType<num>()
+        .map((value) => value.toInt())
+        .where((value) => value >= 0)
+        .toSet();
+    return StudentWorkoutProgress(
+      currentSessionIndex: (data['currentSessionIndex'] as num?)?.toInt() ?? 0,
+      completedSessionIndexes: indexes('completedSessionIndexes'),
+      skippedSessionIndexes: indexes('skippedSessionIndexes'),
+    );
+  }
 }
 
 class StudentWorkoutProgressStore {
@@ -47,6 +72,42 @@ class StudentWorkoutProgressStore {
 
   static String _key(StudentProfile profile) {
     return '${profile.userId}_${profile.currentWeekLabel}';
+  }
+
+  static String firestoreDocumentId(StudentProfile profile) =>
+      Uri.encodeComponent(_key(profile));
+
+  static StudentWorkoutProgress snapshot(StudentProfile profile) {
+    final progress = getProgress(profile) ?? StudentWorkoutProgress();
+    return progress.copyWith(
+      completedSessionIndexes: {...progress.completedSessionIndexes},
+      skippedSessionIndexes: {...progress.skippedSessionIndexes},
+    );
+  }
+
+  static void restore(StudentProfile profile, StudentWorkoutProgress progress) {
+    _progressByStudentWeek[_key(profile)] = progress;
+  }
+
+  static Future<void> loadForProfile(StudentProfile? profile) async {
+    if (profile == null) return;
+    final snapshot = await FirebaseFirestore.instance
+        .collection('workoutProgress')
+        .doc(firestoreDocumentId(profile))
+        .get();
+    if (snapshot.data() case final data?) {
+      _progressByStudentWeek[_key(profile)] =
+          StudentWorkoutProgress.fromFirestore(data);
+    }
+  }
+
+  static Future<void> _persist(StudentProfile profile) async {
+    final progress = getProgress(profile);
+    if (progress == null) return;
+    await FirebaseFirestore.instance
+        .collection('workoutProgress')
+        .doc(firestoreDocumentId(profile))
+        .set(progress.toFirestore(profile));
   }
 
   static StudentWorkoutProgress? getProgress(StudentProfile? profile) {
@@ -107,6 +168,15 @@ class StudentWorkoutProgressStore {
     );
   }
 
+  static Future<void> completeCurrentSessionPersisted(
+    StudentProfile? profile,
+    int totalSessions,
+  ) async {
+    if (profile == null) return;
+    completeCurrentSession(profile, totalSessions);
+    await _persist(profile);
+  }
+
   static void skipCurrentSession(StudentProfile? profile, int totalSessions) {
     if (profile == null || totalSessions <= 0) return;
 
@@ -129,6 +199,15 @@ class StudentWorkoutProgressStore {
       completedSessionIndexes: completed,
       skippedSessionIndexes: skipped,
     );
+  }
+
+  static Future<void> skipCurrentSessionPersisted(
+    StudentProfile? profile,
+    int totalSessions,
+  ) async {
+    if (profile == null) return;
+    skipCurrentSession(profile, totalSessions);
+    await _persist(profile);
   }
 
   static bool isWeekFinished(StudentProfile? profile, int totalSessions) {
