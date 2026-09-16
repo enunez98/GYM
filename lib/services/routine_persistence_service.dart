@@ -115,6 +115,10 @@ class RoutinePersistenceService {
         .collection('routineAssignments')
         .where('plan', isEqualTo: plan)
         .get();
+    final customizedUserIds = previousAssignments.docs
+        .where((document) => document.data()['isCustomized'] == true)
+        .map((document) => document.id)
+        .toSet();
     final assignedAt = DateTime.now();
     final serializedSessions = sessions
         .map((session) => session.toFirestore())
@@ -128,26 +132,30 @@ class RoutinePersistenceService {
         'sessions': serializedSessions,
       }),
       for (final previous in previousAssignments.docs)
-        (batch) => batch.delete(previous.reference),
+        if (!customizedUserIds.contains(previous.id))
+          (batch) => batch.delete(previous.reference),
       for (final studentDocument in studentsSnapshot.docs)
-        (batch) {
-          final student = StudentProfile.fromFirestore(
-            studentDocument.id,
-            studentDocument.data(),
-          );
-          final assignment = _assignmentFor(
-            student: student,
-            planId: planId,
-            plan: plan,
-            sourceFileName: sourceFileName,
-            assignedAt: assignedAt,
-            sessions: sessions,
-          );
-          batch.set(
-            firestore.collection('routineAssignments').doc(student.userId),
-            assignment.toFirestore(),
-          );
-        },
+        if (!customizedUserIds.contains(
+          (studentDocument.data()['userId'] as String?) ?? '',
+        ))
+          (batch) {
+            final student = StudentProfile.fromFirestore(
+              studentDocument.id,
+              studentDocument.data(),
+            );
+            final assignment = _assignmentFor(
+              student: student,
+              planId: planId,
+              plan: plan,
+              sourceFileName: sourceFileName,
+              assignedAt: assignedAt,
+              sessions: sessions,
+            );
+            batch.set(
+              firestore.collection('routineAssignments').doc(student.userId),
+              assignment.toFirestore(),
+            );
+          },
     ];
 
     for (var start = 0; start < writes.length; start += 450) {
@@ -170,9 +178,16 @@ class RoutinePersistenceService {
                 StudentProfile.fromFirestore(document.id, document.data()),
           )
           .toList(),
+      protectedUserIds: customizedUserIds,
     );
     return RoutinePersistenceResult(
-      assignedStudents: studentsSnapshot.docs.length,
+      assignedStudents: studentsSnapshot.docs
+          .where(
+            (document) => !customizedUserIds.contains(
+              (document.data()['userId'] as String?) ?? '',
+            ),
+          )
+          .length,
     );
   }
 
@@ -243,8 +258,25 @@ class RoutinePersistenceService {
       assignedAt: DateTime.now(),
       sessions: sessions,
       students: students,
+      protectedUserIds: RoutineAssignmentStore.all
+          .where(
+            (assignment) =>
+                samePlan(assignment.plan, plan) && assignment.isCustomized,
+          )
+          .map((assignment) => assignment.userId)
+          .toSet(),
     );
-    return RoutinePersistenceResult(assignedStudents: students.length);
+    return RoutinePersistenceResult(
+      assignedStudents: students
+          .where(
+            (student) =>
+                RoutineAssignmentStore.getByUserId(
+                  student.userId,
+                )?.isCustomized !=
+                true,
+          )
+          .length,
+    );
   }
 
   static void _replaceLocalAssignments({
@@ -254,14 +286,20 @@ class RoutinePersistenceService {
     required DateTime assignedAt,
     required List<DemoRoutineSession> sessions,
     required List<StudentProfile> students,
+    required Set<String> protectedUserIds,
   }) {
     for (final assignment
         in RoutineAssignmentStore.all
-            .where((item) => samePlan(item.plan, plan))
+            .where(
+              (item) =>
+                  samePlan(item.plan, plan) &&
+                  !protectedUserIds.contains(item.userId),
+            )
             .toList()) {
       RoutineAssignmentStore.removeByUserId(assignment.userId);
     }
     for (final student in students) {
+      if (protectedUserIds.contains(student.userId)) continue;
       RoutineAssignmentStore.assign(
         _assignmentFor(
           student: student,

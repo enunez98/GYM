@@ -33,6 +33,7 @@ class _StudentsListScreenState extends State<StudentsListScreen> {
   String _selectedOrder = 'Nombre A-Z';
   int _currentPage = 0;
   StudentProfile? _selectedStudent;
+  bool _editingStudentRoutine = false;
   bool _showRegisterStudent = false;
 
   static const int _studentsPerPage = 10;
@@ -89,7 +90,10 @@ class _StudentsListScreenState extends State<StudentsListScreen> {
   }
 
   void _openStudent(StudentProfile student) {
-    setState(() => _selectedStudent = student);
+    setState(() {
+      _selectedStudent = student;
+      _editingStudentRoutine = false;
+    });
   }
 
   @override
@@ -311,7 +315,10 @@ class _StudentsListScreenState extends State<StudentsListScreen> {
         Row(
           children: [
             TextButton.icon(
-              onPressed: () => setState(() => _selectedStudent = null),
+              onPressed: () => setState(() {
+                _selectedStudent = null;
+                _editingStudentRoutine = false;
+              }),
               icon: const Icon(Icons.arrow_back),
               label: const Text('Volver al listado'),
             ),
@@ -343,17 +350,39 @@ class _StudentsListScreenState extends State<StudentsListScreen> {
                 color: Color(0xFF7A838C),
               ),
             ),
-            Expanded(
-              child: Text(
-                student.name,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
+            Text(
+              student.name,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
+            if (_editingStudentRoutine) ...[
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8),
+                child: Icon(
+                  Icons.chevron_right,
+                  size: 18,
+                  color: Color(0xFF7A838C),
+                ),
+              ),
+              const Expanded(
+                child: Text(
+                  'Modificar rutina individual',
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
           ],
         ),
         const SizedBox(height: 10),
-        Expanded(child: StudentDetailScreen(student: student, embedded: true)),
+        Expanded(
+          child: StudentDetailScreen(
+            student: student,
+            embedded: true,
+            onRoutineEditingChanged: (editing) =>
+                setState(() => _editingStudentRoutine = editing),
+          ),
+        ),
       ],
     );
   }
@@ -413,6 +442,15 @@ class _StudentsListScreenState extends State<StudentsListScreen> {
     }
 
     final students = StudentProfileStore.all;
+    final visibleStudents = _visibleStudents;
+    final totalPages = math.max(
+      1,
+      (visibleStudents.length / _studentsPerPage).ceil(),
+    );
+    final currentPage = math.min(_currentPage, totalPages - 1);
+    final pageStudents = visibleStudents
+        .skip(currentPage * _studentsPerPage)
+        .take(_studentsPerPage);
     final activeCount = _countStatus(students, 'Activo');
     final expiringCount = _countStatus(students, 'Por vencer');
     final expiredCount = _countStatus(students, 'Vencido');
@@ -442,6 +480,8 @@ class _StudentsListScreenState extends State<StudentsListScreen> {
                       child: ResponsiveFormField(
                         webMaxWidth: 620,
                         child: TextField(
+                          controller: _searchController,
+                          onChanged: (_) => setState(() => _currentPage = 0),
                           decoration: InputDecoration(
                             hintText: 'Buscar alumno...',
                             prefixIcon: const Icon(Icons.search),
@@ -453,6 +493,40 @@ class _StudentsListScreenState extends State<StudentsListScreen> {
                           ),
                         ),
                       ),
+                    ),
+                    const SizedBox(height: 14),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: AppSelectField(
+                            value: _selectedStatus,
+                            decoration: _filterDecoration(label: 'Estado'),
+                            options: const [
+                              'Todos los estados',
+                              'Activo',
+                              'Por vencer',
+                              'Vencido',
+                              'Inactivo',
+                            ],
+                            onChanged: (value) => setState(() {
+                              _selectedStatus = value ?? 'Todos los estados';
+                              _currentPage = 0;
+                            }),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: AppSelectField(
+                            value: _selectedOrder,
+                            decoration: _filterDecoration(label: 'Ordenar por'),
+                            options: const ['Nombre A-Z', 'Nombre Z-A'],
+                            onChanged: (value) => setState(() {
+                              _selectedOrder = value ?? 'Nombre A-Z';
+                              _currentPage = 0;
+                            }),
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 14),
                     Row(
@@ -483,13 +557,44 @@ class _StudentsListScreenState extends State<StudentsListScreen> {
                       ],
                     ),
                     const SizedBox(height: 14),
-                    for (final student in students) ...[
+                    if (visibleStudents.isEmpty)
+                      const AppCard(
+                        child: Text(
+                          'No hay alumnos que coincidan con la búsqueda.',
+                        ),
+                      ),
+                    for (final student in pageStudents) ...[
                       _StudentListCard(
                         student: student,
                         onTap: () => _openStudent(student),
                       ),
                       const SizedBox(height: 12),
                     ],
+                    if (totalPages > 1)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          IconButton(
+                            tooltip: 'Página anterior',
+                            onPressed: currentPage > 0
+                                ? () => setState(
+                                    () => _currentPage = currentPage - 1,
+                                  )
+                                : null,
+                            icon: const Icon(Icons.chevron_left),
+                          ),
+                          Text('${currentPage + 1} de $totalPages'),
+                          IconButton(
+                            tooltip: 'Página siguiente',
+                            onPressed: currentPage < totalPages - 1
+                                ? () => setState(
+                                    () => _currentPage = currentPage + 1,
+                                  )
+                                : null,
+                            icon: const Icon(Icons.chevron_right),
+                          ),
+                        ],
+                      ),
                     const SizedBox(height: 24),
                   ],
                 ),

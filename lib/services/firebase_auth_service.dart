@@ -14,15 +14,12 @@ class FirebaseAuthService {
   static Future<AppUser> login({
     required String email,
     required String password,
-    bool rememberMe = false,
   }) async {
     final normalizedEmail = email.trim().toLowerCase();
 
     try {
       if (kIsWeb) {
-        await FirebaseAuth.instance.setPersistence(
-          rememberMe ? Persistence.LOCAL : Persistence.SESSION,
-        );
+        await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
       }
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: normalizedEmail,
@@ -33,41 +30,7 @@ class FirebaseAuthService {
         throw const AuthException('No se pudo iniciar sesión');
       }
 
-      final reference = FirebaseFirestore.instance
-          .collection('users')
-          .doc(firebaseUser.uid);
-      var snapshot = await reference.get();
-
-      if (!snapshot.exists &&
-          firebaseUser.email?.toLowerCase() == _adminEmail) {
-        await reference.set({
-          'rut': '',
-          'name': 'Administrador GYM',
-          'role': 'admin',
-          'isActive': true,
-          'email': _adminEmail,
-          'createdAt': FieldValue.serverTimestamp(),
-        });
-        snapshot = await reference.get();
-      }
-
-      final data = snapshot.data();
-      if (data == null) {
-        await FirebaseAuth.instance.signOut();
-        throw const AuthException('El usuario no tiene un perfil configurado');
-      }
-      if (data['isActive'] == false) {
-        await FirebaseAuth.instance.signOut();
-        throw const AuthException('Usuario inactivo');
-      }
-
-      return AppUser(
-        id: firebaseUser.uid,
-        rut: (data['rut'] as String?) ?? '',
-        name: (data['name'] as String?) ?? 'Usuario',
-        role: data['role'] == 'admin' ? UserRole.admin : UserRole.student,
-        isActive: data['isActive'] != false,
-      );
+      return await _loadProfile(firebaseUser);
     } on FirebaseAuthException catch (error) {
       switch (error.code) {
         case 'invalid-credential':
@@ -82,6 +45,50 @@ class FirebaseAuthService {
           throw const AuthException('No se pudo iniciar sesión con Firebase');
       }
     }
+  }
+
+  static Future<AppUser?> restoreCurrentUser() async {
+    final firebaseUser = await FirebaseAuth.instance.authStateChanges().first;
+    if (firebaseUser == null) return null;
+    return _loadProfile(firebaseUser);
+  }
+
+  static Future<AppUser> _loadProfile(User firebaseUser) async {
+    final reference = FirebaseFirestore.instance
+        .collection('users')
+        .doc(firebaseUser.uid);
+    var snapshot = await reference.get();
+
+    if (!snapshot.exists && firebaseUser.email?.toLowerCase() == _adminEmail) {
+      await reference.set({
+        'rut': '',
+        'name': 'Administrador GYM',
+        'role': 'admin',
+        'isActive': true,
+        'email': _adminEmail,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+      snapshot = await reference.get();
+    }
+
+    final data = snapshot.data();
+    if (data == null) {
+      await FirebaseAuth.instance.signOut();
+      throw const AuthException('El usuario no tiene un perfil configurado');
+    }
+    if (data['isActive'] == false) {
+      await FirebaseAuth.instance.signOut();
+      throw const AuthException('Usuario inactivo');
+    }
+
+    return AppUser(
+      id: firebaseUser.uid,
+      rut: (data['rut'] as String?) ?? '',
+      name: (data['name'] as String?) ?? 'Usuario',
+      role: data['role'] == 'admin' ? UserRole.admin : UserRole.student,
+      isActive: data['isActive'] != false,
+      photoData: data['photoData'] as String?,
+    );
   }
 
   static Future<void> signOut() => FirebaseAuth.instance.signOut();

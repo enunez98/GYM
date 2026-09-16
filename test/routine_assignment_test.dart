@@ -3,11 +3,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gym_app/features/student/screens/student_home_screen.dart';
 import 'package:gym_app/features/student/screens/workout_screen.dart';
 import 'package:gym_app/features/teacher/screens/student_detail_screen.dart';
+import 'package:gym_app/features/teacher/screens/student_routine_editor_screen.dart';
 import 'package:gym_app/models/app_user.dart';
 import 'package:gym_app/models/routine_assignment.dart';
 import 'package:gym_app/models/routine_models.dart';
 import 'package:gym_app/models/student_profile.dart';
 import 'package:gym_app/services/demo_student_profile_service.dart';
+import 'package:gym_app/services/exercise_catalog_service.dart';
 import 'package:gym_app/services/imported_routine_store.dart';
 import 'package:gym_app/services/routine_assignment_store.dart';
 import 'package:gym_app/services/routine_persistence_service.dart';
@@ -155,6 +157,160 @@ void main() {
     expect(RoutineAssignmentStore.all, hasLength(1));
   });
 
+  test('la carga general conserva asignaciones personalizadas', () {
+    final otherStudent = StudentProfile(
+      id: 'other_profile',
+      userId: 'other_student',
+      name: 'Otro alumno',
+      rut: '222222222',
+      phone: '+56922222222',
+      email: 'otro@test.cl',
+      plan: profile.plan,
+      status: 'Activo',
+      startDate: profile.startDate,
+      endDate: profile.endDate,
+      daysRemaining: 30,
+      weeklyAttendanceCompleted: 0,
+      weeklyAttendanceTarget: 4,
+      monthlyAttendanceCompleted: 0,
+      monthlyAttendanceTarget: 16,
+      bodyScore: 0,
+      currentWeekLabel: profile.currentWeekLabel,
+      currentWeekDates: profile.currentWeekDates,
+    );
+    StudentProfileStore.clearAll();
+    StudentProfileStore.add(profile);
+    StudentProfileStore.add(otherStudent);
+    addTearDown(StudentProfileStore.resetToDemo);
+
+    RoutinePersistenceService.replaceLocally(
+      plan: profile.plan,
+      sourceFileName: 'general_v1.xlsx',
+      sessions: sessions,
+    );
+    final original = RoutineAssignmentStore.getByUserId(profile.userId)!;
+    final personalizedSessions = [
+      DemoRoutineSession(
+        session: sessions.first.session,
+        title: sessions.first.title,
+        exercises: [sessions.first.exercises.first],
+      ),
+      sessions.last,
+    ];
+    RoutineAssignmentStore.assign(
+      original.withStudentSessions(personalizedSessions),
+    );
+
+    RoutinePersistenceService.replaceLocally(
+      plan: profile.plan,
+      sourceFileName: 'general_v2.xlsx',
+      sessions: [sessions.last],
+    );
+
+    final customized = RoutineAssignmentStore.getByUserId(profile.userId)!;
+    final other = RoutineAssignmentStore.getByUserId(otherStudent.userId)!;
+    expect(customized.isCustomized, isTrue);
+    expect(customized.sessions.first.exercises, hasLength(1));
+    expect(customized.sourceFileName, 'general_v1.xlsx');
+    expect(other.isCustomized, isFalse);
+    expect(other.sourceFileName, 'general_v2.xlsx');
+    expect(other.sessions, hasLength(1));
+  });
+
+  testWidgets('editar la rutina de un alumno no cambia otra asignación', (
+    tester,
+  ) async {
+    ExerciseCatalogService.testExerciseNames = const ['Remo', 'Press banca'];
+    addTearDown(() => ExerciseCatalogService.testExerciseNames = null);
+    tester.view.physicalSize = const Size(430, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final first = RoutineAssignment(
+      id: 'first',
+      userId: profile.userId,
+      studentProfileId: profile.id,
+      studentName: profile.name,
+      plan: profile.plan,
+      routineName: 'Rutina importada',
+      sourceFileName: 'general.xlsx',
+      assignedAt: DateTime(2026, 7, 22),
+      sessions: sessions,
+    );
+    final second = RoutineAssignment(
+      id: 'second',
+      userId: 'other_student',
+      studentProfileId: 'other_profile',
+      studentName: 'Otro alumno',
+      plan: profile.plan,
+      routineName: 'Rutina importada',
+      sourceFileName: 'general.xlsx',
+      assignedAt: DateTime(2026, 7, 22),
+      sessions: sessions,
+    );
+    RoutineAssignmentStore.assign(first);
+    RoutineAssignmentStore.assign(second);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Builder(
+          builder: (context) => ElevatedButton(
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => StudentRoutineEditorScreen(assignment: first),
+              ),
+            ),
+            child: const Text('Abrir editor'),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Abrir editor'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Eliminar ejercicio').first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Eliminar').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Agregar ejercicio').first);
+    await tester.pumpAndSettle();
+    await tester.enterText(
+      find.byKey(const Key('exercise_search_field')),
+      'Remo',
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Remo').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Guardar ejercicio').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Editar ejercicio').first);
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byKey(const Key('exercise_series_field')), '5');
+    await tester.tap(find.text('Guardar cambios').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('save_student_routine_button')));
+    await tester.pumpAndSettle();
+
+    expect(
+      RoutineAssignmentStore.getByUserId(profile.userId)!.isCustomized,
+      isTrue,
+    );
+    final personalExercises = RoutineAssignmentStore.getByUserId(
+      profile.userId,
+    )!.sessions.first.exercises;
+    expect(personalExercises, hasLength(2));
+    expect(personalExercises.map((item) => item.name), contains('Remo'));
+    expect(personalExercises.first.series, 5);
+    expect(
+      RoutineAssignmentStore.getByUserId(
+        second.userId,
+      )!.sessions.first.exercises,
+      hasLength(2),
+    );
+    expect(sessions.first.exercises, hasLength(2));
+  });
+
   testWidgets('admin assigns and keeps the imported routine in detail', (
     tester,
   ) async {
@@ -187,6 +343,7 @@ void main() {
     expect(assignment?.sessions, sessions);
     expect(find.text('Rutina asignada a Felipe Durán'), findsOneWidget);
     expect(find.text('plan_felipe.xlsx'), findsOneWidget);
+    expect(find.text('Modificar rutina del alumno'), findsOneWidget);
 
     SessionStore.signIn(
       const AppUser(

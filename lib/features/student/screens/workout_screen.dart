@@ -16,6 +16,7 @@ import '../../../services/session_store.dart';
 import '../../../services/student_routine_service.dart';
 import '../../../services/student_workout_progress_store.dart';
 import '../../../services/workout_history_store.dart';
+import '../../../services/workout_exercise_draft_store.dart';
 
 class WorkoutScreen extends StatefulWidget {
   const WorkoutScreen({super.key});
@@ -27,6 +28,143 @@ class WorkoutScreen extends StatefulWidget {
 class _WorkoutScreenState extends State<WorkoutScreen> {
   final Map<String, TextEditingController> _workoutControllers = {};
   bool _isSaving = false;
+  bool _draftLoading = false;
+  bool _restoringDraft = false;
+  String? _activeDraftKey;
+  final Set<int> _completedExercises = {};
+
+  String _draftKey(
+    AppUser? user,
+    StudentProfile? profile,
+    DemoRoutineSession session,
+  ) {
+    final signature = session.exercises
+        .map(
+          (exercise) => '${exercise.name}:${exercise.series}:${exercise.reps}',
+        )
+        .join('|');
+    return WorkoutExerciseDraftStore.key(
+      userId: profile?.userId ?? user?.id ?? '',
+      week: profile?.currentWeekLabel ?? session.session,
+      session: session.session + session.title,
+      routineSignature: signature,
+    );
+  }
+
+  Future<void> _loadDraft(String key) async {
+    _activeDraftKey = key;
+    _draftLoading = true;
+    try {
+      final draft = await WorkoutExerciseDraftStore.load(key);
+      if (!mounted || _activeDraftKey != key) return;
+      _restoringDraft = true;
+      _clearWorkoutInputs();
+      for (final entry
+          in draft?.inputs.entries ?? <MapEntry<String, String>>[]) {
+        _workoutControllers.putIfAbsent(entry.key, () {
+          final controller = TextEditingController();
+          controller.addListener(_onInputChanged);
+          return controller;
+        }).text = entry.value;
+      }
+      _completedExercises
+        ..clear()
+        ..addAll(draft?.completedExercises ?? {});
+      _restoringDraft = false;
+    } catch (_) {
+      if (mounted && _activeDraftKey == key) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No se pudo recuperar el avance local')),
+        );
+      }
+    } finally {
+      if (mounted && _activeDraftKey == key) {
+        setState(() => _draftLoading = false);
+      }
+    }
+  }
+
+  WorkoutExerciseDraft _draftSnapshot() => WorkoutExerciseDraft(
+    inputs: _workoutControllers.map((key, value) => MapEntry(key, value.text)),
+    completedExercises: {..._completedExercises},
+  );
+
+  void _onInputChanged() {
+    if (_restoringDraft) return;
+    setState(() {});
+    final key = _activeDraftKey;
+    if (key != null && !_draftLoading) {
+      WorkoutExerciseDraftStore.save(key, _draftSnapshot());
+    }
+  }
+
+  String? _exerciseValidationError(DemoRoutineSession session, int index) {
+    final exercise = session.exercises[index];
+    final totalSeries = exercise.series <= 0 ? 1 : exercise.series;
+    for (var series = 1; series <= totalSeries; series++) {
+      final kgText = _controllerFor(
+        type: 'kg',
+        exerciseIndex: index,
+        seriesNumber: series,
+      ).text.trim();
+      final repsText = _controllerFor(
+        type: 'reps',
+        exerciseIndex: index,
+        seriesNumber: series,
+      ).text.trim();
+      if (repsText.isEmpty) {
+        return 'Completa todas las series de ${exercise.name}';
+      }
+      final kg = kgText.isEmpty
+          ? 0.0
+          : double.tryParse(kgText.replaceAll(',', '.'));
+      if (kg == null || !kg.isFinite || kg < 0 || kg > 2000) {
+        return 'Serie $series: usa un peso entre 0 y 2000 kg';
+      }
+      final reps = int.tryParse(repsText);
+      if (reps == null || reps <= 0 || reps > 3600) {
+        return 'Serie $series: ingresa repeticiones o segundos entre 1 y 3600';
+      }
+    }
+    return null;
+  }
+
+  Future<void> _completeExercise(DemoRoutineSession session, int index) async {
+    final error = _exerciseValidationError(session, index);
+    if (error != null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(error)));
+      return;
+    }
+    final key = _activeDraftKey;
+    if (key == null) return;
+    setState(() => _completedExercises.add(index));
+    try {
+      await WorkoutExerciseDraftStore.save(key, _draftSnapshot());
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _completedExercises.remove(index));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No se pudo guardar el ejercicio')),
+      );
+    }
+  }
+
+  Future<void> _cancelExercise(int index) async {
+    final key = _activeDraftKey;
+    if (key == null) return;
+    setState(() => _completedExercises.remove(index));
+    try {
+      await WorkoutExerciseDraftStore.save(key, _draftSnapshot());
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _completedExercises.add(index));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No se pudo habilitar el ejercicio')),
+      );
+    }
+  }
 
   String _controllerKey({
     required String type,
@@ -46,7 +184,11 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
       exerciseIndex: exerciseIndex,
       seriesNumber: seriesNumber,
     );
-    _workoutControllers.putIfAbsent(key, TextEditingController.new);
+    _workoutControllers.putIfAbsent(key, () {
+      final controller = TextEditingController();
+      controller.addListener(_onInputChanged);
+      return controller;
+    });
     return _workoutControllers[key]!;
   }
 
@@ -101,6 +243,21 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
   void _clearWorkoutInputs() {
     for (final controller in _workoutControllers.values) {
       controller.clear();
+    }
+  }
+
+  Future<void> _clearDraftAfterAdvancing() async {
+    final oldDraftKey = _activeDraftKey;
+    _activeDraftKey = null;
+    _restoringDraft = true;
+    _clearWorkoutInputs();
+    _completedExercises.clear();
+    _restoringDraft = false;
+    if (oldDraftKey == null) return;
+    try {
+      await WorkoutExerciseDraftStore.clear(oldDraftKey);
+    } catch (error) {
+      debugPrint('No se pudo limpiar el avance local: $error');
     }
   }
 
@@ -191,6 +348,16 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
       );
       return;
     }
+    if (_completedExercises.length != assignedSession.exercises.length) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Guarda cada ejercicio antes de finalizar el entrenamiento',
+          ),
+        ),
+      );
+      return;
+    }
 
     final validationError = _workoutValidationError(assignedSession);
     if (validationError != null) {
@@ -232,7 +399,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
           completed: true,
         );
       }
-      _clearWorkoutInputs();
+      await _clearDraftAfterAdvancing();
       if (!mounted) return;
       setState(() => _isSaving = false);
     } catch (error) {
@@ -295,7 +462,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
           completed: false,
         );
       }
-      _clearWorkoutInputs();
+      await _clearDraftAfterAdvancing();
       if (!mounted) return;
       setState(() => _isSaving = false);
     } catch (error) {
@@ -322,6 +489,24 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
     final assignedSession = StudentRoutineService.getCurrentSession(profile);
     final hasAssignedWorkout = assignedSession != null;
     final weekFinished = weekSessions.isNotEmpty && assignedSession == null;
+    if (assignedSession != null) {
+      final key = _draftKey(user, profile, assignedSession);
+      if (_activeDraftKey != key) {
+        _loadDraft(key);
+      }
+    }
+    if (_draftLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    final completedSessions =
+        StudentWorkoutProgressStore.getProgress(
+          profile,
+        )?.completedSessionIndexes.length ??
+        0;
+    final totalSessions = weekSessions.length;
+    final progressPercent = totalSessions == 0
+        ? 0
+        : ((completedSessions / totalSessions) * 100).round();
 
     if (MediaQuery.sizeOf(context).width >= 900) {
       return _buildWebWorkout(
@@ -407,6 +592,30 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                       ),
                     ),
                     const SizedBox(height: 14),
+                    AppCard(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Plan: ${profile?.plan ?? 'Plan no asignado'}'),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Progreso semanal: $progressPercent%',
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 8),
+                          LinearProgressIndicator(value: progressPercent / 100),
+                          const SizedBox(height: 8),
+                          Text(
+                            '$completedSessions de $totalSessions entrenamientos completados',
+                          ),
+                          Text('Frecuencia: $totalSessions días por semana'),
+                          Text(
+                            'Sesión actual: ${assignedSession?.title ?? 'Sin sesión pendiente'}',
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 14),
                     Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
@@ -445,6 +654,13 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                           number: i + 1,
                           exerciseIndex: i,
                           exercise: assignedSession.exercises[i],
+                          completed: _completedExercises.contains(i),
+                          canComplete:
+                              _exerciseValidationError(assignedSession, i) ==
+                              null,
+                          onComplete: () =>
+                              _completeExercise(assignedSession, i),
+                          onCancel: () => _cancelExercise(i),
                           kgControllerFor: (seriesNumber) => _controllerFor(
                             type: 'kg',
                             exerciseIndex: i,
@@ -736,6 +952,20 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                                     number: index + 1,
                                     exerciseIndex: index,
                                     exercise: assignedSession.exercises[index],
+                                    completed: _completedExercises.contains(
+                                      index,
+                                    ),
+                                    canComplete:
+                                        _exerciseValidationError(
+                                          assignedSession,
+                                          index,
+                                        ) ==
+                                        null,
+                                    onComplete: () => _completeExercise(
+                                      assignedSession,
+                                      index,
+                                    ),
+                                    onCancel: () => _cancelExercise(index),
                                     kgControllerFor: (seriesNumber) =>
                                         _controllerFor(
                                           type: 'kg',
@@ -990,6 +1220,10 @@ class _WebWorkoutExerciseCard extends StatelessWidget {
   final DemoRoutineExercise exercise;
   final TextEditingController Function(int seriesNumber) kgControllerFor;
   final TextEditingController Function(int seriesNumber) repsControllerFor;
+  final bool completed;
+  final bool canComplete;
+  final VoidCallback onComplete;
+  final VoidCallback onCancel;
 
   const _WebWorkoutExerciseCard({
     required this.number,
@@ -997,173 +1231,197 @@ class _WebWorkoutExerciseCard extends StatelessWidget {
     required this.exercise,
     required this.kgControllerFor,
     required this.repsControllerFor,
+    required this.completed,
+    required this.canComplete,
+    required this.onComplete,
+    required this.onCancel,
   });
 
   @override
   Widget build(BuildContext context) {
     final totalSeries = exercise.series <= 0 ? 1 : exercise.series;
     final metricLabel = _metricLabel(exercise.reps);
-    return AppCard(
-      padding: const EdgeInsets.all(20),
-      webContentMaxWidth: double.infinity,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CircleAvatar(
-            radius: 16,
-            backgroundColor: const Color(0xFFDDF6C7),
-            child: Text(
-              '$number',
-              style: const TextStyle(
-                color: Color(0xFF3FB52A),
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-          ),
-          const SizedBox(width: 14),
-          Container(
-            width: 150,
-            height: 170,
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF5F6F6),
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: ExerciseMotionPreview(exerciseName: exercise.name),
-          ),
-          const SizedBox(width: 20),
-          Expanded(
-            child: Column(
+    return _CompletedExerciseCard(
+      completed: completed,
+      onCancel: onCancel,
+      child: AppCard(
+        padding: const EdgeInsets.all(20),
+        webContentMaxWidth: double.infinity,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  exercise.name.toUpperCase(),
-                  style: const TextStyle(
-                    color: Color(0xFF07111D),
-                    fontSize: 18,
-                    fontWeight: FontWeight.w800,
+                CircleAvatar(
+                  radius: 16,
+                  backgroundColor: const Color(0xFFDDF6C7),
+                  child: Text(
+                    '$number',
+                    style: const TextStyle(
+                      color: Color(0xFF3FB52A),
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  'Objetivo · ${exercise.reps}',
-                  style: const TextStyle(color: Color(0xFF616B76)),
-                ),
-                const SizedBox(height: 18),
+                const SizedBox(width: 14),
                 Container(
-                  padding: const EdgeInsets.all(14),
+                  width: 150,
+                  height: 170,
+                  padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF5F7F8),
-                    borderRadius: BorderRadius.circular(12),
+                    color: const Color(0xFFF5F6F6),
+                    borderRadius: BorderRadius.circular(14),
                   ),
-                  child: Row(
+                  child: ExerciseMotionPreview(exerciseName: exercise.name),
+                ),
+                const SizedBox(width: 20),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Icon(Icons.track_changes, color: Color(0xFF4AC51F)),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          'Completa $totalSeries series de ${exercise.reps}',
-                          style: const TextStyle(fontWeight: FontWeight.w600),
+                      Text(
+                        exercise.name.toUpperCase(),
+                        style: const TextStyle(
+                          color: Color(0xFF07111D),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
                         ),
                       ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Objetivo · ${exercise.reps}',
+                        style: const TextStyle(color: Color(0xFF616B76)),
+                      ),
+                      const SizedBox(height: 18),
+                      Container(
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF5F7F8),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.track_changes,
+                              color: Color(0xFF4AC51F),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Text(
+                                'Completa $totalSeries series de ${exercise.reps}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      if (exercise.rest.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        Text(
+                          'Descanso: ${exercise.rest}',
+                          style: const TextStyle(
+                            color: Color(0xFF616B76),
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),
-                if (exercise.rest.isNotEmpty) ...[
-                  const SizedBox(height: 12),
-                  Text(
-                    'Descanso: ${exercise.rest}',
-                    style: const TextStyle(
-                      color: Color(0xFF616B76),
-                      fontSize: 13,
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-          const SizedBox(width: 22),
-          SizedBox(
-            width: 315,
-            child: Column(
-              children: [
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    '$totalSeries series',
-                    style: const TextStyle(
-                      color: Color(0xFF616B76),
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                for (
-                  var seriesNumber = 1;
-                  seriesNumber <= totalSeries;
-                  seriesNumber++
-                )
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 62,
-                          child: Text(
-                            'Serie $seriesNumber',
-                            style: const TextStyle(
-                              color: Color(0xFF25303A),
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
-                            ),
+                const SizedBox(width: 22),
+                SizedBox(
+                  width: 315,
+                  child: Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          '$totalSeries series',
+                          style: const TextStyle(
+                            color: Color(0xFF616B76),
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
-                        Expanded(
-                          child: TextField(
-                            controller: kgControllerFor(seriesNumber),
-                            textAlign: TextAlign.center,
-                            keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true,
-                            ),
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(
-                                RegExp(r'^\d{0,4}([.,]\d{0,2})?'),
+                      ),
+                      const SizedBox(height: 8),
+                      for (
+                        var seriesNumber = 1;
+                        seriesNumber <= totalSeries;
+                        seriesNumber++
+                      )
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: 62,
+                                child: Text(
+                                  'Serie $seriesNumber',
+                                  style: const TextStyle(
+                                    color: Color(0xFF25303A),
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: TextField(
+                                  enabled: !completed,
+                                  controller: kgControllerFor(seriesNumber),
+                                  textAlign: TextAlign.center,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                        decimal: true,
+                                      ),
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                      RegExp(r'^\d{0,4}([.,]\d{0,2})?'),
+                                    ),
+                                  ],
+                                  decoration: const InputDecoration(
+                                    hintText: 'kg',
+                                    isDense: true,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: TextField(
+                                  enabled: !completed,
+                                  controller: repsControllerFor(seriesNumber),
+                                  textAlign: TextAlign.center,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                    LengthLimitingTextInputFormatter(4),
+                                  ],
+                                  decoration: InputDecoration(
+                                    hintText: metricLabel,
+                                    isDense: true,
+                                  ),
+                                ),
                               ),
                             ],
-                            decoration: const InputDecoration(
-                              hintText: 'kg',
-                              isDense: true,
-                            ),
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: TextField(
-                            controller: repsControllerFor(seriesNumber),
-                            textAlign: TextAlign.center,
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                              LengthLimitingTextInputFormatter(4),
-                            ],
-                            decoration: InputDecoration(
-                              hintText: metricLabel,
-                              isDense: true,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        const Icon(
-                          Icons.radio_button_unchecked,
-                          color: Color(0xFFB8C0C6),
-                        ),
-                      ],
-                    ),
+                    ],
                   ),
+                ),
               ],
             ),
-          ),
-        ],
+            const SizedBox(height: 12),
+            if (completed)
+              const SizedBox(height: 48)
+            else
+              _ExerciseSaveControls(
+                canComplete: canComplete,
+                onComplete: onComplete,
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -1175,6 +1433,10 @@ class _ImportedWorkoutExerciseCard extends StatelessWidget {
   final DemoRoutineExercise exercise;
   final TextEditingController Function(int seriesNumber) kgControllerFor;
   final TextEditingController Function(int seriesNumber) repsControllerFor;
+  final bool completed;
+  final bool canComplete;
+  final VoidCallback onComplete;
+  final VoidCallback onCancel;
 
   const _ImportedWorkoutExerciseCard({
     required this.number,
@@ -1182,6 +1444,10 @@ class _ImportedWorkoutExerciseCard extends StatelessWidget {
     required this.exercise,
     required this.kgControllerFor,
     required this.repsControllerFor,
+    required this.completed,
+    required this.canComplete,
+    required this.onComplete,
+    required this.onCancel,
   });
 
   @override
@@ -1189,153 +1455,269 @@ class _ImportedWorkoutExerciseCard extends StatelessWidget {
     final totalSeries = exercise.series <= 0 ? 1 : exercise.series;
     final metricLabel = _metricLabel(exercise.reps);
 
-    return AppCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 16,
-                backgroundColor: const Color(0xFFEDF9E8),
-                child: Text(
-                  '$number',
-                  style: const TextStyle(
-                    color: Color(0xFF59D52D),
-                    fontWeight: FontWeight.bold,
+    return _CompletedExerciseCard(
+      completed: completed,
+      onCancel: onCancel,
+      child: AppCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 16,
+                  backgroundColor: const Color(0xFFEDF9E8),
+                  child: Text(
+                    '$number',
+                    style: const TextStyle(
+                      color: Color(0xFF59D52D),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  exercise.name,
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    exercise.name,
+                    style: const TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-              Text(
-                '$totalSeries series',
-                style: const TextStyle(color: Color(0xFF616B76), fontSize: 12),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          SizedBox(
-            width: double.infinity,
-            height: 210,
-            child: ExerciseMotionPreview(exerciseName: exercise.name),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Objetivo: ${exercise.reps}',
-            style: const TextStyle(
-              color: Color(0xFF616B76),
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
+                Text(
+                  '$totalSeries series',
+                  style: const TextStyle(
+                    color: Color(0xFF616B76),
+                    fontSize: 12,
+                  ),
+                ),
+              ],
             ),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  'Serie',
-                  style: const TextStyle(
-                    color: Color(0xFF616B76),
-                    fontWeight: FontWeight.bold,
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              height: 210,
+              child: ExerciseMotionPreview(exerciseName: exercise.name),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Objetivo: ${exercise.reps}',
+              style: const TextStyle(
+                color: Color(0xFF616B76),
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'Serie',
+                    style: const TextStyle(
+                      color: Color(0xFF616B76),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(
-                width: 76,
-                child: Text(
-                  'kg',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Color(0xFF616B76),
-                    fontWeight: FontWeight.bold,
+                SizedBox(
+                  width: 76,
+                  child: Text(
+                    'kg',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Color(0xFF616B76),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(width: 8),
-              SizedBox(
-                width: 76,
-                child: Text(
-                  metricLabel,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Color(0xFF616B76),
-                    fontWeight: FontWeight.bold,
+                SizedBox(width: 8),
+                SizedBox(
+                  width: 76,
+                  child: Text(
+                    metricLabel,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Color(0xFF616B76),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          for (
-            int seriesNumber = 1;
-            seriesNumber <= totalSeries;
-            seriesNumber++
-          )
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 6),
-              child: Row(
-                children: [
-                  Expanded(child: Text('Serie $seriesNumber')),
-                  SizedBox(
-                    width: 76,
-                    child: TextField(
-                      controller: kgControllerFor(seriesNumber),
-                      textAlign: TextAlign.center,
-                      keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true,
-                      ),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(
-                          RegExp(r'^\d{0,4}([.,]\d{0,2})?'),
+              ],
+            ),
+            const SizedBox(height: 8),
+            for (
+              int seriesNumber = 1;
+              seriesNumber <= totalSeries;
+              seriesNumber++
+            )
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 6),
+                child: Row(
+                  children: [
+                    Expanded(child: Text('Serie $seriesNumber')),
+                    SizedBox(
+                      width: 76,
+                      child: TextField(
+                        enabled: !completed,
+                        controller: kgControllerFor(seriesNumber),
+                        textAlign: TextAlign.center,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
                         ),
-                      ],
-                      decoration: InputDecoration(
-                        hintText: 'kg',
-                        isDense: true,
-                        filled: true,
-                        fillColor: const Color(0xFFF6F7F7),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                            RegExp(r'^\d{0,4}([.,]\d{0,2})?'),
+                          ),
+                        ],
+                        decoration: InputDecoration(
+                          hintText: 'kg',
+                          isDense: true,
+                          filled: true,
+                          fillColor: const Color(0xFFF6F7F7),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  SizedBox(
-                    width: 76,
-                    child: TextField(
-                      controller: repsControllerFor(seriesNumber),
-                      textAlign: TextAlign.center,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                        LengthLimitingTextInputFormatter(4),
-                      ],
-                      decoration: InputDecoration(
-                        hintText: metricLabel,
-                        isDense: true,
-                        filled: true,
-                        fillColor: const Color(0xFFF6F7F7),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
+                    const SizedBox(width: 8),
+                    SizedBox(
+                      width: 76,
+                      child: TextField(
+                        enabled: !completed,
+                        controller: repsControllerFor(seriesNumber),
+                        textAlign: TextAlign.center,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(4),
+                        ],
+                        decoration: InputDecoration(
+                          hintText: metricLabel,
+                          isDense: true,
+                          filled: true,
+                          fillColor: const Color(0xFFF6F7F7),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-        ],
+            const SizedBox(height: 12),
+            if (completed)
+              const SizedBox(height: 48)
+            else
+              _ExerciseSaveControls(
+                canComplete: canComplete,
+                onComplete: onComplete,
+              ),
+          ],
+        ),
       ),
     );
   }
+}
+
+class _CompletedExerciseCard extends StatelessWidget {
+  final bool completed;
+  final VoidCallback onCancel;
+  final Widget child;
+
+  const _CompletedExerciseCard({
+    required this.completed,
+    required this.onCancel,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        AbsorbPointer(absorbing: completed, child: child),
+        if (completed) ...[
+          Positioned.fill(
+            child: IgnorePointer(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: const Color(0xC0A9B1BC),
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 76,
+                        height: 76,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFF59D52D),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.check_rounded,
+                          color: Colors.white,
+                          size: 48,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      const Text(
+                        'COMPLETADO',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 1,
+                          shadows: [
+                            Shadow(color: Color(0x66000000), blurRadius: 8),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            right: 12,
+            bottom: 12,
+            child: TextButton.icon(
+              onPressed: onCancel,
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: const Color(0xFF25303A),
+              ),
+              icon: const Icon(Icons.undo),
+              label: const Text('Cancelar completado'),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+class _ExerciseSaveControls extends StatelessWidget {
+  final bool canComplete;
+  final VoidCallback onComplete;
+
+  const _ExerciseSaveControls({
+    required this.canComplete,
+    required this.onComplete,
+  });
+
+  @override
+  Widget build(BuildContext context) => Align(
+    alignment: Alignment.centerRight,
+    child: ElevatedButton.icon(
+      onPressed: canComplete ? onComplete : null,
+      icon: const Icon(Icons.check),
+      label: const Text('Guardar ejercicio'),
+    ),
+  );
 }

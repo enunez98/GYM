@@ -12,6 +12,7 @@ class RoutineAssignment {
   final String sourceFileName;
   final DateTime assignedAt;
   final List<DemoRoutineSession> sessions;
+  final bool isCustomized;
 
   const RoutineAssignment({
     required this.id,
@@ -23,6 +24,7 @@ class RoutineAssignment {
     required this.sourceFileName,
     required this.assignedAt,
     required this.sessions,
+    this.isCustomized = false,
   });
 
   int get totalWeeks {
@@ -47,6 +49,7 @@ class RoutineAssignment {
     'sourceFileName': sourceFileName,
     'assignedAt': assignedAt,
     'sessions': sessions.map((session) => session.toFirestore()).toList(),
+    'isCustomized': isCustomized,
   };
 
   factory RoutineAssignment.fromFirestore(
@@ -76,6 +79,24 @@ class RoutineAssignment {
             ),
           )
           .toList(),
+      isCustomized: data['isCustomized'] == true,
+    );
+  }
+
+  RoutineAssignment withStudentSessions(
+    List<DemoRoutineSession> updatedSessions,
+  ) {
+    return RoutineAssignment(
+      id: id,
+      userId: userId,
+      studentProfileId: studentProfileId,
+      studentName: studentName,
+      plan: plan,
+      routineName: routineName,
+      sourceFileName: sourceFileName,
+      assignedAt: assignedAt,
+      sessions: updatedSessions,
+      isCustomized: true,
     );
   }
 }

@@ -459,7 +459,17 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
                     if (selectedPlan != null && selectedWeek != null)
                       const SizedBox(height: 14),
                     for (final session in selectedSessions) ...[
-                      _RoutineSessionCard(session: session),
+                      _RoutineSessionCard(
+                        session: session,
+                        onAddExercise: () => _showAddExerciseDialog(session),
+                        onEditExercise: (index) =>
+                            _showEditExerciseDialog(session, index),
+                        onDeleteExercise: (index) =>
+                            _deleteExercise(session, index),
+                        onSave: _saveRoutineChanges,
+                        hasUnsavedChanges: hasUnsavedChanges,
+                        isSaving: isSavingRoutine,
+                      ),
                       const SizedBox(height: 14),
                     ],
                     if (isUsingLocalImport && Firebase.apps.isEmpty) ...[
@@ -862,7 +872,7 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
   Future<void> _showAddExerciseDialog(DemoRoutineSession session) async {
     final exercise = await showDialog<DemoRoutineExercise>(
       context: context,
-      builder: (_) => _AddExerciseDialog(sessionLabel: session.session),
+      builder: (_) => RoutineExerciseDialog(sessionLabel: session.session),
     );
 
     if (exercise == null || !mounted) return;
@@ -887,7 +897,7 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
   ) async {
     final exercise = await showDialog<DemoRoutineExercise>(
       context: context,
-      builder: (_) => _AddExerciseDialog(
+      builder: (_) => RoutineExerciseDialog(
         sessionLabel: session.session,
         initialExercise: session.exercises[index],
       ),
@@ -991,17 +1001,21 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
   }
 }
 
-class _AddExerciseDialog extends StatefulWidget {
+class RoutineExerciseDialog extends StatefulWidget {
   final String sessionLabel;
   final DemoRoutineExercise? initialExercise;
 
-  const _AddExerciseDialog({required this.sessionLabel, this.initialExercise});
+  const RoutineExerciseDialog({
+    super.key,
+    required this.sessionLabel,
+    this.initialExercise,
+  });
 
   @override
-  State<_AddExerciseDialog> createState() => _AddExerciseDialogState();
+  State<RoutineExerciseDialog> createState() => _RoutineExerciseDialogState();
 }
 
-class _AddExerciseDialogState extends State<_AddExerciseDialog> {
+class _RoutineExerciseDialogState extends State<RoutineExerciseDialog> {
   final formKey = GlobalKey<FormState>();
   late final TextEditingController nameController;
   final nameFocusNode = FocusNode();
@@ -1085,7 +1099,7 @@ class _AddExerciseDialogState extends State<_AddExerciseDialog> {
   void _save() {
     if (!(formKey.currentState?.validate() ?? false)) return;
 
-    final name = _catalogMatch()!;
+    final name = _catalogMatch() ?? widget.initialExercise!.name;
     final series = int.tryParse(seriesController.text.trim()) ?? 0;
     final reps = repsController.text.trim();
     final rest = restController.text.trim();
@@ -1096,9 +1110,50 @@ class _AddExerciseDialogState extends State<_AddExerciseDialog> {
     );
   }
 
+  Widget _seriesField() => TextFormField(
+    key: const Key('exercise_series_field'),
+    controller: seriesController,
+    keyboardType: TextInputType.number,
+    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+    decoration: const InputDecoration(
+      labelText: 'Series',
+      hintText: 'Ej: 3',
+      prefixIcon: Icon(Icons.numbers),
+      border: OutlineInputBorder(),
+    ),
+    validator: (value) {
+      final series = int.tryParse(value?.trim() ?? '');
+      return series == null || series <= 0 || series > 20
+          ? 'Usa entre 1 y 20 series'
+          : null;
+    },
+  );
+
+  Widget _repsField() => TextFormField(
+    key: const Key('exercise_reps_field'),
+    controller: repsController,
+    decoration: const InputDecoration(
+      labelText: 'Repeticiones',
+      hintText: 'Ej: 10 - 12',
+      prefixIcon: Icon(Icons.repeat),
+      border: OutlineInputBorder(),
+    ),
+    validator: (value) {
+      final text = value?.trim() ?? '';
+      if (text.isEmpty) return 'Completa las repeticiones';
+      if (text.length > 30) return 'Máximo 30 caracteres';
+      if (!RegExp(r'\d|amrap|fallo', caseSensitive: false).hasMatch(text)) {
+        return 'Usa reps, segundos, AMRAP o al fallo';
+      }
+      return null;
+    },
+  );
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      scrollable: true,
+      insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       title: Text(
         '${widget.initialExercise == null ? 'Agregar' : 'Editar'} ejercicio · ${widget.sessionLabel}',
       ),
@@ -1136,7 +1191,10 @@ class _AddExerciseDialogState extends State<_AddExerciseDialog> {
                         ),
                   border: const OutlineInputBorder(),
                 ),
-                validator: (_) => _catalogMatch() == null
+                validator: (_) =>
+                    _catalogMatch() == null &&
+                        nameController.text.trim() !=
+                            widget.initialExercise?.name
                     ? 'Selecciona un ejercicio de la lista'
                     : null,
               ),
@@ -1158,90 +1216,58 @@ class _AddExerciseDialogState extends State<_AddExerciseDialog> {
                   ),
                   clipBehavior: Clip.antiAlias,
                   child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxHeight: 290),
-                    child: ListView.builder(
+                    constraints: BoxConstraints(
+                      maxHeight: MediaQuery.sizeOf(context).width < 600
+                          ? 180
+                          : 290,
+                    ),
+                    child: SingleChildScrollView(
                       padding: const EdgeInsets.symmetric(vertical: 6),
-                      shrinkWrap: true,
-                      itemCount: _searchResults.length,
-                      itemBuilder: (context, index) {
-                        final name = _searchResults[index];
-                        return ListTile(
-                          leading: SizedBox(
-                            width: 48,
-                            height: 48,
-                            child: ExerciseMotionPreview(
-                              exerciseName: name,
-                              borderRadius: BorderRadius.circular(8),
-                              animate: false,
-                              showPhaseLabel: false,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          for (final name in _searchResults)
+                            ListTile(
+                              leading: SizedBox(
+                                width: 48,
+                                height: 48,
+                                child: ExerciseMotionPreview(
+                                  exerciseName: name,
+                                  borderRadius: BorderRadius.circular(8),
+                                  animate: false,
+                                  showPhaseLabel: false,
+                                ),
+                              ),
+                              title: Text(name),
+                              onTap: () {
+                                setState(() {
+                                  selectedExerciseName = name;
+                                  showSearchResults = false;
+                                  nameController.text = name;
+                                });
+                                nameFocusNode.unfocus();
+                                formKey.currentState?.validate();
+                              },
                             ),
-                          ),
-                          title: Text(name),
-                          onTap: () {
-                            setState(() {
-                              selectedExerciseName = name;
-                              showSearchResults = false;
-                              nameController.text = name;
-                            });
-                            nameFocusNode.unfocus();
-                            formKey.currentState?.validate();
-                          },
-                        );
-                      },
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ],
               const SizedBox(height: 14),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      key: const Key('exercise_series_field'),
-                      controller: seriesController,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      decoration: const InputDecoration(
-                        labelText: 'Series',
-                        hintText: 'Ej: 3',
-                        prefixIcon: Icon(Icons.numbers),
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        final series = int.tryParse(value?.trim() ?? '');
-                        return series == null || series <= 0 || series > 20
-                            ? 'Usa entre 1 y 20 series'
-                            : null;
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: TextFormField(
-                      key: const Key('exercise_reps_field'),
-                      controller: repsController,
-                      decoration: const InputDecoration(
-                        labelText: 'Repeticiones',
-                        hintText: 'Ej: 10 - 12',
-                        prefixIcon: Icon(Icons.repeat),
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        final text = value?.trim() ?? '';
-                        if (text.isEmpty) return 'Completa las repeticiones';
-                        if (text.length > 30) return 'Máximo 30 caracteres';
-                        if (!RegExp(
-                          r'\d|amrap|fallo',
-                          caseSensitive: false,
-                        ).hasMatch(text)) {
-                          return 'Usa reps, segundos, AMRAP o al fallo';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                ],
-              ),
+              if (MediaQuery.sizeOf(context).width < 600) ...[
+                _seriesField(),
+                const SizedBox(height: 14),
+                _repsField(),
+              ] else
+                Row(
+                  children: [
+                    Expanded(child: _seriesField()),
+                    const SizedBox(width: 12),
+                    Expanded(child: _repsField()),
+                  ],
+                ),
               const SizedBox(height: 14),
               TextFormField(
                 key: const Key('exercise_rest_field'),
@@ -1589,8 +1615,22 @@ class _WebRoutineExerciseRow extends StatelessWidget {
 
 class _RoutineSessionCard extends StatefulWidget {
   final DemoRoutineSession session;
+  final VoidCallback onAddExercise;
+  final ValueChanged<int> onEditExercise;
+  final ValueChanged<int> onDeleteExercise;
+  final VoidCallback onSave;
+  final bool hasUnsavedChanges;
+  final bool isSaving;
 
-  const _RoutineSessionCard({required this.session});
+  const _RoutineSessionCard({
+    required this.session,
+    required this.onAddExercise,
+    required this.onEditExercise,
+    required this.onDeleteExercise,
+    required this.onSave,
+    required this.hasUnsavedChanges,
+    required this.isSaving,
+  });
 
   @override
   State<_RoutineSessionCard> createState() => _RoutineSessionCardState();
@@ -1655,13 +1695,63 @@ class _RoutineSessionCardState extends State<_RoutineSessionCard> {
                     children: [
                       const SizedBox(height: 14),
                       for (int i = 0; i < session.exercises.length; i++) ...[
-                        _RoutineExerciseRow(
-                          number: i + 1,
-                          exercise: session.exercises[i],
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _RoutineExerciseRow(
+                                number: i + 1,
+                                exercise: session.exercises[i],
+                              ),
+                            ),
+                            PopupMenuButton<String>(
+                              tooltip: 'Acciones del ejercicio',
+                              onSelected: (action) {
+                                if (action == 'edit') {
+                                  widget.onEditExercise(i);
+                                }
+                                if (action == 'delete') {
+                                  widget.onDeleteExercise(i);
+                                }
+                              },
+                              itemBuilder: (_) => const [
+                                PopupMenuItem(
+                                  value: 'edit',
+                                  child: Text('Editar'),
+                                ),
+                                PopupMenuItem(
+                                  value: 'delete',
+                                  child: Text('Eliminar'),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                         if (i < session.exercises.length - 1)
                           const Divider(height: 18),
                       ],
+                      const SizedBox(height: 14),
+                      Wrap(
+                        spacing: 10,
+                        runSpacing: 8,
+                        children: [
+                          OutlinedButton.icon(
+                            onPressed: widget.onAddExercise,
+                            icon: const Icon(Icons.add),
+                            label: const Text('Agregar ejercicio'),
+                          ),
+                          ElevatedButton.icon(
+                            key: const Key('save_routine_button_mobile'),
+                            onPressed:
+                                widget.hasUnsavedChanges && !widget.isSaving
+                                ? widget.onSave
+                                : null,
+                            icon: const Icon(Icons.save_outlined),
+                            label: Text(
+                              widget.isSaving ? 'Guardando...' : 'Guardar',
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
           ),

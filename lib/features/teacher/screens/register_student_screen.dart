@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
 import '../../../core/validation/app_validators.dart';
+import '../../../core/validation/rut_input_formatter.dart';
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/app_select_field.dart';
 import '../../../core/widgets/app_text_field.dart';
@@ -511,11 +512,7 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
                               icon: Icons.badge_outlined,
                               hint: 'Ej: 12.345.678-5',
                               maxLength: 12,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                  RegExp(r'[0-9kK.\-]'),
-                                ),
-                              ],
+                              inputFormatters: const [RutInputFormatter()],
                             ),
                             second: AppTextField(
                               controller: phoneController,
@@ -634,29 +631,6 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
                       ),
                     ),
                     const SizedBox(height: 14),
-                    Container(
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFEFF6FF),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: const Row(
-                        children: [
-                          Icon(Icons.info_outline, color: Color(0xFF2563EB)),
-                          SizedBox(width: 10),
-                          Expanded(
-                            child: Text(
-                              'Cuando conectemos Firebase, esta ficha quedará guardada en la base de datos del gimnasio.',
-                              style: TextStyle(
-                                color: Color(0xFF1E3A8A),
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 18),
                     _ResponsiveButtonGroup(
                       isWebLayout: isWebLayout,
                       primary: ResponsiveActionButton(

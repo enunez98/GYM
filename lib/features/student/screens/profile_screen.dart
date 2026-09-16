@@ -3,16 +3,52 @@ import 'package:flutter/material.dart';
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/info_row.dart';
 import '../../../core/widgets/logout_option.dart';
+import '../../../core/widgets/student_avatar.dart';
 import '../../../services/demo_student_profile_service.dart';
+import '../../../services/profile_photo_service.dart';
 import '../../../services/session_store.dart';
 
 import '../../auth/login_screen.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
-  void _logout(BuildContext context) {
-    SessionStore.signOut();
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  bool _uploadingPhoto = false;
+
+  Future<void> _changePhoto() async {
+    final user = SessionStore.currentUser;
+    if (user == null || _uploadingPhoto) return;
+    setState(() => _uploadingPhoto = true);
+    try {
+      final data = await ProfilePhotoService.pickAndSave(user);
+      if (data == null || !mounted) return;
+      SessionStore.updatePhotoData(data);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Foto de perfil actualizada')),
+      );
+    } on FormatException catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(error.message)));
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No se pudo subir la foto de perfil')),
+      );
+    } finally {
+      if (mounted) setState(() => _uploadingPhoto = false);
+    }
+  }
+
+  Future<void> _logout(BuildContext context) async {
+    await SessionStore.signOut();
+    if (!context.mounted) return;
 
     Navigator.pushReplacement(
       context,
@@ -36,12 +72,28 @@ class ProfileScreen extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 24),
-            const CircleAvatar(
-              radius: 44,
-              backgroundColor: Color(0xFF59D52D),
-              child: Icon(Icons.person, color: Color(0xFF111214), size: 48),
+            StudentAvatar(radius: 44, fallbackName: userName),
+            TextButton.icon(
+              onPressed: _uploadingPhoto ? null : _changePhoto,
+              icon: _uploadingPhoto
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.add_a_photo_outlined),
+              label: Text(
+                _uploadingPhoto ? 'Subiendo foto...' : 'Cambiar foto',
+              ),
+              style: TextButton.styleFrom(
+                foregroundColor: const Color(0xFF59D52D),
+              ),
             ),
-            const SizedBox(height: 12),
+            const Text(
+              'PNG o JPEG · máximo 2 MB',
+              style: TextStyle(color: Colors.white70, fontSize: 12),
+            ),
+            const SizedBox(height: 8),
             Text(
               userName,
               style: const TextStyle(

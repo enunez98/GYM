@@ -3,6 +3,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'core/theme/app_colors.dart';
 import 'features/auth/login_screen.dart';
+import 'features/student/screens/home_shell.dart';
+import 'features/teacher/screens/teacher_dashboard_screen.dart';
+import 'models/app_user.dart';
+import 'services/session_store.dart';
 
 class GymApp extends StatelessWidget {
   const GymApp({super.key});
@@ -78,7 +82,39 @@ class GymApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const LoginScreen(),
+      home: const _SessionGate(),
+    );
+  }
+}
+
+class _SessionGate extends StatefulWidget {
+  const _SessionGate();
+
+  @override
+  State<_SessionGate> createState() => _SessionGateState();
+}
+
+class _SessionGateState extends State<_SessionGate> {
+  late final Future<AppUser?> _restoredUser = SessionStore.restore();
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<AppUser?>(
+      future: _restoredUser,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const Scaffold(
+            backgroundColor: Color(0xFF07080A),
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        final user = snapshot.data;
+        if (user?.role == UserRole.student) return const HomeShell();
+        if (user?.role == UserRole.admin) {
+          return const TeacherDashboardScreen();
+        }
+        return const LoginScreen();
+      },
     );
   }
 }

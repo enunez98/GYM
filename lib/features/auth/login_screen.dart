@@ -2,13 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../models/app_user.dart';
 import '../../services/demo_auth_service.dart';
-import '../../services/body_evaluation_store.dart';
 import '../../services/firebase_auth_service.dart';
-import '../../services/routine_assignment_store.dart';
 import '../../services/session_store.dart';
-import '../../services/student_profile_store.dart';
-import '../../services/student_workout_progress_store.dart';
-import '../../services/workout_history_store.dart';
 import '../../core/validation/app_validators.dart';
 import '../student/screens/home_shell.dart';
 import '../teacher/screens/teacher_dashboard_screen.dart';
@@ -32,7 +27,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final passwordController = TextEditingController();
   bool isLoading = false;
   bool obscurePassword = true;
-  bool rememberMe = false;
 
   @override
   void dispose() {
@@ -60,22 +54,8 @@ class _LoginScreenState extends State<LoginScreen> {
       final user = await FirebaseAuthService.login(
         email: email,
         password: password,
-        rememberMe: rememberMe,
       );
-      if (user.role == UserRole.admin) {
-        await StudentProfileStore.loadFromFirestore();
-        await RoutineAssignmentStore.loadAllFromFirestore();
-        await WorkoutHistoryStore.loadAllFromFirestore();
-      } else {
-        await StudentProfileStore.loadForUser(user.id);
-        final profile = StudentProfileStore.getByUserId(user.id);
-        await Future.wait([
-          BodyEvaluationStore.loadForUser(user.id),
-          RoutineAssignmentStore.loadForUser(user.id),
-          WorkoutHistoryStore.loadForUser(user.id),
-          StudentWorkoutProgressStore.loadForProfile(profile),
-        ]);
-      }
+      await SessionStore.loadDataFor(user);
       SessionStore.signIn(user);
 
       if (!mounted) return;
@@ -179,14 +159,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                   passwordController: passwordController,
                                   isLoading: isLoading,
                                   obscurePassword: obscurePassword,
-                                  rememberMe: rememberMe,
                                   onLogin: login,
                                   onForgotPassword: recoverPassword,
                                   onTogglePassword: () => setState(
                                     () => obscurePassword = !obscurePassword,
-                                  ),
-                                  onRememberChanged: (value) => setState(
-                                    () => rememberMe = value ?? false,
                                   ),
                                 ),
                               ),
@@ -339,11 +315,9 @@ class _LoginPanel extends StatelessWidget {
     required this.passwordController,
     required this.isLoading,
     required this.obscurePassword,
-    required this.rememberMe,
     required this.onLogin,
     required this.onForgotPassword,
     required this.onTogglePassword,
-    required this.onRememberChanged,
   });
 
   final bool isDesktop;
@@ -351,23 +325,18 @@ class _LoginPanel extends StatelessWidget {
   final TextEditingController passwordController;
   final bool isLoading;
   final bool obscurePassword;
-  final bool rememberMe;
   final VoidCallback onLogin;
   final VoidCallback onForgotPassword;
   final VoidCallback onTogglePassword;
-  final ValueChanged<bool?> onRememberChanged;
 
   @override
   Widget build(BuildContext context) {
-    final content = SingleChildScrollView(
-      physics: isDesktop
-          ? const NeverScrollableScrollPhysics()
-          : const ClampingScrollPhysics(),
+    final content = Padding(
       padding: EdgeInsets.fromLTRB(
         isDesktop ? 48 : 24,
-        isDesktop ? 32 : 28,
+        isDesktop ? 32 : 16,
         isDesktop ? 48 : 24,
-        isDesktop ? 20 : 28,
+        isDesktop ? 20 : 16,
       ),
       child: Center(
         child: ConstrainedBox(
@@ -377,11 +346,17 @@ class _LoginPanel extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 if (!isDesktop) ...[
-                  const Center(child: _BrandLogo()),
-                  const SizedBox(height: 28),
+                  const Center(
+                    child: SizedBox(
+                      width: 130,
+                      height: 130,
+                      child: _BrandLogo(),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
                 ],
                 const _LoginTitle(),
-                SizedBox(height: isDesktop ? 24 : 34),
+                SizedBox(height: isDesktop ? 24 : 22),
                 _DarkTextField(
                   controller: emailController,
                   label: 'Correo electrónico',
@@ -418,37 +393,18 @@ class _LoginPanel extends StatelessWidget {
                 const SizedBox(height: 12),
                 Row(
                   children: [
-                    SizedBox(
-                      width: 22,
-                      height: 22,
-                      child: Checkbox(
-                        value: rememberMe,
-                        activeColor: _energyGreen,
-                        checkColor: _carbonBlack,
-                        side: const BorderSide(color: _energyGreen),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        onChanged: onRememberChanged,
-                      ),
-                    ),
-                    const SizedBox(width: 9),
-                    const Text(
-                      'Recordarme',
-                      style: TextStyle(color: _boneWhite, fontSize: 13),
-                    ),
                     Expanded(
                       child: Align(
                         alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: isLoading ? null : onForgotPassword,
-                          style: TextButton.styleFrom(
-                            foregroundColor: _energyGreen,
-                            padding: EdgeInsets.zero,
-                          ),
-                          child: const FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: TextButton(
+                            onPressed: isLoading ? null : onForgotPassword,
+                            style: TextButton.styleFrom(
+                              foregroundColor: _energyGreen,
+                              padding: EdgeInsets.zero,
+                            ),
+                            child: const Text(
                               '¿Olvidaste tu contraseña?',
                               style: TextStyle(fontSize: 12),
                             ),
@@ -458,7 +414,7 @@ class _LoginPanel extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: isDesktop ? 15 : 22),
+                SizedBox(height: isDesktop ? 15 : 14),
                 SizedBox(
                   height: 54,
                   child: ElevatedButton(
@@ -492,9 +448,9 @@ class _LoginPanel extends StatelessWidget {
                           ),
                   ),
                 ),
-                SizedBox(height: isDesktop ? 18 : 25),
+                SizedBox(height: isDesktop ? 18 : 16),
                 const _DividerLabel(),
-                SizedBox(height: isDesktop ? 14 : 20),
+                SizedBox(height: isDesktop ? 14 : 12),
                 _SocialButton(
                   label: 'Continuar con Google',
                   child: const Text(
@@ -512,26 +468,29 @@ class _LoginPanel extends StatelessWidget {
                   child: Icon(Icons.apple, color: _boneWhite, size: 24),
                 ),
                 if (!isDesktop) ...[
-                  const SizedBox(height: 22),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        '¿No tienes cuenta? ',
-                        style: TextStyle(color: _boneWhite, fontSize: 12),
-                      ),
-                      GestureDetector(
-                        onTap: () => _comingSoon(context),
-                        child: const Text(
-                          'Regístrate',
-                          style: TextStyle(
-                            color: _energyGreen,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 12,
+                  const SizedBox(height: 14),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          '¿No tienes cuenta? ',
+                          style: TextStyle(color: _boneWhite, fontSize: 12),
+                        ),
+                        GestureDetector(
+                          onTap: () => _comingSoon(context),
+                          child: const Text(
+                            'Regístrate',
+                            style: TextStyle(
+                              color: _energyGreen,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 12,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ],
@@ -552,12 +511,26 @@ class _LoginPanel extends StatelessWidget {
                   child: SizedBox(
                     width: constraints.maxWidth,
                     height: 620,
-                    child: content,
+                    child: SingleChildScrollView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      child: content,
+                    ),
                   ),
                 );
               },
             )
-          : content,
+          : LayoutBuilder(
+              builder: (context, constraints) {
+                if (MediaQuery.viewInsetsOf(context).bottom > 0) {
+                  return SingleChildScrollView(child: content);
+                }
+                return FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.center,
+                  child: SizedBox(width: constraints.maxWidth, child: content),
+                );
+              },
+            ),
     );
   }
 }

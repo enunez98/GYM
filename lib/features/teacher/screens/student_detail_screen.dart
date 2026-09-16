@@ -18,15 +18,18 @@ import '../../../services/imported_routine_store.dart';
 import '../../../services/routine_assignment_store.dart';
 import '../../../services/student_attendance_service.dart';
 import '../../../services/student_workout_progress_store.dart';
+import 'student_routine_editor_screen.dart';
 
 class StudentDetailScreen extends StatefulWidget {
   final StudentProfile student;
   final bool embedded;
+  final ValueChanged<bool>? onRoutineEditingChanged;
 
   const StudentDetailScreen({
     super.key,
     required this.student,
     this.embedded = false,
+    this.onRoutineEditingChanged,
   });
 
   @override
@@ -38,6 +41,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
   List<BodyEvaluation> _firestoreEvaluations = const [];
   Object? _evaluationError;
   bool _loadingEvaluations = false;
+  RoutineAssignment? _editingRoutine;
 
   StudentProfile get student => widget.student;
 
@@ -53,6 +57,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
   void didUpdateWidget(covariant StudentDetailScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.student.userId != widget.student.userId) {
+      _editingRoutine = null;
       _listenToEvaluations();
     }
   }
@@ -150,8 +155,40 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
     ).showSnackBar(SnackBar(content: Text(message)));
   }
 
+  Future<void> _editStudentRoutine(RoutineAssignment assignment) async {
+    if (widget.embedded && MediaQuery.sizeOf(context).width >= 900) {
+      setState(() => _editingRoutine = assignment);
+      widget.onRoutineEditingChanged?.call(true);
+      return;
+    }
+    final saved = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => StudentRoutineEditorScreen(assignment: assignment),
+      ),
+    );
+    if (saved != true || !mounted) return;
+    setState(() {});
+    showMessage('Rutina de ${student.name} actualizada');
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (_editingRoutine case final editingRoutine?) {
+      return StudentRoutineEditorScreen(
+        assignment: editingRoutine,
+        embedded: true,
+        onClose: () {
+          setState(() => _editingRoutine = null);
+          widget.onRoutineEditingChanged?.call(false);
+        },
+        onSaved: () {
+          setState(() => _editingRoutine = null);
+          widget.onRoutineEditingChanged?.call(false);
+          showMessage('Rutina de ${student.name} actualizada');
+        },
+      );
+    }
     final isWeb = MediaQuery.sizeOf(context).width >= 900;
     final attendance = StudentAttendanceService.getSummary(student);
     final evaluations = _usesFirestore
@@ -316,6 +353,29 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                                         label: 'Asignada',
                                         value: formatDate(
                                           assignment.assignedAt,
+                                        ),
+                                      ),
+                                      if (assignment.isCustomized)
+                                        const Padding(
+                                          padding: EdgeInsets.only(top: 8),
+                                          child: Text(
+                                            'Rutina personalizada para este alumno',
+                                            style: TextStyle(
+                                              color: Color(0xFF247A16),
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      const SizedBox(height: 14),
+                                      ResponsiveActionButton(
+                                        webMaxWidth: isWeb ? 470 : 360,
+                                        child: OutlinedButton.icon(
+                                          onPressed: () =>
+                                              _editStudentRoutine(assignment),
+                                          icon: const Icon(Icons.edit_outlined),
+                                          label: const Text(
+                                            'Modificar rutina del alumno',
+                                          ),
                                         ),
                                       ),
                                     ],

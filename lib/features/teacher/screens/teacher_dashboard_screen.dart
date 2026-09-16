@@ -122,6 +122,8 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
   }
 
   Widget _buildMobileOverview(BuildContext context, String userName) {
+    final recentStudents = [...StudentProfileStore.all]
+      ..sort((a, b) => b.createdAtEpoch.compareTo(a.createdAtEpoch));
     return Scaffold(
       backgroundColor: const Color(0xFF111214),
       body: SafeArea(
@@ -142,33 +144,7 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
                 ),
                 child: ListView(
                   children: [
-                    Row(
-                      children: const [
-                        Expanded(
-                          child: MetricCard(
-                            title: 'Alumnos activos',
-                            value: '42',
-                            subtitle: 'activos',
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        Expanded(
-                          child: MetricCard(
-                            title: 'Clases hoy',
-                            value: '18',
-                            subtitle: 'agendadas',
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        Expanded(
-                          child: MetricCard(
-                            title: 'Pesajes',
-                            value: '6',
-                            subtitle: 'semana',
-                          ),
-                        ),
-                      ],
-                    ),
+                    const _RealtimeDashboardMetrics(mobile: true),
                     const SizedBox(height: 14),
                     AppCard(
                       child: Column(
@@ -228,30 +204,23 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
                     AppCard(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
+                        children: [
+                          const Text(
                             'Alumnos recientes',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(height: 14),
-                          _StudentMiniRow(
-                            name: 'Felipe Durán',
-                            plan: 'Plan 3 sesiones',
-                            status: 'Activo',
-                          ),
-                          _StudentMiniRow(
-                            name: 'Camila Rojas',
-                            plan: 'Plan 2 sesiones',
-                            status: 'Activo',
-                          ),
-                          _StudentMiniRow(
-                            name: 'Matías Soto',
-                            plan: 'Plan 4 sesiones',
-                            status: 'Por vencer',
-                          ),
+                          const SizedBox(height: 14),
+                          if (recentStudents.isEmpty)
+                            const Text('Aún no hay alumnos registrados.'),
+                          for (final student in recentStudents.take(3))
+                            _StudentMiniRow(
+                              name: student.name,
+                              plan: student.plan,
+                              status: student.status,
+                            ),
                         ],
                       ),
                     ),
@@ -693,13 +662,19 @@ class _AdminDashboardHeader extends StatelessWidget {
 }
 
 class _RealtimeDashboardMetrics extends StatelessWidget {
-  const _RealtimeDashboardMetrics();
+  final bool mobile;
+
+  const _RealtimeDashboardMetrics({this.mobile = false});
+
+  Widget _metrics(_DashboardMetrics metrics) => mobile
+      ? _MobileDashboardMetrics(metrics: metrics)
+      : _DashboardMetricsRow(metrics: metrics);
 
   @override
   Widget build(BuildContext context) {
     if (Firebase.apps.isEmpty) {
-      return _DashboardMetricsRow(
-        metrics: _DashboardMetrics.fromStudents(
+      return _metrics(
+        _DashboardMetrics.fromStudents(
           StudentProfileStore.all
               .map((student) => student.toFirestore())
               .toList(),
@@ -717,17 +692,13 @@ class _RealtimeDashboardMetrics extends StatelessWidget {
               .snapshots(),
           builder: (context, evaluationsSnapshot) {
             if (studentsSnapshot.hasError || evaluationsSnapshot.hasError) {
-              return const _DashboardMetricsRow(
-                metrics: _DashboardMetrics.unavailable(),
-              );
+              return _metrics(const _DashboardMetrics.unavailable());
             }
             if (!studentsSnapshot.hasData || !evaluationsSnapshot.hasData) {
-              return const _DashboardMetricsRow(
-                metrics: _DashboardMetrics.loading(),
-              );
+              return _metrics(const _DashboardMetrics.loading());
             }
-            return _DashboardMetricsRow(
-              metrics: _DashboardMetrics.fromStudents(
+            return _metrics(
+              _DashboardMetrics.fromStudents(
                 studentsSnapshot.data!.docs
                     .map((document) => document.data())
                     .toList(),
@@ -886,6 +857,59 @@ class _DashboardMetricsRow extends StatelessWidget {
             value: metrics.attendance,
             detail: metrics.attendanceDetail,
           ),
+        ),
+      ],
+    );
+  }
+}
+
+class _MobileDashboardMetrics extends StatelessWidget {
+  final _DashboardMetrics metrics;
+
+  const _MobileDashboardMetrics({required this.metrics});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: MetricCard(
+                title: 'Alumnos activos',
+                value: metrics.activeStudents,
+                subtitle: metrics.activeDetail,
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: MetricCard(
+                title: 'Clases esta semana',
+                value: metrics.weeklyClasses,
+                subtitle: metrics.classesDetail,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        Row(
+          children: [
+            Expanded(
+              child: MetricCard(
+                title: 'Evaluaciones',
+                value: metrics.weeklyEvaluations,
+                subtitle: metrics.evaluationsDetail,
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: MetricCard(
+                title: 'Asistencia',
+                value: metrics.attendance,
+                subtitle: metrics.attendanceDetail,
+              ),
+            ),
+          ],
         ),
       ],
     );

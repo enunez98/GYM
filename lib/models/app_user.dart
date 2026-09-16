@@ -20,6 +20,7 @@ class AppUser {
   final String name;
   final UserRole role;
   final bool isActive;
+  final String? photoData;
 
   const AppUser({
     required this.id,
@@ -27,5 +28,15 @@ class AppUser {
     required this.name,
     required this.role,
     this.isActive = true,
+    this.photoData,
   });
+
+  AppUser withPhotoData(String data) => AppUser(
+    id: id,
+    rut: rut,
+    name: name,
+    role: role,
+    isActive: isActive,
+    photoData: data,
+  );
 }

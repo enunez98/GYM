@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/widgets/student_avatar.dart';
 
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/info_row.dart';
@@ -96,11 +97,7 @@ class _WebStudentHome extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
               child: Row(
                 children: [
-                  const CircleAvatar(
-                    radius: 24,
-                    backgroundColor: Color(0xFF59D52D),
-                    child: Icon(Icons.person, color: Color(0xFF07111D)),
-                  ),
+                  StudentAvatar(radius: 24, fallbackName: userName),
                   const SizedBox(width: 14),
                   Expanded(
                     child: Column(
@@ -522,11 +519,7 @@ class _Header extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
       child: Row(
         children: [
-          const CircleAvatar(
-            radius: 24,
-            backgroundColor: Color(0xFF59D52D),
-            child: Icon(Icons.person, color: Color(0xFF111214)),
-          ),
+          StudentAvatar(radius: 24, fallbackName: userName),
           const SizedBox(width: 14),
           Expanded(
             child: Column(

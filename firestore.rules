@@ -31,7 +31,9 @@ service cloud.firestore {
         && request.resource.data.email is string
         && request.resource.data.email.size() <= 254
         && request.resource.data.role in ['admin', 'student']
-        && request.resource.data.isActive is bool;
+        && request.resource.data.isActive is bool
+        && request.resource.data.get('photoData', '') is string
+        && request.resource.data.get('photoData', '').size() <= 300000;
     }
 
     function validStudent() {
@@ -158,7 +160,7 @@ service cloud.firestore {
         || (isActiveUser()
           && request.auth.uid == userId
           && request.resource.data.diff(resource.data).affectedKeys()
-            .hasOnly(['name'])
+            .hasOnly(['name', 'photoData'])
           && validUser());
       allow delete: if isAdmin();
     }
@@ -214,6 +216,9 @@ service cloud.firestore {
     }
 
     match /workoutProgress/{progressId} {
+      // A new student has no progress document until the first workout.
+      allow get: if isActiveUser()
+        && !exists(/databases/$(database)/documents/workoutProgress/$(progressId));
       allow read: if isAdmin()
         || (isActiveUser() && resource.data.userId == request.auth.uid);
       allow create: if isActiveUser()

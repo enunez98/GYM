@@ -132,6 +132,10 @@ void main() {
     await tester.enterText(fields.at(0), 'Camila');
     await tester.enterText(fields.at(1), 'Rojas');
     await tester.enterText(fields.at(2), '12.345.678-5');
+    expect(
+      tester.widget<TextField>(fields.at(2)).controller!.text,
+      '12.345.678-5',
+    );
     await tester.enterText(fields.at(3), '+569 9876 5432');
     await tester.enterText(fields.at(4), 'camila@correo.cl');
     await tester.tap(find.text('Seleccionar plan'));

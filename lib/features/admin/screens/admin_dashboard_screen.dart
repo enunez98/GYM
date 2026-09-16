@@ -12,9 +12,9 @@ import '../../auth/login_screen.dart';
 class AdminDashboardScreen extends StatelessWidget {
   const AdminDashboardScreen({super.key});
 
-  void _logout(BuildContext context) {
-    SessionStore.signOut();
-
+  Future<void> _logout(BuildContext context) async {
+    await SessionStore.signOut();
+    if (!context.mounted) return;
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => const LoginScreen()),

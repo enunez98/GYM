@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/widgets/student_avatar.dart';
 
 import 'student_home_screen.dart';
 import 'workout_screen.dart';
@@ -53,15 +54,20 @@ class _HomeShellState extends State<HomeShell> {
             unselectedItemColor: const Color(0xFF616B76),
             backgroundColor: Colors.white,
             type: BottomNavigationBarType.fixed,
-            items: _studentDestinations
-                .map(
-                  (destination) => BottomNavigationBarItem(
-                    icon: Icon(destination.icon),
-                    activeIcon: Icon(destination.selectedIcon),
-                    label: destination.label,
-                  ),
-                )
-                .toList(),
+            items: _studentDestinations.asMap().entries.map((entry) {
+              final destination = entry.value;
+              final isProfile = entry.key == 4;
+              final name = SessionStore.currentUser?.name ?? 'Alumno';
+              return BottomNavigationBarItem(
+                icon: isProfile
+                    ? StudentAvatar(radius: 12, fallbackName: name)
+                    : Icon(destination.icon),
+                activeIcon: isProfile
+                    ? StudentAvatar(radius: 12, fallbackName: name)
+                    : Icon(destination.selectedIcon),
+                label: destination.label,
+              );
+            }).toList(),
           ),
         );
       },
@@ -120,8 +126,9 @@ class _StudentWebShell extends StatelessWidget {
     required this.child,
   });
 
-  void _logout(BuildContext context) {
-    SessionStore.signOut();
+  Future<void> _logout(BuildContext context) async {
+    await SessionStore.signOut();
+    if (!context.mounted) return;
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => const LoginScreen()),
@@ -169,10 +176,7 @@ class _StudentWebShell extends StatelessWidget {
                 const SizedBox(height: 10),
                 Row(
                   children: [
-                    const CircleAvatar(
-                      backgroundColor: Color(0xFF59D52D),
-                      child: Icon(Icons.person, color: Color(0xFF07111D)),
-                    ),
+                    StudentAvatar(radius: 20, fallbackName: userName),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Column(

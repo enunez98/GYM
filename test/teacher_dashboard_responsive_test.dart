@@ -4,7 +4,12 @@ import 'package:gym_app/core/widgets/app_select_field.dart';
 import 'package:gym_app/core/widgets/exercise_motion_preview.dart';
 import 'package:gym_app/features/teacher/screens/teacher_dashboard_screen.dart';
 import 'package:gym_app/features/teacher/screens/students_list_screen.dart';
+import 'package:gym_app/features/teacher/screens/weekly_routine_screen.dart';
+import 'package:gym_app/models/routine_models.dart';
+import 'package:gym_app/models/routine_assignment.dart';
+import 'package:gym_app/services/demo_student_profile_service.dart';
 import 'package:gym_app/services/exercise_catalog_service.dart';
+import 'package:gym_app/services/routine_assignment_store.dart';
 
 void main() {
   setUp(() {
@@ -59,6 +64,108 @@ void main() {
 
     expect(find.byType(BottomNavigationBar), findsOneWidget);
     expect(find.text('Listado general del gimnasio'), findsOneWidget);
+  });
+
+  testWidgets('filtra alumnos desde la búsqueda móvil', (tester) async {
+    tester.view.physicalSize = const Size(430, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(appAtSize(const Size(430, 900)));
+    await tester.tap(find.text('Alumnos'));
+    await tester.pumpAndSettle();
+    await tester.enterText(
+      find.widgetWithText(TextField, 'Buscar alumno...'),
+      'sin coincidencias 123',
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text('No hay alumnos que coincidan con la búsqueda.'),
+      findsOneWidget,
+    );
+    expect(find.text('Felipe Durán'), findsNothing);
+  });
+
+  testWidgets('ofrece edición de ejercicios en la rutina móvil', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(430, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(appAtSize(const Size(430, 900)));
+    await tester.tap(find.text('Rutinas'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(AppSelectField).first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Plan 3 sesiones').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(AppSelectField).at(1));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Semana 1').last);
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Sesión 1').first);
+    await tester.tap(find.text('Sesión 1').first);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Agregar ejercicio'), findsWidgets);
+    expect(find.byTooltip('Acciones del ejercicio'), findsWidgets);
+  });
+
+  testWidgets('diálogo de ejercicio cabe en una pantalla móvil baja', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(400, 631);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    ExerciseCatalogService.testExerciseNames = const [
+      'Press banca plano con barra',
+      'Press inclinado con mancuernas',
+      'Peso muerto rumano',
+      'Plancha',
+      'Prensa de piernas',
+    ];
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Builder(
+          builder: (context) {
+            return Scaffold(
+              body: Center(
+                child: ElevatedButton(
+                  onPressed: () => showDialog<void>(
+                    context: context,
+                    builder: (_) => RoutineExerciseDialog(
+                      sessionLabel: 'Sesión 1',
+                      initialExercise: DemoRoutineExercise(
+                        name: 'Press banca plano con barra',
+                        series: 4,
+                        reps: '10',
+                        rest: '60 seg',
+                      ),
+                    ),
+                  ),
+                  child: const Text('Editar'),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+    await tester.tap(find.text('Editar'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byKey(const Key('exercise_search_field')), 'p');
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.byKey(const Key('exercise_series_field')), findsOneWidget);
+    expect(find.byKey(const Key('exercise_reps_field')), findsOneWidget);
+    expect(find.text('Guardar cambios'), findsOneWidget);
   });
 
   testWidgets('muestra el dashboard web desde 900 px', (tester) async {
@@ -297,6 +404,62 @@ void main() {
     expect(find.text('Buscar alumno...'), findsOneWidget);
     expect(find.text('Felipe Durán'), findsOneWidget);
     expect(find.text('Detalle del alumno'), findsNothing);
+  });
+
+  testWidgets('edita la rutina individual dentro del panel web con imágenes', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1440, 1000);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    final student = DemoStudentProfileService.getByUserId('student_001')!;
+    RoutineAssignmentStore.assign(
+      RoutineAssignment(
+        id: 'web_editor_test',
+        userId: student.userId,
+        studentProfileId: student.id,
+        studentName: student.name,
+        plan: student.plan,
+        routineName: 'Rutina individual',
+        sourceFileName: 'general.xlsx',
+        assignedAt: DateTime(2026, 7, 22),
+        sessions: [
+          DemoRoutineSession(
+            session: 'Semana 1',
+            title: 'Sesión 1',
+            exercises: [
+              DemoRoutineExercise(
+                name: 'Press banca plano con barra',
+                series: 4,
+                reps: '10',
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+    addTearDown(RoutineAssignmentStore.clearAll);
+
+    await tester.pumpWidget(appAtSize(const Size(1440, 1000)));
+    await tester.tap(find.text('Alumnos'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Felipe Durán'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Modificar rutina del alumno'));
+    await tester.tap(find.text('Modificar rutina del alumno'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Inicio'), findsOneWidget);
+    expect(find.text('Listado general del gimnasio'), findsOneWidget);
+    expect(find.text('Modificar rutina individual'), findsOneWidget);
+    expect(find.byType(ExerciseMotionPreview), findsWidgets);
+    expect(find.text('Volver a la ficha'), findsOneWidget);
+
+    await tester.tap(find.text('Volver a la ficha'));
+    await tester.pumpAndSettle();
+    expect(find.text('Datos del alumno'), findsOneWidget);
+    expect(find.text('Modificar rutina individual'), findsNothing);
   });
 
   testWidgets('abre registro desde alumnos sin perder el panel web', (
