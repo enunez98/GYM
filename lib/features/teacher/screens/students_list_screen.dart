@@ -17,10 +17,14 @@ import 'student_detail_screen.dart';
 
 class StudentsListScreen extends StatefulWidget {
   final bool initiallyShowRegisterStudent;
+  final VoidCallback? onClose;
+  final VoidCallback? onRegisterStudent;
 
   const StudentsListScreen({
     super.key,
     this.initiallyShowRegisterStudent = false,
+    this.onClose,
+    this.onRegisterStudent,
   });
 
   @override
@@ -74,6 +78,10 @@ class _StudentsListScreenState extends State<StudentsListScreen> {
   }
 
   Future<void> _openRegisterStudent() async {
+    if (widget.onRegisterStudent != null) {
+      widget.onRegisterStudent!();
+      return;
+    }
     if (MediaQuery.sizeOf(context).width >= 900) {
       setState(() {
         _selectedStudent = null;
@@ -94,6 +102,14 @@ class _StudentsListScreenState extends State<StudentsListScreen> {
       _selectedStudent = student;
       _editingStudentRoutine = false;
     });
+  }
+
+  void _closeScreen() {
+    if (widget.onClose != null) {
+      widget.onClose!();
+    } else if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
   }
 
   @override
@@ -130,7 +146,7 @@ class _StudentsListScreenState extends State<StudentsListScreen> {
               title: 'Alumnos',
               subtitle: 'Listado general del gimnasio',
               icon: Icons.groups,
-              onBack: () => Navigator.pop(context),
+              onBack: _closeScreen,
             ),
             Expanded(
               child: Container(
@@ -464,7 +480,7 @@ class _StudentsListScreenState extends State<StudentsListScreen> {
               title: 'Alumnos',
               subtitle: 'Listado general del gimnasio',
               icon: Icons.groups,
-              onBack: () => Navigator.pop(context),
+              onBack: _closeScreen,
             ),
             Expanded(
               child: Container(
@@ -476,6 +492,16 @@ class _StudentsListScreenState extends State<StudentsListScreen> {
                 ),
                 child: ListView(
                   children: [
+                    SizedBox(
+                      width: double.infinity,
+                      height: 48,
+                      child: ElevatedButton.icon(
+                        onPressed: _openRegisterStudent,
+                        icon: const Icon(Icons.person_add_alt_1),
+                        label: const Text('Registrar alumno'),
+                      ),
+                    ),
+                    const SizedBox(height: 14),
                     AppCard(
                       child: ResponsiveFormField(
                         webMaxWidth: 620,

@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gym_app/core/widgets/app_select_field.dart';
 import 'package:gym_app/core/widgets/exercise_motion_preview.dart';
 import 'package:gym_app/features/teacher/screens/teacher_dashboard_screen.dart';
+import 'package:gym_app/features/teacher/screens/register_student_screen.dart';
 import 'package:gym_app/features/teacher/screens/students_list_screen.dart';
 import 'package:gym_app/features/teacher/screens/weekly_routine_screen.dart';
 import 'package:gym_app/models/routine_models.dart';
@@ -86,6 +87,92 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Felipe Durán'), findsNothing);
+  });
+
+  testWidgets('registra alumnos desde el listado móvil', (tester) async {
+    tester.view.physicalSize = const Size(400, 631);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(appAtSize(const Size(400, 631)));
+    await tester.tap(find.text('Alumnos'));
+    await tester.pumpAndSettle();
+
+    final registerButton = find.widgetWithText(
+      ElevatedButton,
+      'Registrar alumno',
+    );
+    expect(registerButton, findsOneWidget);
+    await tester.tap(registerButton);
+    await tester.pumpAndSettle();
+
+    expect(find.byType(RegisterStudentScreen), findsOneWidget);
+    expect(find.text('Registrar alumno'), findsOneWidget);
+    expect(find.byType(BottomNavigationBar), findsOneWidget);
+    await tester.tap(find.byIcon(Icons.arrow_back_ios_new).first);
+    await tester.pumpAndSettle();
+    expect(find.text('Listado general del gimnasio'), findsOneWidget);
+    expect(find.byType(BottomNavigationBar), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('registro desde Inicio conserva navegación móvil', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(400, 631);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(appAtSize(const Size(400, 631)));
+    await tester.tap(find.text('Registrar alumno'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(RegisterStudentScreen), findsOneWidget);
+    expect(find.byType(BottomNavigationBar), findsOneWidget);
+    final cancel = find.text('Cancelar');
+    await tester.scrollUntilVisible(
+      cancel,
+      400,
+      scrollable: find.descendant(
+        of: find.byType(RegisterStudentScreen),
+        matching: find.byType(Scrollable),
+      ).first,
+    );
+    await tester.tap(cancel);
+    await tester.pumpAndSettle();
+    expect(find.text('Listado general del gimnasio'), findsOneWidget);
+    expect(find.byType(BottomNavigationBar), findsOneWidget);
+  });
+
+  testWidgets('las flechas de secciones móviles vuelven a Inicio', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(400, 631);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(appAtSize(const Size(400, 631)));
+    for (final section in ['Alumnos', 'Evaluar', 'Rutinas', 'Importar']) {
+      final tab = find.descendant(
+        of: find.byType(BottomNavigationBar),
+        matching: find.text(section),
+      );
+      await tester.tap(tab);
+      await tester.pumpAndSettle();
+      await tester.tap(find.byIcon(Icons.arrow_back_ios_new).first);
+      await tester.pumpAndSettle();
+
+      expect(
+        find.text('Panel Admin'),
+        findsOneWidget,
+        reason: 'La flecha de $section debe volver a Inicio',
+      );
+      expect(find.byType(BottomNavigationBar), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    }
   });
 
   testWidgets('ofrece edición de ejercicios en la rutina móvil', (

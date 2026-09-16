@@ -98,4 +98,29 @@ void main() {
       expect(tester.takeException(), isNull);
     }
   });
+
+  testWidgets('el teclado no reduce el tamaño del login móvil', (tester) async {
+    tester.view.physicalSize = const Size(400, 631);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.view.resetViewInsets);
+
+    await tester.pumpWidget(const GymApp());
+    await tester.pumpAndSettle();
+    final logo = find.bySemanticsLabel('NexFit — Tu fuerza. Tu mejor versión.');
+    final originalLogoRect = tester.getRect(logo);
+
+    tester.view.viewInsets = const FakeViewPadding(bottom: 300);
+    await tester.pumpAndSettle();
+
+    expect(tester.getRect(logo).size, originalLogoRect.size);
+    expect(find.byType(SingleChildScrollView), findsOneWidget);
+    expect(find.text('Iniciar sesión'), findsOneWidget);
+    final password = find.widgetWithText(TextField, 'Contraseña');
+    await tester.enterText(password, 'clave-segura');
+    await tester.pumpAndSettle();
+    expect(tester.getRect(password).bottom, lessThanOrEqualTo(331));
+    expect(tester.takeException(), isNull);
+  });
 }

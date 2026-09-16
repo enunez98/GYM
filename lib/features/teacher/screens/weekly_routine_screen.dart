@@ -15,7 +15,9 @@ import '../../../services/imported_routine_store.dart';
 import '../../../services/routine_persistence_service.dart';
 
 class WeeklyRoutineScreen extends StatefulWidget {
-  const WeeklyRoutineScreen({super.key});
+  final VoidCallback? onClose;
+
+  const WeeklyRoutineScreen({super.key, this.onClose});
 
   @override
   State<WeeklyRoutineScreen> createState() => _WeeklyRoutineScreenState();
@@ -29,6 +31,14 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
   String? routineLoadError;
   bool hasUnsavedChanges = false;
   bool isSavingRoutine = false;
+
+  void _closeScreen() {
+    if (widget.onClose != null) {
+      widget.onClose!();
+    } else if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
+  }
 
   @override
   void initState() {
@@ -285,7 +295,7 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
               title: 'Rutina semanal',
               subtitle: 'Planificación de ejercicios',
               icon: Icons.fitness_center,
-              onBack: () => Navigator.pop(context),
+              onBack: _closeScreen,
             ),
             Expanded(
               child: Container(
@@ -533,7 +543,7 @@ class _WeeklyRoutineScreenState extends State<WeeklyRoutineScreen> {
               title: 'Rutina semanal',
               subtitle: 'Planificación de ejercicios',
               icon: Icons.fitness_center,
-              onBack: () => Navigator.pop(context),
+              onBack: _closeScreen,
             ),
             Expanded(
               child: Container(

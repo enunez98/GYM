@@ -28,6 +28,7 @@ class TeacherDashboardScreen extends StatefulWidget {
 class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
   int _webSectionIndex = 0;
   int _mobileSectionIndex = 0;
+  bool _mobileRegisterStudent = false;
 
   void _selectWebSection(int index) {
     setState(() => _webSectionIndex = index);
@@ -43,11 +44,18 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
     );
   }
 
-  void _openRegisterStudent(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const RegisterStudentScreen()),
-    );
+  void _openRegisterStudent() {
+    setState(() {
+      _mobileRegisterStudent = true;
+      _mobileSectionIndex = 1;
+    });
+  }
+
+  void _closeMobileRegisterStudent() {
+    setState(() {
+      _mobileRegisterStudent = false;
+      _mobileSectionIndex = 1;
+    });
   }
 
   @override
@@ -69,11 +77,18 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
   Widget _buildMobileDashboard(BuildContext context, String userName) {
     final pages = <Widget>[
       _buildMobileOverview(context, userName),
-      const StudentsListScreen(),
+      _mobileRegisterStudent
+          ? RegisterStudentScreen(onClose: _closeMobileRegisterStudent)
+          : StudentsListScreen(
+              onClose: () => setState(() => _mobileSectionIndex = 0),
+              onRegisterStudent: _openRegisterStudent,
+            ),
       RegisterBodyEvaluationScreen(
         onClose: () => setState(() => _mobileSectionIndex = 0),
       ),
-      const WeeklyRoutineScreen(),
+      WeeklyRoutineScreen(
+        onClose: () => setState(() => _mobileSectionIndex = 0),
+      ),
       ImportRoutinesScreen(
         onClose: () => setState(() => _mobileSectionIndex = 0),
       ),
@@ -162,7 +177,7 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
                             icon: Icons.person_add_alt,
                             title: 'Registrar alumno',
                             subtitle: 'Nombre, teléfono, plan y vencimiento',
-                            onTap: () => _openRegisterStudent(context),
+                            onTap: _openRegisterStudent,
                           ),
                           TeacherActionRow(
                             icon: Icons.groups,

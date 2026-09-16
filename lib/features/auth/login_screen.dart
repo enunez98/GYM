@@ -25,6 +25,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final mobileKeyboardScrollController = ScrollController();
   bool isLoading = false;
   bool obscurePassword = true;
 
@@ -32,6 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
+    mobileKeyboardScrollController.dispose();
     super.dispose();
   }
 
@@ -112,6 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF07080A),
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -157,6 +160,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   isDesktop: isDesktop,
                                   emailController: emailController,
                                   passwordController: passwordController,
+                                  mobileKeyboardScrollController:
+                                      mobileKeyboardScrollController,
                                   isLoading: isLoading,
                                   obscurePassword: obscurePassword,
                                   onLogin: login,
@@ -313,6 +318,7 @@ class _LoginPanel extends StatelessWidget {
     required this.isDesktop,
     required this.emailController,
     required this.passwordController,
+    required this.mobileKeyboardScrollController,
     required this.isLoading,
     required this.obscurePassword,
     required this.onLogin,
@@ -323,6 +329,7 @@ class _LoginPanel extends StatelessWidget {
   final bool isDesktop;
   final TextEditingController emailController;
   final TextEditingController passwordController;
+  final ScrollController mobileKeyboardScrollController;
   final bool isLoading;
   final bool obscurePassword;
   final VoidCallback onLogin;
@@ -521,13 +528,34 @@ class _LoginPanel extends StatelessWidget {
             )
           : LayoutBuilder(
               builder: (context, constraints) {
-                if (MediaQuery.viewInsetsOf(context).bottom > 0) {
-                  return SingleChildScrollView(child: content);
-                }
-                return FittedBox(
+                final fixedLayout = FittedBox(
                   fit: BoxFit.scaleDown,
                   alignment: Alignment.center,
                   child: SizedBox(width: constraints.maxWidth, child: content),
+                );
+                final keyboardHeight = MediaQuery.viewInsetsOf(context).bottom;
+                if (keyboardHeight == 0) return fixedLayout;
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (!mobileKeyboardScrollController.hasClients) return;
+                  final target = (keyboardHeight * .35).clamp(
+                    0.0,
+                    mobileKeyboardScrollController.position.maxScrollExtent,
+                  );
+                  if (mobileKeyboardScrollController.offset < target) {
+                    mobileKeyboardScrollController.animateTo(
+                      target,
+                      duration: const Duration(milliseconds: 180),
+                      curve: Curves.easeOut,
+                    );
+                  }
+                });
+                return SingleChildScrollView(
+                  controller: mobileKeyboardScrollController,
+                  padding: EdgeInsets.only(bottom: keyboardHeight),
+                  child: SizedBox(
+                    height: constraints.maxHeight,
+                    child: fixedLayout,
+                  ),
                 );
               },
             ),

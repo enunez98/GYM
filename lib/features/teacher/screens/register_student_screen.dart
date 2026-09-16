@@ -172,11 +172,13 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
   }
 
   void closeScreen() {
-    if (widget.embedded) {
-      widget.onClose?.call();
+    if (widget.onClose != null) {
+      widget.onClose!();
       return;
     }
-    Navigator.pop(context);
+    if (!widget.embedded && Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
   }
 
   Future<void> showRegistrationResult({required bool success, String? detail}) {
